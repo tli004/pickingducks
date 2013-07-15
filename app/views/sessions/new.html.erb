@@ -1,0 +1,26 @@
+<div id="log_in">
+	<div class="log_in_form">
+		<%= image_tag (asset_path "PD_logo.png"), :class => "overlay_logo_login" %> 
+		<span class="close_button">x</span>
+		<h1>Log in</h1>
+		<%= form_tag sessions_path do%>
+		
+		 <p>
+		 	<%= label_tag :email, nil, :class => "login_label" %>: 
+		 	<%= text_field_tag :email, params[:email], :size => 30 %>
+		 </p>
+		 <p>
+		 	<%= label_tag :password, nil, :class => "login_label" %>: 
+		 	<%= password_field_tag :password, "", :size => 30 %>
+		 </p>
+		 
+		 <div class="login_bottom_fields">
+		 	<%= link_to "forgot password?", new_password_reset_path %><br/>
+			<%= label_tag :remember_me %>
+			<%= check_box_tag :remember_me, 1, params[:remember_me] %>
+			
+		 	<%= submit_tag "Log in!", :class => "button login_btn submit_btn" %>
+	 	</div>
+		<% end %>
+	</div>
+</div>

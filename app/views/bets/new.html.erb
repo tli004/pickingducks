@@ -1,0 +1,45 @@
+<h1>Place a Wager</h1>
+
+ <div id="bet_tabs">	 	
+ 	
+ 	<ul>
+ 		<li><a href="#handicap">Handicap</a></li>
+ 		<li><a href="#over_under">Over Under</a></li>
+ 	</ul>
+ 	
+ 	
+ 	<div id="handicap"> 	
+ 		<%= form_for @bet do |f| %>	 
+ 			
+		 <p>
+		 	<h3>
+		 		<% if @event.spread > 0 %>
+		 			The <%= @event.home_team %> are favored by <%= @event.spread %> points
+		 		<% else %>
+		 			<%= @event.away_team %> are favored by <%= @event.spread.abs %> points
+		 		<% end %>
+		 	</h3>
+		 	<%= hidden_field_tag 'event_id', @event.id %>
+		 	<%= f.hidden_field 'pending', true %>
+		 	<%= @event.home_team %> (<%= -@event.spread %>): <%= f.radio_button(:bet, 'home') %>
+		 	<%= @event.away_team %> (<%= @event.spread %>): <%= f.radio_button(:bet, 'away') %><br />
+		 	Wager: <%= f.number_field :amount, :min => 1, :class => "number_input" %>
+		 </p>
+		 <p><%= f.submit 'Place Bet!', :class => 'button place_bet' %></p>
+		 <% end %>
+	</div>
+	<div id="over_under">
+		<%= form_for @bet do |f| %>	 
+		 <p>
+		 	<h3>
+		 		Total Points: <%= @event.total_points %>
+		 	</h3>
+		 	<%= hidden_field_tag 'event_id', @event.id %>
+		 	Over: <%= f.radio_button(:bet, 'over') %>
+		 	Under: <%= f.radio_button(:bet, 'under') %><br/>
+		 	Wager: <%= f.number_field :amount, :class => "number_input" %>
+		 	<p><%= f.submit 'Place Bet!', :class => 'button place_bet' %></p>
+		 </p>
+		 <% end %>
+	</div>	 
+</div>	

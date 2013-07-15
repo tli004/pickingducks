@@ -1,0 +1,2 @@
+$("#featured_games_table").html($("<%= escape_javascript(render :partial => 'events/featured_games', :locals => {:featured => @featured}) %>"));
+$("#selected_sport").text("<%= @selected_sport %>");

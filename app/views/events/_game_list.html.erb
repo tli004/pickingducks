@@ -1,0 +1,43 @@
+<table>
+<% if games.length > 0 %>
+	<tr>
+		<th>Start Time</th>
+		<th>Matchup</th>
+		<th>Handicap</th>
+		<th>Total Points</th>
+		<th></th>
+	</tr>
+	<% games.each do |game| %>
+	<% if sport != game.sport %>
+	<tr>
+		<td><h4><%= LEAGUE_NAMES_ABBR[game.sport-1] %> Games</h4></td>
+		<% sport = game.sport %>
+	</tr>
+	<% end %>
+	<tr>
+		<td>
+			<span style="font-weight:bold"><%= game.start_time.strftime("%I:%M").upcase %></span><br />
+			<%= game.start_time.strftime("%P %Z") %>
+		</td>
+		<td>
+			<span class="featured_team_name"><%= game.home_team %></span> vs<br/> <span class="featured_team_name"><%= game.away_team %></span>
+		</td>
+		<td>
+			<%= game.spread %><br />
+			<%= -game.spread %>
+		</td>
+		<td>
+			over <%= game.total_points %><br />
+			under <%= game.total_points %>
+		</td>
+		<% if current_user %>
+		<td>
+			<a href="<%= new_event_bet_path(game.id) %>" class="wager_link_home button black_gradient">Wager</a>
+		</td>
+		<% end %>
+	</tr>
+	<% end %>
+<% else %>
+	<tr><th>There are no games today for your selected sport</th></tr>
+<% end %>
+</table>

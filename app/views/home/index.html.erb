@@ -1,0 +1,21 @@
+<span class="featured_header"><h1>UPCOMING GAMES:</h1>
+	<span id="menu">
+		<span class="featured_dropdown">
+			<span id="selected_sport" style="font-size:24px"><%= @selected_sport %></span>
+			<%= image_tag (asset_path 'down_arrow.png'), :class => "dropdown_arrow" %>
+		</span>
+	</span>
+</span>
+<span class="featured_date"><%= Time.now.strftime("%A, %B %d") %></span>
+<ul class="sports_list">
+	<li onclick="get_featured(1);">Football</li>
+	<li onclick="get_featured(2);">Basketball</li>
+	<li onclick="get_featured(3);">Baseball</li>
+	<li onclick="get_featured(4);">Hockey</li>
+</ul>
+
+<%= render :partial => 'events/featured_games', :locals => {:featured => @featured } %>
+	
+
+<%= render :partial => 'users/top_ten_table', :locals => { :top_ten => @top_ten } %>
+	

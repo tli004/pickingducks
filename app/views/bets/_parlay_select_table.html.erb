@@ -1,0 +1,63 @@
+<div id="parlay_game_list">
+	<h3>Select Up to 10 games</h3>
+	<table id="parlay_game_table">
+	<% if games.length > 0 %>	
+			<% games.each do |game| %>
+			
+			<% if sport != game.sport %>
+			<tr>
+				<td class="table_left"><h4><%= LEAGUE_NAMES_ABBR[game.sport-1] %> Games</h4></td>
+				<% sport = game.sport %>
+			</tr>
+			<tr>
+				<th class="table_left">Game Day</th>
+				<th>Matchup</th>
+				<th>Add to Parlay</th>
+			</tr>
+			<% end %>
+			
+			<tr>
+				<td class="table_left"> 
+					<span>
+						<%= game.start_time.strftime("%m-%d") %>
+					</span>
+				</td>
+				<td>
+					<span class="featured_team_name"><%= game.home_team %><span class="spread_text">(<%= game.spread %>)</span></span> vs <span class="featured_team_name"><%= game.away_team %><span class="spread_text">(<%= -game.spread %>)</span></span>
+				</td>
+				<td>				
+					<%= check_box_tag 'event_id[]', game.id %>
+					<script id="<%= 'parlay_event_' + game.id.to_s %>" type="text/javascript">
+						$(function () {						
+							$("#"+"<%= 'parlay_event_' + game.id.to_s %>").siblings('input').change(function (e) {
+								if (this.checked) {
+									if (num_games == 10) {
+										this.checked = false;
+										alert("maximum of 10 games in parlay bet!");
+									} else {
+										num_games += 1;
+										$("#parlay_selected_games").append("<li data-id='<%= game.id %>'>" + "<%= game.home_team %> (" + "<%= game.spread %>" + ")" + " vs " + "<%= game.away_team %> (" + "<%= -game.spread %>" + ")" + "</li>");					
+										if (num_games > 1)	
+											$(".winning_payout").text("$" + (parseInt($(".number_input").val()) * parlay_odds[num_games-2]).toFixed(2).toString());
+										else
+											$(".winning_payout").text("N/A");
+									}
+								} else {
+									num_games -= 1;
+									$("#parlay_selected_games").children("li[data-id='<%= game.id %>']").remove();
+									if (num_games > 1)	
+										$(".winning_payout").text("$" + (parseInt($(".number_input").val()) * parlay_odds[num_games-2]).toFixed(2).toString());
+									else
+										$(".winning_payout").text("N/A");						
+								}
+							});
+						});
+					</script>
+				</td>
+			</tr>
+			<% end %>		
+	<% else %>
+			<tr><th>There are no games today for your selected sport</th></tr>
+	</table>
+	<% end %>
+</div>

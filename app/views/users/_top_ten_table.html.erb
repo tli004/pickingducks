@@ -1,0 +1,28 @@
+<h1>Top Ten</h1>
+<span class="featured_date"></span>
+<table id="top_ten_users_table">
+	<tr>
+		<th>Rank</th>
+		<th>Username</th>
+		<th>WLT</th>
+		<th>Win%</th>
+		<th>Units</th>
+	</tr>
+	<% 10.times do |i| %>
+		<% user = top_ten[i] %>
+		<% if user %>
+			<tr>
+				<td><%= i + 1 %></td>
+				<td><%= user.username %></td>
+				<td><%= "#{user.wins}-#{user.losses}-#{user.ties}" %></td>
+				<td><%= ((user.wins.to_f / (user.wins + user.losses + user.ties))*100).round(2) %></td>
+				<td><%= user.bankroll %></td>
+			</tr>
+		<% else %>
+			<tr>
+				<td><%= i + 1 %></td>
+				<td colspan="4"></td>
+			</tr>
+		<% end %>	
+	<% end %>
+</table>

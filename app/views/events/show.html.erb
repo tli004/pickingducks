@@ -1,0 +1,40 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Sport:</b>
+  <%= @event.sport %>
+</p>
+
+<p>
+  <b>Spread:</b>
+  <%= @event.spread %>
+</p>
+
+<p>
+  <b>Start time:</b>
+  <%= @event.start_time %>
+</p>
+
+<p>
+  <b>Islive:</b>
+  <%= @event.isLive %>
+</p>
+
+<p>
+  <b>Home:</b>
+  <%= @event.home %>
+</p>
+
+<p>
+  <b>Away:</b>
+  <%= @event.away %>
+</p>
+
+<p>
+  <b>Extern:</b>
+  <%= @event.extern_id %>
+</p>
+
+
+<%= link_to 'Edit', edit_event_path(@event) %> |
+<%= link_to 'Back', events_path %>

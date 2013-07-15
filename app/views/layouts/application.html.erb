@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Picking Ducks</title>  
+  <%= favicon_link_tag 'favicon.ico' %>
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= javascript_include_tag "application" %> 
+  <%= javascript_include_tag "js-class" %> 
+  <%= javascript_include_tag "excanvas" %>  
+  <%= javascript_include_tag "bluff-min" %>
+  <%= csrf_meta_tags %>
+</head>
+<body>	
+	<div class="header">
+		<div class="user_nav">
+			<% if current_user %>
+				<span style="color:white">Logged in as <a href="<%= user_path(current_user.id) %>"><%= current_user.email %></a>					
+				</span>
+				<%= button_to_function "Log out", "logout()", :class => "button logout_btn" %>
+			<% else %>
+				<%= button_to_function "Sign up", "show_sign_up()", :class => "button" %> <span style="color:white;">or</span>
+				<%= button_to_function "log in", "show_log_in()", :class => "button" %>
+			<% end %>
+		</div>
+		<%= image_tag (asset_path "PD_logo.png"), :class => "home_logo" %> 
+		<span class="company_text">
+			<span class="company_name">PICKING <span style="color:orange">DUCK</span></span><br />
+			<span class="company_blurb">YOUR SPORTS PICK MARKETPLACE</span>
+		</span>
+	<div class="home_banner"style="padding-top:5px">
+		<ul class="home_page_list">
+			<a href="/"><li>HOME.</li></a>
+			<% if current_user %>
+				<a href="<%= bets_home_path %>"><li>GAMBLING HOME.</li></a>
+			<% end %>
+			<a href="<%= sport_home_path(1) %>"><li>NFL.</li></a>
+			<a href="<%= sport_home_path(2) %>"><li>NBA.</li></a>
+			<a href="<%= sport_home_path(3) %>"><li>MLB.</li></a>
+			<a href="<%= sport_home_path(4) %>"><li>NHL.</li></a>
+			<a href="<%= how_to_play_path %>"><li>How to play</li></a>
+		</ul>
+	</div>
+	<div class="white"></div>	
+	</div>
+	<% if flash.keys.length > 0 %>
+		<div id="flash_messages" style="padding-top:10px">	
+			<% flash.each do |name, msg| %>
+			 <%= content_tag :div, msg, :id => "flash_#{name}" %>
+			<% end %>
+		</div>
+		<% else %>
+		<% end %>
+	<% if !current_user %>
+		
+			<%= render :template => 'users/new' %>
+		
+			<%= render :template => 'sessions/new'%>
+	<% end %>		
+	<div id="content">
+	<%= yield %>
+	
+		<div id="footer">
+			<ul id="nav">
+				<li><a href="" title="">About Us</a></li>
+		        <li><a href="" title="">Contact Us</a></li>
+		        <li><a href="/terms_of_service" title="">Terms of Service</a></li>
+				<li><a href="/privacy" title="">Privacy</a></li>
+				<li><a class="active" href="" title="">RSS</a></li>
+		        <li><a class="right" href="" title="">&copy; 2013 Picking Ducks</a></li>
+		    </ul>
+		</div>
+	</div>
+</body>
+</html>

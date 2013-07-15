@@ -1,0 +1,6 @@
+<h2><%= @league_name %> Home</h2>
+
+<h4>All Games:</h4>	
+<table>
+<%= render :partial => 'events/featured_games', :locals => {:featured => @events } %>
+</table>
