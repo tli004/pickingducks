@@ -32,13 +32,16 @@ class UsersController < ApplicationController
     @user = User.new(params[:user])
     @user.wins = 0
     @user.losses = 0
+    @user.ties = 0
     @user.bankroll = 100.0
+    
     if @user.save
       UserMailer.registration_confirmation(@user).deliver
       session[:user_id] = @user.id
       flash.notice = "Signed up!"
       redirect_to root_url
     else
+      logger.info @user.errors.full_messages
       flash.notice = "An error occured with sign up."
       redirect_to root_url
     end
