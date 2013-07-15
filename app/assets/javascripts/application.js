@@ -19,6 +19,7 @@
 //= require jquery.ui.dialog
 //= require_tree .
 //= require jquery.ui.tabs
+
 function show_sign_up() {
 	$('#sign_up').dialog("open");
 }
