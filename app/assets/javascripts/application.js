@@ -19,23 +19,24 @@
 //= require jquery.ui.dialog
 //= require_tree .
 //= require jquery.ui.tabs
-$(function () {
-	function show_sign_up() {
-		$('#sign_up').dialog("open");
-	}
-	function show_log_in() {
-		$('#log_in').dialog("open");
-	}
-	
-	function logout() {
-		window.location = "/log_out";
-	}
-	
-	function get_featured(sport_id) {
-		$.getScript('/get_featured?sport_id=' + sport_id);
-		$(".sports_list").hide();
-	}		
 
+function show_sign_up() {
+	$('#sign_up').dialog("open");
+}
+function show_log_in() {
+	$('#log_in').dialog("open");
+}
+
+function logout() {
+	window.location = "/log_out";
+}
+
+function get_featured(sport_id) {
+	$.getScript('/get_featured?sport_id=' + sport_id);
+	$(".sports_list").hide();
+}
+		
+$(function () {
 	$('#sign_up').dialog({
 		autoOpen: false,
 		closeOnEscape: true,
