@@ -1,6 +1,4 @@
 class HomeController < ApplicationController
-  require 'nokogiri'
-  require 'open-uri'
   
   def index
     @user = User.new if current_user.nil?
