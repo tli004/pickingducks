@@ -1,7 +1,4 @@
 PickingDucks::Application.routes.draw do
-  
-  
-
   resources :sessions
   resources :events
   resources :bets
