@@ -36,7 +36,7 @@ class UsersController < ApplicationController
     @user.bankroll = 100.0
     
     if @user.save
-      UserMailer.registration_confirmation(@user).deliver
+      #UserMailer.registration_confirmation(@user).deliver
       session[:user_id] = @user.id
       flash.notice = "Signed up!"
       redirect_to root_url
