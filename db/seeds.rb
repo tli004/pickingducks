@@ -22,14 +22,14 @@ Event.create(:sport => 2, :start_time => 1.days.from_now.to_date, :home_team => 
 Event.create(:sport => 3, :start_time => 2.days.from_now.to_date, :home_team => "Orioles", :away_team => "Diamondbacks", :spread => 1, :total_points => 4)
 Event.create(:sport => 3, :start_time => 2.days.from_now.to_date, :home_team => "Indians", :away_team => "Rockies", :spread => -2, :total_points => 7)
 Event.create(:sport => 3, :start_time => 2.days.from_now.to_date, :home_team => "Tigers", :away_team => "Reds", :spread => 3, :total_points => 2)
-Event.create(:sport => 3, :start_time => 2.days.from_now.to_date, :home_team => "Angels", :away_team => "Mariners", :spread => -.5, :total_points => 5.5)
-Event.create(:sport => 3, :start_time => 2.days.from_now.to_date, :home_team => "Rangers", :away_team => "Cardinals", :spread => .5, :total_points => 9)
+Event.create(:sport => 3, :start_time => 2.days.from_now.to_date, :home_team => "Angels", :away_team => "Mariners", :spread => -0.5, :total_points => 5.5)
+Event.create(:sport => 3, :start_time => 2.days.from_now.to_date, :home_team => "Rangers", :away_team => "Cardinals", :spread => 0.5, :total_points => 9)
 Event.create(:sport => 3, :start_time => 2.days.from_now.to_date, :home_team => "Giants", :away_team => "Athletics", :spread => 3, :total_points => 10)
 
 Event.create(:sport => 4, :start_time => 3.days.from_now.to_date, :home_team => "Ducks", :away_team => "Blackhawks", :spread => 2, :total_points => 2)
 Event.create(:sport => 4, :start_time => 3.days.from_now.to_date, :home_team => "Avalanche", :away_team => "Red Wings", :spread => -1, :total_points => 5)
 Event.create(:sport => 4, :start_time => 3.days.from_now.to_date, :home_team => "Maple Leaves", :away_team => "Canadians", :spread => 3, :total_points => 5)
-Event.create(:sport => 4, :start_time => 3.days.from_now.to_date, :home_team => "Predators", :away_team => "Flyers", :spread => -.5, :total_points => 2)
+Event.create(:sport => 4, :start_time => 3.days.from_now.to_date, :home_team => "Predators", :away_team => "Flyers", :spread => -0.5, :total_points => 2)
 Event.create(:sport => 4, :start_time => 3.days.from_now.to_date, :home_team => "Blues", :away_team => "Sharks", :spread => -1, :total_points => 3)
 Event.create(:sport => 4, :start_time => 3.days.from_now.to_date, :home_team => "Jets", :away_team => "Capitals", :spread => 1.5, :total_points => 2)
 
