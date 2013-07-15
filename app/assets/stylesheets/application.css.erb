@@ -9,11 +9,7 @@
  * compiled file, but it's generally better to create a new file per style scope.
  *
  *= require_self
- *= require jquery.ui.core
- *= require jquery.ui.theme
- *= require jquery.ui.dialog
- *= require jquery.ui.tabs
- *= require_tree .
+ *= require jquery.ui.all
  */
 
 @font-face {
@@ -176,6 +172,7 @@ body {
 
 #sign_up {
 	overflow:hidden;
+	display:none;
 }
 .sign_up_form {
 	position: relative;
@@ -184,6 +181,7 @@ body {
 
 #log_in {
 	overflow:hidden;
+	display:none;
 }
 
 .log_in_form {
@@ -376,7 +374,7 @@ input[type="submit"]:hover {
 }
 
 .featured_team_name {
-	font-size:48px; 
+	font-size:28px; 
 	font-family: 'Oswald_Regular';
 }
 

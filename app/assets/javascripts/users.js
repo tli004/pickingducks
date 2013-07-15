@@ -1,4 +1,4 @@
-$(function () {
+$(document).ready(function () {
   $("#profile_tabs").tabs();
   
   $(".upload_image").click(function () {

@@ -6,10 +6,12 @@ class ApplicationController < ActionController::Base
     @user = User.new
   end
   
-  def privacy    
+  def privacy   
+    @user = User.new 
   end
   
   def terms_of_service
+    @user = User.new
   end
     
   private

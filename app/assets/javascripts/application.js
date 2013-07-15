@@ -17,14 +17,44 @@
 //= require jquery.ui.mouse
 //= require jquery.ui.position
 //= require jquery.ui.dialog
-//= require_tree .
 //= require jquery.ui.tabs
+//= require home.js
+//= require bets.js
+//= require users.js
+
+$(document).ready(function () {		
+	$(".close_button").click(function (e) {
+		$(this).parent().parent().dialog("close");
+	})		
+});	
 
 function show_sign_up() {
-	$('#sign_up').dialog("open");
+	sign_up = $('#sign_up').dialog({
+		autoOpen: false,
+		closeOnEscape: true,
+		height: 550,
+		width: 575,
+		resizable: false,
+		modal: true,
+		dialogClass: 'overlay'
+	});
+	
+	$(".ui-dialog-titlebar").remove();
+	sign_up.dialog("open");
 }
 function show_log_in() {
-	$('#log_in').dialog("open");
+	login = $('#log_in').dialog({
+		autoOpen: false,
+		closeOnEscape: true,
+		height: 230,
+		width: 555,
+		resizable: false,
+		modal: true,
+		dialogClass: 'overlay'
+	});
+	
+	$(".ui-dialog-titlebar").remove();
+	login.dialog("open");
 }
 
 function logout() {
@@ -35,31 +65,3 @@ function get_featured(sport_id) {
 	$.getScript('/get_featured?sport_id=' + sport_id);
 	$(".sports_list").hide();
 }
-		
-$(function () {
-	$('#sign_up').dialog({
-		autoOpen: false,
-		closeOnEscape: true,
-		height: 550,
-		width: 575,
-		resizable: false,
-		modal: true,
-		dialogClass: 'overlay'
-	});
-	$('#log_in').dialog({
-		autoOpen: false,
-		closeOnEscape: true,
-		height: 230,
-		width: 555,
-		resizable: false,
-		modal: true,
-		dialogClass: 'overlay'
-	});
-	$(".ui-dialog-titlebar").remove();
-	
-	$(".close_button").click(function (e) {
-		$(this).parent().parent().dialog("close");
-	})
-	
-	
-});	

@@ -1,4 +1,23 @@
 PickingDucks::Application.configure do
+  
+  NFL = 1
+  NBA = 2
+  MLB = 3
+  NHL = 4
+  SPORTS_NAMES = ["Football", "Basketball", "Baseball", "Hockey"]
+  LEAGUE_NAMES = ["National Footbal League", "National Basketball Association", "Major League Baseball", "National Hockey League"]
+  LEAGUE_NAMES_ABBR = ["NFL", "NBA", "MLB", "NHL"]
+  
+  
+  
+  #parlay odds table
+  
+  PARLAY_ODDS = [2.6, 6, 10, 20, 40, 75, 150, 300, 700, 1100]
+  
+  Paperclip.options[:command_path] = '/usr/bin/convert'
+  
+  
+  
   # Settings specified here will take precedence over those in config/application.rb
 
   # Code is not reloaded between requests
@@ -9,7 +28,7 @@ PickingDucks::Application.configure do
   config.action_controller.perform_caching = true
 
   # Disable Rails's static asset server (Apache or nginx will already do this)
-  config.serve_static_assets = false
+  config.serve_static_assets = true
 
   # Compress JavaScripts and CSS
   config.assets.compress = true
