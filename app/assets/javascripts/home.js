@@ -1,14 +1,12 @@
-$(document).ready(function () {
-	$("body").click(function() {
-	    $(".sports_list").hide();
-	});
-	
-	$(".featured_dropdown").click(function (e) {
-		e.stopPropagation();
-		$(".sports_list").toggle();
-	});
+$("body").click(function() {
+    $(".sports_list").hide();
+});
 
-	$(".sports_list").click(function (e) {
-		e.stopPropagation();
-	});
-})
+$(".featured_dropdown").click(function (e) {
+	e.stopPropagation();
+	$(".sports_list").toggle();
+});
+
+$(".sports_list").click(function (e) {
+	e.stopPropagation();
+});

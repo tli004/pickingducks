@@ -19,8 +19,10 @@
 		 			<%= @event.away_team %> are favored by <%= @event.spread.abs %> points
 		 		<% end %>
 		 	</h3>
-		 	<%= hidden_field_tag 'event_id', :value => @event.id %>
+		 	<%= hidden_field_tag 'event_id', @event.id %>
+		 	<%= f.hidden_field 'sport', :value => @event.sport %>
 		 	<%= f.hidden_field 'pending', :value => true %>
+		 	<%= f.hidden_field 'parlay', :value => false %>
 		 	<%= @event.home_team %> (<%= -@event.spread %>): <%= f.radio_button(:bet, 'home') %>
 		 	<%= @event.away_team %> (<%= @event.spread %>): <%= f.radio_button(:bet, 'away') %><br />
 		 	Wager: <%= f.number_field :amount, :min => 1, :class => "number_input" %>
@@ -35,6 +37,9 @@
 		 		Total Points: <%= @event.total_points %>
 		 	</h3>
 		 	<%= hidden_field_tag 'event_id', @event.id %>
+		 	<%= f.hidden_field 'sport', :value => @event.sport %>
+		 	<%= f.hidden_field 'pending', :value => true %>
+		 	<%= f.hidden_field 'parlay', :value => false %>
 		 	Over: <%= f.radio_button(:bet, 'over') %>
 		 	Under: <%= f.radio_button(:bet, 'under') %><br/>
 		 	Wager: <%= f.number_field :amount, :class => "number_input" %>

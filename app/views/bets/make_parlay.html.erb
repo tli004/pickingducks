@@ -1,16 +1,18 @@
-	<%= form_tag '/add_bets_to_parlay' do %>		
-		<h1 class="basic_header">Parlay Bet<span class="switch_link"><a href="/bets_home"> Straight Bets</a></span></h1>
-		
-		<%= render :partial => 'parlay_select_table', :locals => { :games => @games, :sport => @sport } %>
-		
-		<div id="parlay_wager">
-			<span>Wager: </span><%= number_field_tag :amount, 1, :min => 1, :class => "number_input"%><br />
-			<div>Selected games: 
-				<ul id="parlay_selected_games">
-				</ul>
-				<div>Winning payout: <span class="winning_payout">N/A</span></div>
-				<%= submit_tag "Place Bet!", :class => 'button place_bet' %>
-			</div>
+<%= form_tag '/add_bets_to_parlay' do %>		
+	<h1 class="basic_header">Parlay Bet<span class="switch_link"><a href="/bets_home"> Straight Bets</a></span></h1>
+	
+	<div id="parlay_left">
+	<%= render :partial => 'parlay_select_table', :locals => { :games => @games, :sport => @sport } %>
+	</div>
+	
+	<div id="parlay_wager">
+		<span>Wager: </span><%= number_field_tag :amount, 1, :min => 1, :class => "number_input"%><br />
+		<div>Selected games: 
+			<ul id="parlay_selected_games">
+			</ul>
+			<div>Winning payout: <span class="winning_payout">N/A</span></div>
+			<%= submit_tag "Place Bet!", :class => 'button place_bet' %>
 		</div>
-		
-	<% end %>	
+	</div>
+	
+<% end %>	

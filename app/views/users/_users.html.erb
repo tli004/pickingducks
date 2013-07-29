@@ -1,0 +1,35 @@
+<%= form_tag users_path, :method => 'get', :id => "users_search" do %>
+	<%= hidden_field_tag :direction, params[:direction] %>
+	<%= hidden_field_tag :sort, params[:sort] %>
+    <p>
+      <%= text_field_tag :search, params[:search] %>
+      <%= submit_tag "Search", :name => nil %>
+    </p>
+<% end %>
+<table id="users_table">
+	<tr>
+		<th class="table_left">Rank</td></th>
+		<th><%= sortable 'username', 'Username' %></th>
+		<th><%= sortable 'wins', 'W-L-T' %></th>
+		<th><%= sortable 'win_percentage', 'Win%' %></th>
+		<th><%= sortable 'bankroll', 'Ducks' %></th>
+	</tr>
+	<% @users.each_with_index do |user, i| %>
+			<tr>
+				<% if params[:page] %>
+				<td class="table_left"><%= i + 1 + (params[:page].to_i - 1)* params[:per_page].to_i %></td>
+				<% else %>
+				<td class="table_left"><%= i + 1 %></td>
+				<% end %>
+				<td><a href="<%= public_profile_path user.id %>"><%= user.username %></a></td>
+				<td><%= "#{user.wins}-#{user.losses}-#{user.ties}" %></td>
+				<td><%= (100* user.win_percentage).round(2) %>%</td>
+				<td><%= user.bankroll %></td>
+			</tr>		
+	<% end %>
+	<tr>
+		<td colspan="5">
+			<%= will_paginate @users, :class => "duck_pagination" %>
+		</td>
+	</tr>
+</table>

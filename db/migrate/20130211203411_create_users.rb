@@ -15,6 +15,7 @@ class CreateUsers < ActiveRecord::Migration
       t.datetime :banned_until
       t.boolean :accept_terms
       t.integer :wins, :default => 0
+      t.float :win_percentage, :default => 0
       t.integer :losses, :default => 0
       t.integer :ties, :default => 0
       t.float :bankroll, :default => 100.00

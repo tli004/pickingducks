@@ -1,17 +1,17 @@
 <table>
-<% if games.length > 0 %>
+<% if games.length > 0 %>	
+	<% games.each do |game| %>
+	<% if sport != game.sport %>
+	<tr>
+		<td><h4><%= LEAGUE_NAMES_ABBR[game.sport-1] %> Games</h4></td>
+		<% sport = game.sport %>
+	</tr>
 	<tr>
 		<th>Start Time</th>
 		<th>Matchup</th>
 		<th>Handicap</th>
 		<th>Total Points</th>
 		<th></th>
-	</tr>
-	<% games.each do |game| %>
-	<% if sport != game.sport %>
-	<tr>
-		<td><h4><%= LEAGUE_NAMES_ABBR[game.sport-1] %> Games</h4></td>
-		<% sport = game.sport %>
 	</tr>
 	<% end %>
 	<tr>

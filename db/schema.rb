@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130709012653) do
+ActiveRecord::Schema.define(:version => 20130719230827) do
 
   create_table "bets", :force => true do |t|
     t.integer  "user_id"
@@ -20,8 +20,10 @@ ActiveRecord::Schema.define(:version => 20130709012653) do
     t.boolean  "parlay"
     t.float    "amount"
     t.string   "bet"
+    t.integer  "sport"
     t.boolean  "pending",            :default => true, :null => false
     t.boolean  "winning"
+    t.integer  "public_price",       :default => -1
     t.datetime "finished_at"
     t.integer  "resulting_bankroll"
     t.datetime "created_at",                           :null => false
@@ -43,9 +45,19 @@ ActiveRecord::Schema.define(:version => 20130709012653) do
   end
 
   create_table "parlays", :force => true do |t|
-    t.boolean  "open"
+    t.boolean  "pending"
     t.float    "amount"
+    t.boolean  "winning"
     t.integer  "user_id"
+    t.float    "resulting_bankroll"
+    t.datetime "finished_at"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
+  end
+
+  create_table "purchases", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "bet_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
@@ -65,6 +77,7 @@ ActiveRecord::Schema.define(:version => 20130709012653) do
     t.datetime "banned_until"
     t.boolean  "accept_terms"
     t.integer  "wins",                     :default => 0
+    t.float    "win_percentage",           :default => 0.0
     t.integer  "losses",                   :default => 0
     t.integer  "ties",                     :default => 0
     t.float    "bankroll",                 :default => 100.0

@@ -14,6 +14,7 @@ class BetsController < ApplicationController
         current_user.bets << bet        
         current_user.bankroll = current_user.bankroll - params[:bet][:amount].to_i
         current_user.save
+        update_current_user
         event.bets << bet
         event.save
         flash.notice = "Your bet has been placed! Good luck!!"
@@ -30,7 +31,7 @@ class BetsController < ApplicationController
     parlay.amount = params[:amount]
     params[:event_id].each do |event|
       bet = parlay.bets.build
-      bet.update_attributes({:event_id => event, :amount => params[:amount], :parlay => true})
+      bet.update_attributes({:event_id => event, :amount => params[:amount], :bet => params[:bet][event], :sport => params[:sport][event], :parlay => true})
       if !parlay.save
         flash[:error] = "An error occured while creating your parlay"
         return redirect_to '/bets_home'
@@ -49,6 +50,18 @@ class BetsController < ApplicationController
   def make_parlay
     @games = Event.where('start_time > ? and start_time < ?', Time.now.to_date, 7.days.from_now.to_date).order("sport ASC")
     @sport = 0 # used to set headers in parlay_select_table
+  end
+  
+  def make_bet_public
+    bet = Bet.find(params[:id])
+    
+    if bet.update_attributes params[:bet]
+      flash[:notice] = "Bet has been made purchaseable for #{bet.public_price} ducks!"
+      redirect_to user_path current_user.id
+    else
+      flash[:alert] = "An error occured."
+      redirect_to root_path
+    end    
   end
 
 end

@@ -1,0 +1,199 @@
+<div id="profile">	
+	<h2>PROFILE for <%= @user.username.upcase %></h2>  	
+	<span class="box_number">
+		<span>WINS</span>
+		<div style="color:rgb(125,203,31)"><%= @user.wins %></div>
+	</span>
+	<span class="box_number">
+		<span>LOSSES</span>
+		<div style="color:red"><%= @user.losses %></div>	 				
+	</span>
+	<span class="box_number">
+		<span>TIES</span>
+		<div><%= @user.ties %></div>	 				
+	</span>
+	<span class="box_number">
+		<span>DUCKS</span>
+		<div style="color:#F84A0E"><%= @user.bankroll %></div>
+	</span>
+</div>
+ 
+ <h3>Pending Bets</h3>
+ <table>
+ 	<% if @pending_bets.length > 0 %>
+	 	<% @pending_bets.each do |bet| %>
+	 		<% if current_user && (current_user.purchases.map(&:bet_id).include?(bet.id) || current_user.id == @user.id) %>
+		 		<tr>
+		 			<td>
+		 				<span class="public_bet">PUBLIC: </span><%= bet.amount %>d on <%= bet.bet %> for event <span style="font-weight:bold"><%= bet.event.home_team %> vs. <%= bet.event.away_team %></span> on <%= bet.event.start_time.strftime("%m-%d") %>		 				
+	 				</td>	 				
+		 		</tr>
+	 		<% else %>
+		 		<tr>
+		 			<td>
+		 				<span class="private_bet">PRIVATE: </span>Made bet on event <span style="font-weight:bold"><%= bet.event.home_team %> vs. <%= bet.event.away_team %></span> on <%= bet.event.start_time.strftime("%m-%d") %>
+	 				</td>
+ 				<% if bet.public_price > 0 && current_user && current_user.id != @user.id %>
+		 			<td>
+		 				<a href="<%= pay_for_bet_path(bet.user, bet.id) %>">Purchase bet info for <%= bet.public_price%> ducks</a>
+		 			</td>	
+	 			<% end %>
+ 				</tr>
+ 			<% end %>
+	 	<% end %>
+	 <% else %>
+	 	<tr>No pending bets at this time.</tr>
+	 <% end%> 
+ </table>
+ <br />
+ <br />
+ 
+ <% if @past_straights.length > 0 %>
+<table class="track_record_graph" style="display:none">
+	<caption>Earnings: Straight Bets</caption>
+	<thead>
+		<tr>
+			<th scope="col">0</th>
+		<% @straight_change_dates.each do |date| %>
+			<th scope="col"><%= date %></th>
+		<% end %>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<th scope="row">Ducks</th>
+			<% total = 0 %>
+			<td>0</td>
+			<% @past_straights.each do |bet| %>
+			<% bet.winning ? total += bet.amount : total -= bet.amount %>
+				<td><%= total %></td>
+			<% end %>	
+		</tr>
+	</tbody>
+</table>
+<% end %>
+
+<% if @past_parlays.length > 0 %>
+<table class="track_record_graph" style="display:none">
+	<caption>Earnings: Parlay Bets</caption>
+	<thead>
+		<tr>
+			<th scope="col">0</th>
+		<% @parlay_change_dates.each do |date| %>
+			<th scope="col"><%= date %></th>
+		<% end %>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<th scope="row">Ducks</th>
+			<td>0</td>
+			<% total = 0 %>
+			<% @past_parlays.each do |parlay| %>
+			<% parlay.winning ? total += parlay.amount * PARLAY_ODDS[parlay.bets.length-1]: total -= parlay.amount %>
+				<td><%= total %></td>
+			<% end %>	
+		</tr>
+	</tbody>
+</table>
+<% end %>
+
+<% if @nfl_past_bets.length > 0 %>
+<table class="earnings_by_sport_graph" style="display:none">
+	<caption>NFL Record</caption>
+	<thead>
+		<tr>
+			<th scope="col">0</th>
+			<% @nfl_change_dates.each do |date| %>
+			<th scope="col"><%= date %></th>
+			<% end %>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<th scope="row">NFL Earnings</th>
+				<% total = 0 %>
+				<td>0</td>
+				<% @nfl_past_bets.each do |bet| %>
+				<% bet.winning ? total += bet.amount : total -= bet.amount %>
+				<td><%= total %></td>
+				<% end %>	
+		</tr>		
+	</tbody>
+</table>
+<% end %>
+
+<% if @nba_past_bets.length > 0 %>
+<table class="earnings_by_sport_graph" style="display:none">
+	<caption>NBA Record</caption>
+	<thead>
+		<tr>
+			<th scope="col">0</th>
+			<% @nba_change_dates.each do |date| %>
+			<th scope="col"><%= date %></th>
+			<% end %>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<th scope="row">NBA Earnings</th>
+				<% total = 0 %>
+				<td>0</td>
+				<% @nba_past_bets.each do |bet| %>
+				<% bet.winning ? total += bet.amount : total -= bet.amount %>
+				<td><%= total %></td>
+			<% end %>	
+		</tr>		
+	</tbody>
+</table>
+<% end %>
+
+<% if @mlb_past_bets.length > 0 %>
+<table class="earnings_by_sport_graph" style="display:none">
+	<caption>MLB Record</caption>
+	<thead>
+		<tr>
+			<th scope="col">0</th>
+			<% @mlb_change_dates.each do |date| %>
+			<th scope="col"><%= date %></th>
+			<% end %>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<th scope="row">MLB Earnings</th>
+				<% total = 0 %>
+				<td>0</td>
+				<% @mlb_past_bets.each do |bet| %>
+				<% bet.winning ? total += bet.amount : total -= bet.amount %>
+				<td><%= total %></td>
+			<% end %>	
+		</tr>		
+	</tbody>
+</table>
+<% end %>
+
+<% if @nhl_past_bets.length > 0 %>
+<table class="earnings_by_sport_graph" style="display:none">
+	<caption>NHL Record</caption>
+	<thead>
+		<tr>
+			<th scope="col">0</th>
+			<% @nhl_change_dates.each do |date| %>
+			<th scope="col"><%= date %></th>
+			<% end %>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<th scope="row">NHL Earnings</th>
+				<% total = 0 %>
+				<td>0</td>
+				<% @nhl_past_bets.each do |bet| %>
+				<% bet.winning ? total += bet.amount : total -= bet.amount %>
+				<td><%= total %></td>
+				<% end %>	
+		</tr>		
+	</tbody>
+</table>
+<% end %>

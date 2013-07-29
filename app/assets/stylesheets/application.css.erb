@@ -29,11 +29,16 @@
 		src: url('../fonts/LeagueGothic_Regular.ttf');
 }
 
-	
+
 body {
-	padding-top: 185px;
+	padding: 185px 0 0 0;
 	margin: 0px;
 	font-family: 'Oswald_Regular';
+	overflow: auto;
+}
+
+a {
+	color: #F84A0E;
 }
 
 .home_banner a, .header a {
@@ -100,10 +105,10 @@ body {
 }
 
 #content {
-	margin: 10px;	
 	min-height: 100%;
 	width: 100%;
-	padding: 0 0 85px;
+	box-sizing: border-box;
+	padding: 10px 10px 85px 10px;
 	position: absolute;
 }
 
@@ -252,7 +257,7 @@ input[type="submit"]:hover {
 	top: 0;
 	width: 100%;
 	height: 55px;
-	z-index: 1;
+	z-index: 11;
 	background: black; 
 	background-repeat: repeat-x;
 }
@@ -342,16 +347,56 @@ input[type="submit"]:hover {
 }
 
 #top_ten_users_table td {
-	width: 195px;
+	width: 100px;
 	text-align: center;
 	border-bottom: 1px dotted black;
 	height: 25px;
 	font-family: 'JosefinSans_Bold';
 }
 
+#users_table {
+	font-family: 'JosefinSans_Bold';
+}
+
+#users_table td {
+	width: 165px;
+	text-align: center;
+	height: 30px;	
+}
+
+#users_table th {
+	font-weight: normal !important;
+	text-decoration: none;
+	font-size: 24px;
+	line-height: 55px;
+	text-decoration: underline;
+}
+
+#users_table th a.current {
+	font-weight: bold !important;
+	padding-right: 25px;
+    background-repeat: no-repeat;
+	background-position: right 95%;
+}
+#users_table th .asc { 
+  background-image: url(<%= asset_path 'up_arrow.png' %>); 
+}
+
+#users_table th .desc { 
+  background-image: url(<%= asset_path 'down_arrow.png' %>); 
+}
+
+.duck_pagination { padding: 5px; margin: 15px; letter-spacing: 2px; float: center;} 
+.duck_pagination a { padding: 2px 5px 2px 5px; margin: 2px; border: 1px solid #aaaadd; text-decoration: none; color: #000099; } 
+.duck_pagination a:hover, 
+.duck_pagination a:active { border: 1px solid #000099; color: #000; } 
+.duck_pagination span.current { padding: 2px 5px 2px 5px; margin: 2px; border: 1px solid #000099; font-weight: bold; background-color: #000099; color: #FFF; } 
+.duck_pagination span.disabled { padding: 2px 5px 2px 5px; margin: 2px; border: 1px solid #eee; color: #ddd; }
+ 
+
 #featured_games_table td {	
 	padding: 0;
-	width: 195px;
+	width: 100px;
 	text-align: center;
 	border-bottom: 1px dotted black;
 	height: 65px;
@@ -367,7 +412,7 @@ input[type="submit"]:hover {
 	color: white;
 	display: block;
 	text-align: center;
-	width: 1000px;
+	width: 550px;
 	background: black;
 	font-weight: bold;
 	font-size: 18px;
@@ -383,8 +428,8 @@ input[type="submit"]:hover {
     padding: 0;    
     width: 105px;
 	position: absolute;
-	top: 120px;
-	left: 75px;
+	top: 130px;
+	left: 80px;
 	z-index: 9999999999;
 	background: white;
 	border: 1px solid black;
@@ -545,12 +590,20 @@ input[type="submit"]:hover {
 	font-size: 14px;
 }
 
+.add_border {
+	border-bottom: 1px black solid;
+}
+
+#parlay_left {
+	width: 75%;
+}
+
 #parlay_wager {
 	background: #A8A8A8;
-	line-height: 36px;
+	line-height: 32px;
 	float: right;
-	margin-right: 50px;
-	width: 375px;
+	margin-right: 5px;
+	width: 25%;
 	position: fixed;
 	right: 0;
 	font-size: 20px;
@@ -561,9 +614,34 @@ input[type="submit"]:hover {
 	width: 100px !important;
 }
 
+.table_right {
+	text-align: center;
+	width: 93px !important;
+}
+
 .winning_payout {
 	color: green;
 	font-size: 36px;
 	vertical-align: middle;
 	
+}
+
+#track_record_graph {width: 500px; height: 200px; margin-left: 30px; }
+#track_record_graph td, #track_record_graph th {  font-size: 1.2em; padding: 2px; width: 13%; }
+#track_record_graph th { background-color:#f4f4f4; } 
+#track_record_graph caption { font-size: 1.5em;  }
+
+.visualize-labels-x, .visualize-labels-y {
+	font-size:10px;
+}
+
+
+.public_bet {
+	color: green;
+	font-weight: bold;
+}
+
+.private_bet {
+	color: red;
+	font-weight: bold;
 }

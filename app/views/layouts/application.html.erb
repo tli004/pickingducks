@@ -8,8 +8,13 @@
   <%= javascript_include_tag "js-class" %> 
   <%= javascript_include_tag "excanvas" %>  
   <%= javascript_include_tag "bluff-min" %>
+  <%= javascript_include_tag 'enhance' %>
+  <%= javascript_include_tag 'visualize.jQuery' %>
   
-  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= stylesheet_link_tag "application", :media => "all" %>
+  <%= stylesheet_link_tag "visualize" %>
+  <%= stylesheet_link_tag "visualize-dark" %>
+  
   <%= csrf_meta_tags %>
 </head>
 <body>	
@@ -32,7 +37,10 @@
 	<div class="home_banner"style="padding-top:5px">
 		<ul class="home_page_list">
 			<a href="/"><li>HOME.</li></a>
+			<a href="<%= users_path %>"><li>USER SEARCH.</li></a>
+			<a href="<">
 			<% if current_user %>
+				<a href="<%= user_path current_user %>"><li>MY PROFILE.</li></a>
 				<a href="<%= bets_home_path %>"><li>GAMBLING HOME.</li></a>
 			<% end %>
 			<a href="<%= sport_home_path(1) %>"><li>NFL.</li></a>
@@ -63,7 +71,7 @@
 	
 		<div id="footer">
 			<ul id="nav">
-				<li><a href="" title="">About Us</a></li>
+				<li><a href="/about_us" title="">About Us</a></li>
 		        <li><a href="" title="">Contact Us</a></li>
 		        <li><a href="/terms_of_service" title="">Terms of Service</a></li>
 				<li><a href="/privacy" title="">Privacy</a></li>

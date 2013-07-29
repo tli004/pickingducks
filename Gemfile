@@ -23,6 +23,7 @@ group :assets do
 end
 
 gem 'nokogiri'
+gem 'will_paginate'
 gem 'whenever', :require => false
 gem "paperclip", "~> 3.0"
 
