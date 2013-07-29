@@ -75,7 +75,6 @@ class UsersController < ApplicationController
   end
   
   def new
-    @user = User.new
   end
   
   def update
@@ -93,18 +92,18 @@ class UsersController < ApplicationController
     
     if @user.save
       #UserMailer.registration_confirmation(@user).deliver
-      session[:user_id] = @user.id
+      cookies[:auth_token] = @user.auth_token
       flash.notice = "Signed up!"
       redirect_to root_url
     else
       logger.info @user.errors.full_messages
-      flash.notice = "An error occured with sign up."
+      flash[:error] = "An error occured with sign up.<br />"
+      flash[:error] << @user.errors.full_messages.collect { |msg| msg + "<br/>" }.join
       redirect_to root_url
     end
   end
   
   def index
-    @user = User.new
     @users = User.search(params[:search]).order(sort_column + " " + sort_direction).paginate(:per_page => 15, :page => params[:page])  
     params[:per_page] = 10  
   end

@@ -1,7 +1,6 @@
 class HomeController < ApplicationController
   
   def index
-    @user = User.new if current_user.nil?
     @top_ten = User.order('bankroll DESC').limit(10)
     if params[:sport_id]
       @selected_sport = SPORTS_NAMES[params[:sport_id].to_i-1]

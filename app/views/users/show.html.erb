@@ -79,7 +79,7 @@
 		 	<% @pending_bets.each do |bet| %>
 		 		<tr>
 		 			<td>
-		 				<%= bet.amount %>d on <%= bet.bet %> for event 
+		 				<%= bet.amount %>d on <%= bet.bet_type %> for event 
 		 				<a href="<%= event_path(bet.event.id) %>">
 		 					<span style="font-weight:bold"><%= bet.event.home_team %> vs. <%= bet.event.away_team %></span>
 	 					</a> on <%= bet.event.start_time.strftime("%m-%d") %>
@@ -119,7 +119,12 @@
 	 			<td>
 	 				<ul>
 	 		<% parlay.bets.each do |bet| %>		 		
-	 				<li><%= bet.amount %>d on <%= bet.bet %> for event <span style="font-weight:bold"><%= bet.event.home_team %> vs. <%= bet.event.away_team %></span> on <%= bet.event.start_time.strftime("%m-%d") %></li>	
+	 				<li><%= bet.amount %>d on <%= bet.bet_type %> for event 
+	 					<a href="<%= event_path(bet.event.id) %>">
+	 						<span style="font-weight:bold">
+	 							<%= bet.event.home_team %> vs. <%= bet.event.away_team %>	 							
+	 						</span>
+	 					</a> on <%= bet.event.start_time.strftime("%m-%d") %></li>	
 	 		<% end %>	
 	 				</ul>	
 	 			</td>

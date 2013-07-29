@@ -3,7 +3,10 @@ class Bet < ActiveRecord::Base
   belongs_to :event
   has_many :purchases
   
-  attr_accessible :amount, :bet_home, :over_under, :bet, :sport, :event_id, :user_id, :parlay, :parlay_id, :pending, :winning, :finished_at, :resulting_bankroll, :public, :public_price
+  attr_accessible :amount, :bet_home, :over_under, :bet_type, :sport, :event_id, :user_id, :parlay, :parlay_id, :pending, :winning, :finished_at, :resulting_bankroll, :public, :public_price
+  
+  validates :amount, :numericality => {:greater_than => 0}
+  validates_presence_of :bet_type
   
   scope :get_pending, where(:pending => true) 
   

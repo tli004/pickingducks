@@ -55,14 +55,14 @@
 	<% if flash.keys.length > 0 %>
 		<div id="flash_messages" style="padding-top:10px">	
 			<% flash.each do |name, msg| %>
-			 <%= content_tag :div, msg, :id => "flash_#{name}" %>
+			 <%= content_tag :div, msg.html_safe, :id => "flash_#{name}" %>
 			<% end %>
 		</div>
 		<% else %>
 		<% end %>
 	<% if !current_user %>
 		
-			<%= render :template => 'users/new' %>
+			<%= render :template => 'users/new', :locals => { :user => User.new } %>
 		
 			<%= render :template => 'sessions/new'%>
 	<% end %>		

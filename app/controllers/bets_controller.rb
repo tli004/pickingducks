@@ -6,7 +6,7 @@ class BetsController < ApplicationController
   end
   
   def create
-    event = Event.find(params[:event_id])    
+    @event = Event.find(params[:event_id])    
     
     if params[:bet][:amount].to_i < current_user.bankroll
       bet = Bet.new(params[:bet])
@@ -15,13 +15,17 @@ class BetsController < ApplicationController
         current_user.bankroll = current_user.bankroll - params[:bet][:amount].to_i
         current_user.save
         update_current_user
-        event.bets << bet
-        event.save
+        @event.bets << bet
+        @event.save
         flash.notice = "Your bet has been placed! Good luck!!"
         redirect_to Rails.application.routes.url_helpers.user_path(current_user.id) 
+      else       
+        flash[:error] = bet.errors.full_messages.collect { |msg| msg + "<br/>" }.join
+        @bet = Bet.new
+        render :action => 'new'
       end 
     else
-      flash.alert = "This bet exceeds your current bankroll of Ducks!"
+      flash[:alert] = "This bet exceeds your current bankroll of Ducks!"
       redirect_to 'new'
     end  
   end
@@ -29,17 +33,22 @@ class BetsController < ApplicationController
   def add_bets_to_parlay
     parlay = current_user.parlays.build
     parlay.amount = params[:amount]
+    parlay.pending = true
     params[:event_id].each do |event|
       bet = parlay.bets.build
-      bet.update_attributes({:event_id => event, :amount => params[:amount], :bet => params[:bet][event], :sport => params[:sport][event], :parlay => true})
-      if !parlay.save
-        flash[:error] = "An error occured while creating your parlay"
-        return redirect_to '/bets_home'
-      end
+      bet.update_attributes({:event_id => event, :amount => params[:amount], :bet_type => params[:bet_type][event], :sport => params[:sport][event], :parlay => true})      
     end
     
-    flash[:notice] = "Your parlay bet has been placed!"
-    redirect_to '/bets_home'
+    if parlay.save
+      current_user.save
+      update_current_user
+      flash[:notice] = "Your parlay bet has been placed!"
+      redirect_to '/bets_home'
+    else
+      flash[:error] = "An error occured while creating your parlay"
+      return redirect_to '/bets_home'
+    end
+    
   end
   
   def bets_home

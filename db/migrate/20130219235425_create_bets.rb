@@ -6,7 +6,7 @@ class CreateBets < ActiveRecord::Migration
       t.integer :parlay_id
       t.boolean :parlay
       t.float :amount
-      t.string :bet
+      t.string :bet_type
       t.integer :sport
       t.boolean :pending, :default => true, :null => false
       t.boolean :winning

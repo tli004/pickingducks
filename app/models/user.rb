@@ -13,6 +13,10 @@ class User < ActiveRecord::Base
   before_create { generate_token(:auth_token) }
   
   validates_presence_of :password, :on => :create
+  validates_presence_of :accept_terms
+  validates_presence_of :first_name
+  validates_presence_of :last_name
+  validates_presence_of :username
   validates_confirmation_of :password
   validates_presence_of :email
   validates_uniqueness_of :email

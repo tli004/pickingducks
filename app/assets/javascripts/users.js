@@ -20,7 +20,7 @@ $(document).ready(function () {
   });
   
   $(".track_record_graph").visualize({type: 'line', width: '520px'});
-  $(".earnings_by_sport_graph").visualize({type: 'line', width: '250px'})
+  $(".earnings_by_sport_graph").visualize({type: 'line', width: '250px'});
   
   $(".make_bet_public").submit(function (e) {
   	e.preventDefault();

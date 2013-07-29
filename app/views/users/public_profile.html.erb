@@ -1,21 +1,21 @@
 <div id="profile">	
 	<h2>PROFILE for <%= @user.username.upcase %></h2>  	
-	<span class="box_number">
+	<div class="box_number">
 		<span>WINS</span>
 		<div style="color:rgb(125,203,31)"><%= @user.wins %></div>
-	</span>
-	<span class="box_number">
+	</div>
+	<div class="box_number">
 		<span>LOSSES</span>
 		<div style="color:red"><%= @user.losses %></div>	 				
-	</span>
-	<span class="box_number">
+	</div>
+	<div class="box_number">
 		<span>TIES</span>
 		<div><%= @user.ties %></div>	 				
-	</span>
-	<span class="box_number">
+	</div>
+	<div class="box_number">
 		<span>DUCKS</span>
 		<div style="color:#F84A0E"><%= @user.bankroll %></div>
-	</span>
+	</div>
 </div>
  
  <h3>Pending Bets</h3>
@@ -25,7 +25,7 @@
 	 		<% if current_user && (current_user.purchases.map(&:bet_id).include?(bet.id) || current_user.id == @user.id) %>
 		 		<tr>
 		 			<td>
-		 				<span class="public_bet">PUBLIC: </span><%= bet.amount %>d on <%= bet.bet %> for event <span style="font-weight:bold"><%= bet.event.home_team %> vs. <%= bet.event.away_team %></span> on <%= bet.event.start_time.strftime("%m-%d") %>		 				
+		 				<span class="public_bet">PUBLIC: </span><%= bet.amount %>d on <%= bet.bet_type %> for event <span style="font-weight:bold"><%= bet.event.home_team %> vs. <%= bet.event.away_team %></span> on <%= bet.event.start_time.strftime("%m-%d") %>		 				
 	 				</td>	 				
 		 		</tr>
 	 		<% else %>

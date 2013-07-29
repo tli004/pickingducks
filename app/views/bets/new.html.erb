@@ -9,7 +9,7 @@
  	
  	
  	<div id="handicap"> 	
- 		<%= form_for @bet do |f| %>	 
+ 		<%= form_for @bet, :html => { :id => "handicap_bet_form" } do |f| %>	 
  			
 		 <p>
 		 	<h3>
@@ -23,15 +23,15 @@
 		 	<%= f.hidden_field 'sport', :value => @event.sport %>
 		 	<%= f.hidden_field 'pending', :value => true %>
 		 	<%= f.hidden_field 'parlay', :value => false %>
-		 	<%= @event.home_team %> (<%= -@event.spread %>): <%= f.radio_button(:bet, 'home') %>
-		 	<%= @event.away_team %> (<%= @event.spread %>): <%= f.radio_button(:bet, 'away') %><br />
+		 	<%= @event.home_team %> (<%= -@event.spread %>): <%= f.radio_button(:bet_type, 'home') %>
+		 	<%= @event.away_team %> (<%= @event.spread %>): <%= f.radio_button(:bet_type, 'away') %><br />
 		 	Wager: <%= f.number_field :amount, :min => 1, :class => "number_input" %>
 		 </p>
 		 <p><%= f.submit 'Place Bet!', :class => 'button place_bet' %></p>
 		 <% end %>
 	</div>
 	<div id="over_under">
-		<%= form_for @bet do |f| %>	 
+		<%= form_for @bet, :html => { :id => "over_under_bet_form" }  do |f| %>	 
 		 <p>
 		 	<h3>
 		 		Total Points: <%= @event.total_points %>
@@ -40,9 +40,9 @@
 		 	<%= f.hidden_field 'sport', :value => @event.sport %>
 		 	<%= f.hidden_field 'pending', :value => true %>
 		 	<%= f.hidden_field 'parlay', :value => false %>
-		 	Over: <%= f.radio_button(:bet, 'over') %>
-		 	Under: <%= f.radio_button(:bet, 'under') %><br/>
-		 	Wager: <%= f.number_field :amount, :class => "number_input" %>
+		 	Over: <%= f.radio_button(:bet_type, 'over') %>
+		 	Under: <%= f.radio_button(:bet_type, 'under') %><br/>
+		 	Wager: <%= f.number_field :amount, :min => 1, :class => "number_input" %>
 		 	<p><%= f.submit 'Place Bet!', :class => 'button place_bet' %></p>
 		 </p>
 		 <% end %>
