@@ -63,8 +63,10 @@ class UsersController < ApplicationController
           flash[:notice] = "Bet purchased!"
           return redirect_to public_profile_path(user.id)
       else
-          flash[:alert] = "An error occured."
-          return redirect_to public_profile user
+          flash[:error] = "An error occured.<br />"
+          flash[:error] << user.errors.full_messages.collect { |msg| msg + "<br/>" }.join
+          flash[:error] << current_user.errors.full_messages.collect { |msg| msg + "<br/>" }.join
+          return redirect_to public_profile_path(user)
       end
     else
       flash[:alert] = "You do not have enough ducks to purchase this information"

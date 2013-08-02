@@ -36,7 +36,7 @@
 										alert("maximum of 4 games in parlay bet!");
 									} else {
 										num_games += 1;
-										$("#parlay_selected_games").append("<li data-id='<%= game.id %>'>" + "<%= game.home_team %> (" + "<%= game.spread %>" + ")" + " vs " + "<%= game.away_team %> (" + "<%= -game.spread %>" + ")" + "</li>");					
+										$("#parlay_selected_games").append("<li data-id='<%= game.id %>'>Bet <strong>" + $(this).parent().attr('data-bet') + "</strong> on <%= game.home_team %> (" + "<%= game.spread %>" + ")" + " vs " + "<%= game.away_team %> (" + "<%= -game.spread %>" + ")" + "</li>");					
 										if (num_games > 1)	
 											$(".winning_payout").text("$" + (parseInt($(".number_input").val()) * parlay_odds[num_games-2]).toFixed(2).toString());
 										else
@@ -68,7 +68,9 @@
 						$(function () {
 							$("#"+"<%= 'parlay_event_bet_' + game.id.to_s %>").siblings('input').click(function () {
 								$("#" + "<%= 'parlay_event_checkbox_' + game.id.to_s %>").show();
+								$("#" + "<%= 'parlay_event_checkbox_' + game.id.to_s %>").attr('data-bet', $(this).val());
 							});
+							
 						})
 					</script>
 				</td>

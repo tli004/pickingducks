@@ -18,7 +18,7 @@
 	</div>
 </div>
  
- <h3>Pending Bets</h3>
+ <h2>Pending Bets</h2>
  <table>
  	<% if @pending_bets.length > 0 %>
 	 	<% @pending_bets.each do |bet| %>
@@ -31,23 +31,29 @@
 	 		<% else %>
 		 		<tr>
 		 			<td>
-		 				<span class="private_bet">PRIVATE: </span>Made bet on event <span style="font-weight:bold"><%= bet.event.home_team %> vs. <%= bet.event.away_team %></span> on <%= bet.event.start_time.strftime("%m-%d") %>
-	 				</td>
+		 				<div>
+		 					<span class="private_bet">PRIVATE: </span>Made bet on event <span style="font-weight:bold"><%= bet.event.home_team %> vs. <%= bet.event.away_team %></span> on <%= bet.event.start_time.strftime("%m-%d") %>
+	 					</div>
  				<% if bet.public_price > 0 && current_user && current_user.id != @user.id %>
-		 			<td>
-		 				<a href="<%= pay_for_bet_path(bet.user, bet.id) %>">Purchase bet info for <%= bet.public_price%> ducks</a>
-		 			</td>	
+		 				<div>
+		 				&bull; <%= link_to "Purchase bet info for #{bet.public_price} ducks", pay_for_bet_path(bet.user, bet.id),:class => "purchase_bet_info", :data => {:username => bet.user.username, :home_team => bet.event.home_team, :away_team => bet.event.away_team, :price => bet.public_price } %>		
+		 				</div> 				
 	 			<% end %>
+	 			</td>
  				</tr>
  			<% end %>
+ 			<tr><td><br/></td></tr>
 	 	<% end %>
 	 <% else %>
 	 	<tr>No pending bets at this time.</tr>
 	 <% end%> 
  </table>
+ <div class="confirm_purchase_bet_info">
+ 	<h4>Purchase bet info?</h4>
+ 	<span> </span>
+ </div>
  <br />
- <br />
- 
+ <br /> 
  <% if @past_straights.length > 0 %>
 <table class="track_record_graph" style="display:none">
 	<caption>Earnings: Straight Bets</caption>

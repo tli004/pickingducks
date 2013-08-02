@@ -41,6 +41,11 @@ a {
 	color: #F84A0E;
 }
 
+.important_orange {
+	color: #F84A0E !important;
+	font-weight:bold !important;
+}
+
 .home_banner a, .header a {
 	color: white;
 	text-decoration: none;
@@ -352,6 +357,10 @@ input[type="submit"]:hover {
 	width: 16px;
 }
 
+.featured_dropdown {
+	cursor: pointer;
+}
+
 #top_ten_users_table td {
 	width: 100px;
 	text-align: center;
@@ -478,11 +487,18 @@ input[type="submit"]:hover {
 }
 
 .number_input {
-	width: 148px;
+	width: 136px;
 	vertical-align: middle;
 	margin: 10px;
 	font-size: 36px;
 }
+.number_input_small {
+	width: 75px;
+	vertical-align: middle;
+	margin: 10px;
+	font-size: 18px;
+}
+
 
 .wager_link_home {
 	color: white;
@@ -638,6 +654,20 @@ input[type="submit"]:hover {
 	
 }
 
+.pending_bet_info {
+	text-align: left;
+	line-height: 35px;
+	border: 1px solid black;
+	display: table-cell;
+	margin: 5px;
+	padding: 5px;
+}
+.pending_bet_info h4 {
+	line-height: 0px;
+}
+
+
+
 #track_record_graph {width: 500px; height: 200px; margin-left: 30px; }
 #track_record_graph td, #track_record_graph th {  font-size: 1.2em; padding: 2px; width: 13%; }
 #track_record_graph th { background-color:#f4f4f4; } 
@@ -647,6 +677,24 @@ input[type="submit"]:hover {
 	font-size:10px;
 }
 
+.set_price_btn {
+	-moz-box-shadow: inset 0px 1px 0px 0px #F84A0E;
+	-webkit-box-shadow: inset 0px 1px 0px 0px #F84A0E;
+	box-shadow: inset 0px 1px 0px 0px #F84A0E;
+	background: -webkit-gradient( linear, left top, left bottom, color-stop(0.05, #F84A0E), color-stop(1, #fb9e25) );
+	background: -moz-linear-gradient( center top, #F84A0E 5%, #fb9e25 100% );
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#F84A0E', endColorstr='#fb9e25');
+	background-color: #F84A0E;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	border-radius: 6px;
+	border: 1px solid #eeb44f;
+	display: inline-block;
+	color: #ffffff;
+	padding: 6px 24px;
+	text-decoration: none;
+	cursor: pointer;
+}
 
 .public_bet {
 	color: green;
@@ -656,4 +704,20 @@ input[type="submit"]:hover {
 .private_bet {
 	color: red;
 	font-weight: bold;
+}
+
+.confirm_make_public {
+	display:none;
+}
+
+.confirm_make_public h4 {
+	line-height: 1px;
+}
+
+.confirm_purchase_bet_info {
+	display:none;
+}
+
+.confirm_purchase_bet_info h4 {
+	line-height: 1px;
 }

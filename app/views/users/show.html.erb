@@ -67,49 +67,64 @@
  	</div>
  	
  	<div id="sales_summary">
- 		text
+ 		<h3>Recent Purchases</h3>
+ 		<% current_user.purchases.each do |purchase| %>
+ 			<div>
+ 				<span style="font-weight:bold;">
+ 					<%= link_to purchase.user.username, public_profile_path(purchase.user.id), :class => "important_orange" %> bet <%= purchase.bet.amount %>d on <%= purchase.bet.bet_type %> for event 
+ 				<a class="important_orange" href="<%= event_path(purchase.bet.event.id) %>">
+ 					<span><%= purchase.bet.event.home_team %> vs. <%= purchase.bet.event.away_team %></span>
+				</a> on <%= purchase.bet.event.start_time.strftime("%m-%d") %>
+ 			</div>
+ 		<% end %>
  	</div>
  	
  </div>
  
- <h3>Pending Straight Bets</h3>
+ <h2>Pending Straight Bets</h2>
  <table>
  	<% if @pending_bets.length > 0 %>
- 		
-		 	<% @pending_bets.each do |bet| %>
-		 		<tr>
-		 			<td>
+ 				<tr>
+		 	<% @pending_bets.each_with_index do |bet, i| %>		 		
+		 			<td class="pending_bet_info">
+		 				<h4>Bet Information</h4>
 		 				<%= bet.amount %>d on <%= bet.bet_type %> for event 
 		 				<a href="<%= event_path(bet.event.id) %>">
-		 					<span style="font-weight:bold"><%= bet.event.home_team %> vs. <%= bet.event.away_team %></span>
+		 					<div style="font-weight:bold;font-size:24px"><%= bet.event.home_team %> vs. <%= bet.event.away_team %></div>
 	 					</a> on <%= bet.event.start_time.strftime("%m-%d") %>
-	 				</td>	 	
+	 					 	
 			 <% if bet.public_price < 0 %>	
-			 	<td>
+			 	
 				 <%= form_tag make_bet_public_path(bet), :data => {:home_team => bet.event.home_team, :away_team => bet.event.away_team }, :class=>"make_bet_public" do %>
-				 	<span>
-				 		&bull; Make public for <%= number_field_tag 'bet[public_price]', :amount, :min => 1, :value => 1 %> ducks.
-				 	</span>
-				 	<span>
-				 		<%= submit_tag 'Set Price!' %>
-				 	</span>
+				 	<div>
+				 		Make public for <%= number_field_tag 'bet[public_price]', :amount, :min => 1, :value => 1, :class => "number_input_small" %> ducks.
+				 	</div>
+				 	<div>
+				 		<%= submit_tag 'Set Price!', :class => "set_price_btn" %>
+				 	</div>
 				 <% end %>
-				 </td>
-				 </tr>
+				 </td>				 
 			<% else %>
-					<td>
-						&bull; This bet is public for a price of <%= bet.public_price %> ducks.
+						<div>This bet is public for a price of <%= bet.public_price %> ducks.</div>
 					</td>
+			<% end %>
+			<% if i != 0 && i % 5 == 0 %>
 				</tr>
+				<tr>
 			<% end %>
 		<% end %>
+		</tr>
 	 <% else %>
 	 	<tr>You have no pending bets at this time.</tr>
 	 <% end%>	 
  </table>
+ <div class="confirm_make_public">
+ 	<h4>Make bet for sale?</h4>
+ 	<span></span>
+ </div>
  <br />
  <br />
- <h3>Pending Parlay Bets</h3>
+ <h2>Pending Parlay Bets</h2>
  <table>
  	<% if @parlays.length > 0 %>
 	 	<% @parlays.each do |parlay| %>

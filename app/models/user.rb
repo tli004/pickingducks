@@ -1,7 +1,7 @@
 class User < ActiveRecord::Base
-  has_many :bets
-  has_many :parlays
-  has_many :purchases
+  has_many :bets, :order => 'created_at DESC'
+  has_many :parlays, :order => 'created_at DESC'
+  has_many :purchases, :order => 'created_at DESC'
   
   attr_accessor :password
   attr_accessible :profile_pic, :bio, :dob, :email, :first_name, :active, :last_name, :password, :password_confirmation, :secret_answer, :secret_question, :username, :accept_terms, :wins, :losses, :ties, :bankroll
