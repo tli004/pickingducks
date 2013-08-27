@@ -3,7 +3,11 @@
 	<tr>
 		<th>Start Time</th>
 		<th>Matchup</th>
+		<% if featured[0].sport == 3 %>
+		<th>Moneyline</th>
+		<% else %>
 		<th>Handicap</th>
+		<% end %>
 		<th>Total Points</th>
 		<th></th>
 	</tr>
@@ -14,11 +18,16 @@
 			<%= game.start_time.strftime("%P %Z") %>
 		</td>
 		<td>
-			<span class="featured_team_name"><%= game.home_team %></span> vs<br/> <span class="featured_team_name"><%= game.away_team %></span>
+			<span class="featured_team_name"><%= game.away_team %>@</span><br/> <span class="featured_team_name"><%= game.home_team %></span>
 		</td>
 		<td>
-			<%= game.spread %><br />
-			<%= -game.spread %>
+			<% if game.sport == 3 %>
+				<%= game.moneyline_home %><br />
+				<%= game.moneyline_away %>
+			<% else %>
+				<%= -game.spread %><br />
+				<%= game.spread %>
+			<% end %>
 		</td>
 		<td>
 			<%= game.total_points %>

@@ -3,26 +3,93 @@ require 'will_paginate'
 class UsersController < ApplicationController
   helper_method :sort_column, :sort_direction
   
+  def request_cashout
+    @cashout = Cashout.new
+  end
+  
+  def buy_ducks
+    begin
+      charge = Stripe::Charge.create(
+        :amount => 5 * params[:amount].to_i,
+        :currency => "usd",
+        :card => params[:stripe_card_token],
+        :description => current_user.email
+      )
+      logger.info "BUY DUCK CHARGE WAS MADE. RECEIPT TOKEN: " + charge.id
+      current_user.bankroll += params[:amount].to_i
+      purchase = current_user.purchases.build
+      purchase.stripe_payment_token = charge.id
+      purchase.amount = params[:amount].to_i
+      current_user.save
+      flash[:notice] = "Your ducks have been purchased and added to your bankroll!"
+      redirect_to user_path(current_user)
+    rescue Stripe::CardError => e
+      flash[:error] = "There was a problem processing your credit card information."
+      redirect_to user_path(current_user)
+    end
+  end
+  
+  def buy_bet_info
+    begin
+      charge = Stripe::Charge.create(
+        :amount => params[:amount].to_i,
+        :currency => "usd",
+        :card => params[:stripe_card_token],
+        :description => current_user.email
+      )
+      logger.info "BUY BET INFO CHARGE WAS MADE. RECEIPT TOKEN: " + charge.id
+      current_user.bankroll += params[:amount].to_i
+      purchase = current_user.purchases.build
+      purchase.stripe_payment_token = charge.id
+      purchase.amount = params[:amount].to_i
+      purchase.bet_id = params[:bet_id]
+      current_user.save
+      flash[:notice] = "Your credit card has been charged, and you can now see the bet information you purchased."
+      redirect_to user_path(current_user)
+    rescue Stripe::CardError => e
+      flash[:error] = "There was a problem processing your credit card information."
+      redirect_to user_path(current_user)
+    end
+  end
+  
   def show
     @pending_bets = current_user.bets.where(:pending => true, :parlay => false)
     @parlays = current_user.parlays.where(:pending => true)
        
-    @past_straights = current_user.bets.where(:pending => false, :parlay => false).order('finished_at ASC')
-    @past_parlays = current_user.parlays.where(:pending => false).order('finished_at ASC')
+    @past_straights = current_user.bets.where(:pending => false, :parlay => false).order('closed_at ASC')
+    @past_ten = current_user.bets.where(:pending => false, :parlay => false).order('closed_at DESC').limit(20)
+    
+    @past_parlays = current_user.parlays.where(:pending => false).order('closed_at ASC')
         
-    @nfl_past_bets = current_user.bets.where(:pending => false, :sport => 1, :parlay => false).order('finished_at ASC')
-    @nfl_change_dates = @nfl_past_bets.map(&:finished_at).map {|date| date.strftime('%b')}
-    @nba_past_bets = current_user.bets.where(:pending => false, :sport => 2, :parlay => false).order('finished_at ASC')   
-    @nba_change_dates = @nba_past_bets.map(&:finished_at).map {|date| date.strftime('%b')}
-    @mlb_past_bets = current_user.bets.where(:pending => false, :sport => 3, :parlay => false).order('finished_at ASC')    
-    @mlb_change_dates = @mlb_past_bets.map(&:finished_at).map {|date| date.strftime('%b')}
-    @nhl_past_bets = current_user.bets.where(:pending => false, :sport => 4, :parlay => false).order('finished_at ASC')
-    @nhl_change_dates = @nhl_past_bets.map(&:finished_at).map {|date| date.strftime('%b')}
+    @nfl_past_bets = current_user.bets.where(:pending => false, :sport => 1, :parlay => false).order('closed_at ASC')
+    @nfl_change_dates = @nfl_past_bets.map(&:closed_at).map {|date| date.strftime('%b')}
+    @nba_past_bets = current_user.bets.where(:pending => false, :sport => 2, :parlay => false).order('closed_at ASC')   
+    @nba_change_dates = @nba_past_bets.map(&:closed_at).map {|date| date.strftime('%b')}
+    @mlb_past_bets = current_user.bets.where(:pending => false, :sport => 3, :parlay => false).order('closed_at ASC')    
+    @mlb_change_dates = @mlb_past_bets.map(&:closed_at).map {|date| date.strftime('%b')}
+    @nhl_past_bets = current_user.bets.where(:pending => false, :sport => 4, :parlay => false).order('closed_at ASC')
+    @nhl_change_dates = @nhl_past_bets.map(&:closed_at).map {|date| date.strftime('%b')}
         
-    @straight_change_dates = @past_straights.map(&:finished_at).map {|date| date.strftime('%b')}       
-    @parlay_change_dates = @past_parlays.map(&:finished_at).map {|date| date.strftime('%b')}
+    @straight_change_dates = @past_straights.map(&:closed_at).map {|date| date.strftime('%b')}       
+    @parlay_change_dates = @past_parlays.map(&:closed_at).map {|date| date.strftime('%b')}
     @bankroll_history.to_json.html_safe
     @change_hash = @change_hash.to_json.html_safe
+    
+    @bet_sales = []
+    current_user.bets.order('created_at ASC').each do |bet|
+      @bet_sales << bet.purchases
+      @bet_sales.flatten!
+      if @bet_sales.length >= 10
+        break;
+      end
+    end    
+    
+    @past_week_earnings_straight = current_user.past_week_earnings_straight
+    @past_week_earnings_nfl = current_user.past_week_earnings_nfl
+    @past_week_earnings_nba = current_user.past_week_earnings_nba
+    @past_week_earnings_mlb = current_user.past_week_earnings_mlb
+    @past_week_earnings_nhl = current_user.past_week_earnings_nhl
+    
   end
   
   def public_profile
@@ -30,22 +97,29 @@ class UsersController < ApplicationController
     
     @pending_bets = @user.bets.where(:pending => true, :parlay => false)
     
-    @past_straights = @user.bets.where(:pending => false, :parlay => false).order('finished_at ASC')
-    @past_parlays = @user.parlays.where(:pending => false).order('finished_at ASC')        
+    @past_straights = @user.bets.where(:pending => false, :parlay => false).order('closed_at ASC')
+    @past_parlays = @user.parlays.where(:pending => false).order('closed_at ASC')        
     
-    @nfl_past_bets = @user.bets.where(:pending => false, :sport => 1, :parlay => false).order('finished_at ASC')
-    @nfl_change_dates = @nfl_past_bets.map(&:finished_at).map {|date| date.strftime('%b')}
-    @nba_past_bets = @user.bets.where(:pending => false, :sport => 2, :parlay => false).order('finished_at ASC')   
-    @nba_change_dates = @nba_past_bets.map(&:finished_at).map {|date| date.strftime('%b')}
-    @mlb_past_bets = @user.bets.where(:pending => false, :sport => 3, :parlay => false).order('finished_at ASC')    
-    @mlb_change_dates = @mlb_past_bets.map(&:finished_at).map {|date| date.strftime('%b')}
-    @nhl_past_bets = @user.bets.where(:pending => false, :sport => 4, :parlay => false).order('finished_at ASC')
-    @nhl_change_dates = @nhl_past_bets.map(&:finished_at).map {|date| date.strftime('%b')}    
+    @nfl_past_bets = @user.bets.where(:pending => false, :sport => 1, :parlay => false).order('closed_at ASC')
+    @nfl_change_dates = @nfl_past_bets.map(&:closed_at).map {|date| date.strftime('%b')}
+    @nba_past_bets = @user.bets.where(:pending => false, :sport => 2, :parlay => false).order('closed_at ASC')   
+    @nba_change_dates = @nba_past_bets.map(&:closed_at).map {|date| date.strftime('%b')}
+    @mlb_past_bets = @user.bets.where(:pending => false, :sport => 3, :parlay => false).order('closed_at ASC')    
+    @mlb_change_dates = @mlb_past_bets.map(&:closed_at).map {|date| date.strftime('%b')}
+    @nhl_past_bets = @user.bets.where(:pending => false, :sport => 4, :parlay => false).order('closed_at ASC')
+    @nhl_change_dates = @nhl_past_bets.map(&:closed_at).map {|date| date.strftime('%b')}    
     
-    @straight_change_dates = @past_straights.map(&:finished_at).map {|date| date.strftime('%b')}       
-    @parlay_change_dates = @past_parlays.map(&:finished_at).map {|date| date.strftime('%b')}
+    @straight_change_dates = @past_straights.map(&:closed_at).map {|date| date.strftime('%b')}       
+    @parlay_change_dates = @past_parlays.map(&:closed_at).map {|date| date.strftime('%b')}
     @bankroll_history.to_json.html_safe
     @change_hash = @change_hash.to_json.html_safe
+    
+    @past_week_earnings_straight = @user.past_week_earnings_straight
+    @past_week_earnings_nfl = @user.past_week_earnings_nfl
+    @past_week_earnings_nba = @user.past_week_earnings_nba
+    @past_week_earnings_mlb = @user.past_week_earnings_mlb
+    @past_week_earnings_nhl = @user.past_week_earnings_nhl
+    
   end
     
   
@@ -53,11 +127,11 @@ class UsersController < ApplicationController
     bet = Bet.find(params[:bet_id])
     user = User.find(params[:user_id])
     
-    if bet.public_price <= current_user.bankroll
-      current_user.bankroll -= bet.public_price
+    if bet.duck_price <= current_user.bankroll
+      current_user.bankroll -= bet.duck_price
       purchase = current_user.purchases.build
       purchase.bet = bet
-      user.bankroll += bet.public_price
+      user.bankroll += bet.duck_price
       
       if current_user.save && user.save
           flash[:notice] = "Bet purchased!"
@@ -76,7 +150,16 @@ class UsersController < ApplicationController
     return redirect_to public_profile_path(user.id)  
   end
   
+  def pay_money_for_bet
+    @bet = Bet.find(params[:bet_id])
+    @user = User.find(params[:user_id])    
+  end
+  
   def new
+  end
+  
+  def register
+    
   end
   
   def update
@@ -87,6 +170,7 @@ class UsersController < ApplicationController
   
   def create
     @user = User.new(params[:user])
+    @user.email = params[:user][:email].downcase
     @user.wins = 0
     @user.losses = 0
     @user.ties = 0

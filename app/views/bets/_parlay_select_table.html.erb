@@ -23,7 +23,18 @@
 					</span>
 				</td>
 				<td>
-					<span class="featured_team_name"><%= game.home_team %><span class="spread_text">(<%= game.spread %>)</span></span> vs <span class="featured_team_name"><%= game.away_team %><span class="spread_text">(<%= -game.spread %>)</span></span>
+					<span class="featured_team_name"><%= game.away_team %><span class="spread_text">(
+						<%= if game.sport == 3 
+								game.moneyline_home 
+							else 
+								-game.spread 
+							end 
+						%>)</span></span> @ <span class="featured_team_name"><%= game.home_team %><span class="spread_text">(
+							<%= if game.sport == 3 
+									game.moneyline_away 
+								else 
+									game.spread 
+								end %>)</span></span>
 				</td>
 				<td style="display:none" id="<%= 'parlay_event_checkbox_' + game.id.to_s %>" class="table_right">				
 					<%= check_box_tag 'event_id[]', game.id %>
@@ -36,7 +47,17 @@
 										alert("maximum of 4 games in parlay bet!");
 									} else {
 										num_games += 1;
-										$("#parlay_selected_games").append("<li data-id='<%= game.id %>'>Bet <strong>" + $(this).parent().attr('data-bet') + "</strong> on <%= game.home_team %> (" + "<%= game.spread %>" + ")" + " vs " + "<%= game.away_team %> (" + "<%= -game.spread %>" + ")" + "</li>");					
+										$("#parlay_selected_games").append("<li data-id='<%= game.id %>'>Picked <strong>" + $(this).parent().attr('data-bet') + "</strong> on <%= game.away_team %> (" + 
+										"<%= if game.sport == 3 
+												game.moneyline_away 
+											else 
+												-game.spread 
+											end %>" + ")" + " @ " + "<%= game.home_team %> (" + 
+											"<%= if game.sport == 3 
+													game.moneyline_home 
+												 else 
+													game.spread 
+												 end %>" + ")" + "</li>");					
 										if (num_games > 1)	
 											$(".winning_payout").text("$" + (parseInt($(".number_input").val()) * parlay_odds[num_games-2]).toFixed(2).toString());
 										else
@@ -60,10 +81,10 @@
 				</td>
 				<td class="add_border">
 					<%= hidden_field_tag "sport[#{game.id}]", game.sport %>
-					Bet <%= game.home_team %>: <%= radio_button_tag("bet_type[#{game.id}]", 'home') %>
-					Bet <%= game.away_team %>: <%= radio_button_tag("bet_type[#{game.id}]", 'away') %>
-					Bet Over (<%= game.total_points %>): <%= radio_button_tag("bet_type[#{game.id}]", 'over') %>
-					Bet Under (<%= game.total_points %>): <%= radio_button_tag("bet_type[#{game.id}]", 'under') %>
+					Pick <%= game.home_team %>: <%= radio_button_tag("bet_type[#{game.id}]", 'home') %>
+					Pick <%= game.away_team %>: <%= radio_button_tag("bet_type[#{game.id}]", 'away') %>
+					Pick Over (<%= game.total_points %>): <%= radio_button_tag("bet_type[#{game.id}]", 'over') %>
+					Pick Under (<%= game.total_points %>): <%= radio_button_tag("bet_type[#{game.id}]", 'under') %>
 					<script id="<%= 'parlay_event_bet_' + game.id.to_s %>" type="text/javascript">
 						$(function () {
 							$("#"+"<%= 'parlay_event_bet_' + game.id.to_s %>").siblings('input').click(function () {

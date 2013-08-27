@@ -20,11 +20,17 @@ $(document).ready(function () {
   });
   
   $(".track_record_graph").visualize({type: 'line', width: '520px'});
-  $(".earnings_by_sport_graph").visualize({type: 'line', width: '250px'});  
+  $(".past_week_earnings_graph").visualize({type: 'bar', width: '420px'});
+  $(".earnings_by_sport_graph").visualize({type: 'line', width: '250px'});   
         
-  	$(".make_bet_public").submit(function (e) {
+  $(".make_bet_public").submit(function (e) {
   		e.preventDefault();
-	  	$('.confirm_make_public span').text('Make bet for event ' + $(this).attr('data-home-team') + ' vs. ' + $(this).attr('data-away-team') + ' public, for ' + $(this).find('input[name="bet[public_price]"]').val() + ' ducks?');
+  		
+  		if ($(this).find("[id*='set_money_price'] input").attr('disabled'))
+	  		$('.confirm_make_public span').text('Make bet for event ' + $(this).attr('data-home-team') + ' vs. ' + $(this).attr('data-away-team') + ' public, for ' + $(this).find('input[name="bet[duck_price]"]').val() + ' ducks?');
+	  	else
+	  		$('.confirm_make_public span').text('Make bet for event ' + $(this).attr('data-home-team') + ' vs. ' + $(this).attr('data-away-team') + ' public, for ' + $(this).find('input[name="bet[money_price]"]').val() + ' dollars?');
+	  		
 	  	var this_local = this;
 		confirm_popup = $('.confirm_make_public').dialog({
 			autoOpen: false,
@@ -64,5 +70,102 @@ $(document).ready(function () {
 		confirm_popup.dialog("open");
 	});
   
+  Stripe.setPublishableKey($('meta[name="stripe-key"]').attr('content'));
+  payment.setupForm();
+  
+  $(".cashout_btn").click(function () {
+  		
+		window.location = "/request_cashout";
+  });
 })
+
+var payment = {
+	"setupForm" : function () {
+		$("#buy_ducks_form").submit(function (e) {
+			e.preventDefault();
+			$('input[type=submit]').attr('disabled', true);
+			$('.confirm_buy_ducks span').text('Purchase ' + $("#num_ducks_to_purchase").val() + ' ducks? Your credit card will be charged for $' + parseInt($("#num_ducks_to_purchase").val())*.05 );
+		  	var this_local = this;
+			confirm_popup = $('.confirm_buy_ducks').dialog({
+				autoOpen: false,
+				closeOnEscape: true,
+				height: 250,
+				width: 400,
+				resizable: false,
+				modal: true,
+				dialogClass: 'overlay',
+				buttons: {
+					"Confirm" : function () { 
+						$(this).dialog("close");
+						payment.buyDucks();
+					},
+					"Cancel" : function () { $(this).dialog("close"); }
+				}
+			});
+			$(".ui-dialog-titlebar").remove();
+			confirm_popup.dialog("open");			
+		});
+		$("#buy_bet_info_form").submit(function (e) {
+			e.preventDefault();
+			$('input[type=submit]').attr('disabled', true);
+			$('.confirm_buy_bet_info span').text('Purchase this bet information? Your credit card will be charged for $' + parseInt($("#bet_money_price").val()) / 100 );
+		  	var this_local = this;
+			confirm_popup = $('.confirm_buy_bet_info').dialog({
+				autoOpen: false,
+				closeOnEscape: true,
+				height: 250,
+				width: 400,
+				resizable: false,
+				modal: true,
+				dialogClass: 'overlay',
+				buttons: {
+					"Confirm" : function () { 
+						$(this).dialog("close");
+						payment.buyBetInfo();
+					},
+					"Cancel" : function () { $(this).dialog("close"); }
+				}
+			});
+			$(".ui-dialog-titlebar").remove();
+			confirm_popup.dialog("open");			
+		});
+	},
+	"buyDucks" : function () {
+		var card = {
+			'number' : $("#card_number").val(), 
+			'cvc' : $("#card_code").val(),
+			'expMonth' : $("#card_month").val(),
+			'expYear' : $("#card_year").val()
+		}
+		Stripe.createToken(card, payment.handleBuyDucksResponse);
+	},
+	"buyBetInfo" : function () {
+		var card = {
+			'number' : $("#card_number").val(), 
+			'cvc' : $("#card_code").val(),
+			'expMonth' : $("#card_month").val(),
+			'expYear' : $("#card_year").val()
+		}
+		Stripe.createToken(card, payment.handleBuyBetInfoResponse);
+	},
+	"handleBuyDucksResponse" : function (status, response) {
+		if (status == 200) {
+			$('#stripe_card_token').val(response.id);
+			$('#buy_ducks_form')[0].submit();
+		} else {
+			$("#stripe_error").text(response.error.message);
+			$('input[type=submit]').attr('disabled', false);
+		}		
+	},
+	"handleBuyBetInfoResponse" : function (status, response) {
+		if (status == 200) {
+			$('#stripe_card_token').val(response.id);
+			$('#buy_bet_info_form')[0].submit();
+		} else {
+			$("#stripe_error").text(response.error.message);
+			$('input[type=submit]').attr('disabled', false);
+		}		
+	}	
+	
+}
 

@@ -10,8 +10,8 @@ class CreateBets < ActiveRecord::Migration
       t.integer :sport
       t.boolean :pending, :default => true, :null => false
       t.boolean :winning
-      t.integer :public_price, :default => -1
-      t.datetime :finished_at
+      t.integer :money_price, :default => -1
+      t.datetime :closed_at
       t.integer :resulting_bankroll
       
       t.timestamps

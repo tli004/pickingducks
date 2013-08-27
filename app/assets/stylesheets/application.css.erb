@@ -39,6 +39,12 @@ body {
 
 a {
 	color: #F84A0E;
+	text-decoration: underline;
+}
+
+hr {
+	margin-top: 20px;
+	margin-bottom: 20px;
 }
 
 .important_orange {
@@ -54,7 +60,6 @@ a {
 }
 
 .switch_link a {
-	text-decoration: none;
 	font-size: 14px;
 	display: inline;
 }
@@ -374,7 +379,7 @@ input[type="submit"]:hover {
 }
 
 #users_table td {
-	width: 165px;
+	width: 155px;
 	text-align: center;
 	height: 30px;	
 }
@@ -382,8 +387,7 @@ input[type="submit"]:hover {
 #users_table th {
 	font-weight: normal !important;
 	text-decoration: none;
-	font-size: 24px;
-	line-height: 55px;
+	font-size: 18px;
 	text-decoration: underline;
 }
 
@@ -411,7 +415,7 @@ input[type="submit"]:hover {
 
 #featured_games_table td {	
 	padding: 0;
-	width: 100px;
+	width: 125px;
 	text-align: center;
 	border-bottom: 1px dotted black;
 	height: 65px;
@@ -427,7 +431,7 @@ input[type="submit"]:hover {
 	color: white;
 	display: block;
 	text-align: center;
-	width: 550px;
+	width: 635px;
 	background: black;
 	font-weight: bold;
 	font-size: 18px;
@@ -474,7 +478,7 @@ input[type="submit"]:hover {
 	font-family: 'LeagueGothic_Bold';
 	list-style: none;
 	clear:both;
-	width: 100%;
+	width: 2400px;
 	height: 35px;
 	background: black;
 }
@@ -497,6 +501,13 @@ input[type="submit"]:hover {
 	vertical-align: middle;
 	margin: 10px;
 	font-size: 18px;
+}
+
+[id*='set_money_price'] {
+	display:none;
+}
+[id*='set_duck_price'] {
+	
 }
 
 
@@ -546,15 +557,15 @@ input[type="submit"]:hover {
 	vertical-align: middle;
 }
 
-#flash_notice {
+.flash_notice {
 	color: rgb(125,203,31);
 }
 
-#flash_alert {
+.flash_alert {
 	color: #F84A0E;
 }
 
-#flash_error {
+.flash_error {
 	color: red;
 }
 
@@ -595,6 +606,11 @@ input[type="submit"]:hover {
 
 .hidden_upload_field {
 	display:none;
+}
+
+.public_profile_pic {
+	vertical-align: middle;
+	width: 100px;
 }
 
 .basic_header{
@@ -655,16 +671,27 @@ input[type="submit"]:hover {
 }
 
 .pending_bet_info {
-	text-align: left;
+	text-align: center;
 	line-height: 35px;
 	border: 1px solid black;
 	display: table-cell;
+	width: 300px;
 	margin: 5px;
 	padding: 5px;
 }
 .pending_bet_info h4 {
 	line-height: 0px;
 }
+.public_bet_info {
+	text-align: center;
+	line-height: 35px;
+	border: 1px solid black;
+	display: table-cell;
+	width: 200px;
+	margin: 5px;
+	padding: 5px;
+}
+
 
 
 
@@ -696,6 +723,25 @@ input[type="submit"]:hover {
 	cursor: pointer;
 }
 
+.send_cashout_request {
+	-moz-box-shadow: inset 0px 1px 0px 0px #F84A0E;
+	-webkit-box-shadow: inset 0px 1px 0px 0px #F84A0E;
+	box-shadow: inset 0px 1px 0px 0px #F84A0E;
+	background: -webkit-gradient( linear, left top, left bottom, color-stop(0.05, #F84A0E), color-stop(1, #fb9e25) );
+	background: -moz-linear-gradient( center top, #F84A0E 5%, #fb9e25 100% );
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#F84A0E', endColorstr='#fb9e25');
+	background-color: #F84A0E;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	border-radius: 6px;
+	border: 1px solid #eeb44f;
+	display: inline-block;
+	color: #ffffff;
+	padding: 6px 24px;
+	text-decoration: none;
+	cursor: pointer;
+}
+
 .public_bet {
 	color: green;
 	font-weight: bold;
@@ -706,7 +752,20 @@ input[type="submit"]:hover {
 	font-weight: bold;
 }
 
+.confirm_buy_ducks {
+	display:none;
+}
+
+.recent_transaction_line {
+	margin-bottom: 10px;
+	margin-left: 10px;
+}
+
 .confirm_make_public {
+	display:none;
+}
+
+.confirm_buy_bet_info {
 	display:none;
 }
 
@@ -720,4 +779,55 @@ input[type="submit"]:hover {
 
 .confirm_purchase_bet_info h4 {
 	line-height: 1px;
+}
+
+.cashout_btn {
+	-moz-box-shadow: 0px 10px 14px -7px #3e7327;
+    -webkit-box-shadow: 0px 10px 14px -7px #3e7327;
+    box-shadow: 0px 10px 14px -7px #3e7327;
+    
+    background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #77b55a), color-stop(1, #72b352));
+    background:-moz-linear-gradient(top, #77b55a 5%, #72b352 100%);
+    background:-webkit-linear-gradient(top, #77b55a 5%, #72b352 100%);
+    background:-o-linear-gradient(top, #77b55a 5%, #72b352 100%);
+    background:-ms-linear-gradient(top, #77b55a 5%, #72b352 100%);
+    background:linear-gradient(to bottom, #77b55a 5%, #72b352 100%);
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#77b55a', endColorstr='#72b352',GradientType=0);
+    
+    background-color:#77b55a;
+    
+    -moz-border-radius:4px;
+    -webkit-border-radius:4px;
+    border-radius:4px;
+    
+    border:1px solid #4b8f29;
+    
+    display:inline-block;
+    color:#ffffff;
+    font-family:arial;
+    font-size:13px;
+    font-weight:bold;
+    padding:6px 12px;
+    text-decoration:none;
+    
+    text-shadow:0px 1px 0px #5b8a3c;
+    
+    cursor: pointer;
+}
+
+.cashout_btn:hover {
+        
+    background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #72b352), color-stop(1, #77b55a));
+    background:-moz-linear-gradient(top, #72b352 5%, #77b55a 100%);
+    background:-webkit-linear-gradient(top, #72b352 5%, #77b55a 100%);
+    background:-o-linear-gradient(top, #72b352 5%, #77b55a 100%);
+    background:-ms-linear-gradient(top, #72b352 5%, #77b55a 100%);
+    background:linear-gradient(to bottom, #72b352 5%, #77b55a 100%);
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#72b352', endColorstr='#77b55a',GradientType=0);
+    
+    background-color:#72b352;
+}
+.cashout_btn:active {
+    position:relative;
+    top:1px;
 }

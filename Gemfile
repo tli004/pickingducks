@@ -26,6 +26,7 @@ gem 'nokogiri'
 gem 'will_paginate'
 gem 'whenever', :require => false
 gem "paperclip", "~> 3.0"
+gem 'stripe'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'

@@ -4,18 +4,21 @@
   <title>Picking Ducks</title>  
   <%= favicon_link_tag 'favicon.ico' %>
   
-  <%= javascript_include_tag "application" %> 
+  
+  <%= javascript_include_tag 'https://js.stripe.com/v1/' %>
+  <%= javascript_include_tag "application" %>  
   <%= javascript_include_tag "js-class" %> 
   <%= javascript_include_tag "excanvas" %>  
   <%= javascript_include_tag "bluff-min" %>
   <%= javascript_include_tag 'enhance' %>
-  <%= javascript_include_tag 'visualize.jQuery' %>
+  <%= javascript_include_tag 'visualize.jQuery' %> 
   
   <%= stylesheet_link_tag "application", :media => "all" %>
   <%= stylesheet_link_tag "visualize" %>
   <%= stylesheet_link_tag "visualize-dark" %>
   
   <%= csrf_meta_tags %>
+  <%= tag :meta, :name => "stripe-key", :content => STRIPE_PUBLIC_KEY %>
 </head>
 <body>	
 	<div class="header">
@@ -41,7 +44,7 @@
 			<a href="<">
 			<% if current_user %>
 				<a href="<%= user_path current_user %>"><li>MY PROFILE.</li></a>
-				<a href="<%= bets_home_path %>"><li>GAMBLING HOME.</li></a>
+				<a href="<%= bets_home_path %>"><li>PICKING HOME.</li></a>
 			<% end %>
 			<a href="<%= sport_home_path(1) %>"><li>NFL.</li></a>
 			<a href="<%= sport_home_path(2) %>"><li>NBA.</li></a>
@@ -55,7 +58,7 @@
 	<% if flash.keys.length > 0 %>
 		<div id="flash_messages" style="padding-top:10px">	
 			<% flash.each do |name, msg| %>
-			 <%= content_tag :div, msg.html_safe, :id => "flash_#{name}" %>
+			 <%= content_tag :div, msg.html_safe, :class => "flash_#{name}" %>
 			<% end %>
 		</div>
 		<% else %>

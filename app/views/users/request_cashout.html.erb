@@ -1,0 +1,34 @@
+<h1>Request Cashout</h1>
+<span class="cashout_notice">
+	Currently we handle cashout requests by paying out a check via the United States Postal Service. Please enter your mailing address below and we will process your request in a timely manner. Allow 7-10 days for the delivery of your money.
+</span>
+<div>Cash available: <span style="color:green">$<%= current_user.money %></span></div>
+
+<%= form_for @cashout do |f| %>
+	
+	<p>
+		<%= f.label :amount, :class => "reg_label" %>: 
+		<%= f.number_field :amount, :min => 20, :max => current_user.money, :value => 20, :class => "number_input_small" %>
+	</p>
+	<p>
+		<%= f.label :address1, :class => "reg_label" %>: 
+		<%= f.text_field :address1 %>
+	</p>
+	<p>
+		<%= f.label :address2, :class => "reg_label" %>: 
+		<%= f.text_field :address2 %>
+	</p>
+	<p>
+		<%= f.label :city, :class => "reg_label" %>: 
+		<%= f.text_field :city %>
+	</p>
+		<%= f.label :state, :class => "reg_label" %>: 
+		<%= f.select :state, us_states%>
+	<p>
+		<%= f.label :zip, :class => "reg_label" %>: 
+		<%= f.text_field :zip, :size => 5 %>
+	</p>
+	<p>
+		<%= submit_tag "Send Cashout Request", :class => "send_cashout_request" %>
+	</p>
+<% end %>

@@ -13,7 +13,9 @@
  			
 		 <p>
 		 	<h3>
-		 		<% if @event.spread > 0 %>
+		 		<% if @event.sport == 3 %>
+		 			<%= "This is a moneyline bet: " + @event.home_team + "(#{@event.moneyline_home}) " + @event.away_team + "(#{@event.moneyline_away})" %>
+		 		<% elsif @event.spread > 0 %>
 		 			The <%= @event.home_team %> are favored by <%= @event.spread %> points
 		 		<% else %>
 		 			<%= @event.away_team %> are favored by <%= @event.spread.abs %> points
@@ -23,8 +25,13 @@
 		 	<%= f.hidden_field 'sport', :value => @event.sport %>
 		 	<%= f.hidden_field 'pending', :value => true %>
 		 	<%= f.hidden_field 'parlay', :value => false %>
-		 	<%= @event.home_team %> (<%= -@event.spread %>): <%= f.radio_button(:bet_type, 'home') %>
-		 	<%= @event.away_team %> (<%= @event.spread %>): <%= f.radio_button(:bet_type, 'away') %><br />
+		 	<% if @event.moneyline_home %>
+		 		<%= @event.home_team %> (<%= @event.moneyline_home %>): <%= f.radio_button(:bet_type, 'home') %>
+			 	<%= @event.away_team %> (<%= @event.moneyline_away %>): <%= f.radio_button(:bet_type, 'away') %>
+		 	<% else %>
+			 	<%= @event.home_team %> (<%= -@event.spread %>): <%= f.radio_button(:bet_type, 'home') %>
+			 	<%= @event.away_team %> (<%= @event.spread %>): <%= f.radio_button(:bet_type, 'away') %>
+			<% end %><br />
 		 	Wager: <%= f.number_field :amount, :min => 1, :class => "number_input" %>
 		 </p>
 		 <p><%= f.submit 'Place Bet!', :class => 'button place_bet' %></p>

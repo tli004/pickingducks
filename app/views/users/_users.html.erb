@@ -11,7 +11,15 @@
 		<th class="table_left">Rank</td></th>
 		<th><%= sortable 'username', 'Username' %></th>
 		<th><%= sortable 'wins', 'W-L-T' %></th>
-		<th><%= sortable 'win_percentage', 'Win%' %></th>
+		<th><%= sortable 'nfl_wins', 'NLF Record' %></th>
+		<th><%= sortable 'nba_wins', 'NBA Record' %></th>
+		<th><%= sortable 'mlb_wins', 'MLB Record' %></th>
+		<th><%= sortable 'nhl_wins', 'NHL Record' %></th>
+		<th><%= sortable 'win_percentage', 'Win%' %></th>		
+		<th><%= sortable 'nfl_win_percentage', "NFL Win%" %></th>
+		<th><%= sortable 'nba_win_percentage', "NBA Win%" %></th>
+		<th><%= sortable 'mlb_win_percentage', "MLB Win%" %></th>
+		<th><%= sortable 'nhl_win_percentage', "NHL Win%" %></th>
 		<th><%= sortable 'bankroll', 'Ducks' %></th>
 	</tr>
 	<% @users.each_with_index do |user, i| %>
@@ -23,12 +31,20 @@
 				<% end %>
 				<td><a href="<%= public_profile_path user.id %>"><%= user.username %></a></td>
 				<td><%= "#{user.wins}-#{user.losses}-#{user.ties}" %></td>
+				<td><%= "#{user.nfl_wins}-#{user.nfl_losses}-#{user.nfl_ties}" %></td>
+				<td><%= "#{user.nba_wins}-#{user.nba_losses}-#{user.nba_ties}" %></td>
+				<td><%= "#{user.mlb_wins}-#{user.mlb_losses}-#{user.mlb_ties}" %></td>
+				<td><%= "#{user.nhl_wins}-#{user.nhl_losses}-#{user.nhl_ties}" %></td>
 				<td><%= (100* user.win_percentage).round(2) %>%</td>
+				<td><%= (100* user.nfl_win_percentage).round(2) %>%</td>
+				<td><%= (100* user.nba_win_percentage).round(2) %>%</td>
+				<td><%= (100* user.mlb_win_percentage).round(2) %>%</td>
+				<td><%= (100* user.nhl_win_percentage).round(2) %>%</td>
 				<td><%= user.bankroll %></td>
 			</tr>		
 	<% end %>
 	<tr>
-		<td colspan="5">
+		<td colspan="13">
 			<%= will_paginate @users, :class => "duck_pagination" %>
 		</td>
 	</tr>

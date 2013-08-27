@@ -1,5 +1,10 @@
 <div id="profile">	
-	<h2>PROFILE for <%= @user.username.upcase %></h2>  	
+	<h2>
+		<% if @user.profile_pic.url != "/images/missing.jpg" %>
+	 		<%= image_tag @user.profile_pic.url(:medium), :class => "public_profile_pic" %>
+		<% end %> <%= @user.username.upcase %>
+	</h2>  	
+	<hr />
 	<div class="box_number">
 		<span>WINS</span>
 		<div style="color:rgb(125,203,31)"><%= @user.wins %></div>
@@ -14,36 +19,35 @@
 	</div>
 	<div class="box_number">
 		<span>DUCKS</span>
-		<div style="color:#F84A0E"><%= @user.bankroll %></div>
+		<div style="color:#F84A0E"><%= @user.bankroll.round(2) %></div>
 	</div>
 </div>
- 
+ <hr />
  <h2>Pending Bets</h2>
  <table>
  	<% if @pending_bets.length > 0 %>
-	 	<% @pending_bets.each do |bet| %>
+ 	<tr>
+	 	<% @pending_bets.each_with_index do |bet, i| %>	 		
 	 		<% if current_user && (current_user.purchases.map(&:bet_id).include?(bet.id) || current_user.id == @user.id) %>
-		 		<tr>
-		 			<td>
-		 				<span class="public_bet">PUBLIC: </span><%= bet.amount %>d on <%= bet.bet_type %> for event <span style="font-weight:bold"><%= bet.event.home_team %> vs. <%= bet.event.away_team %></span> on <%= bet.event.start_time.strftime("%m-%d") %>		 				
-	 				</td>	 				
-		 		</tr>
+		 			<td class="public_bet_info">
+		 				<span class="public_bet">VISIBLE: <br/></span><span style="font-weight:bold"><%= bet.amount %>d on <%= bet.event.bet_type(bet.bet_type) %><br/></span> for event <br/><a href="<%= event_path(bet.event.id) %>"><%= bet.event.away_team %> @ <%= bet.event.home_team %></a> <br/>on <%= bet.event.start_time.strftime("%m-%d") %>	 				
+	 				 	
 	 		<% else %>
-		 		<tr>
-		 			<td>
-		 				<div>
-		 					<span class="private_bet">PRIVATE: </span>Made bet on event <span style="font-weight:bold"><%= bet.event.home_team %> vs. <%= bet.event.away_team %></span> on <%= bet.event.start_time.strftime("%m-%d") %>
-	 					</div>
- 				<% if bet.public_price > 0 && current_user && current_user.id != @user.id %>
-		 				<div>
-		 				&bull; <%= link_to "Purchase bet info for #{bet.public_price} ducks", pay_for_bet_path(bet.user, bet.id),:class => "purchase_bet_info", :data => {:username => bet.user.username, :home_team => bet.event.home_team, :away_team => bet.event.away_team, :price => bet.public_price } %>		
-		 				</div> 				
+		 			<td class="public_bet_info">				 		 								
+	 			<% if bet.money_price > 0 %>	
+	 				<span class="private_bet">HIDDEN:<br/> </span>Made pick on event <br/><a href="<%= event_path(bet.event.id) %>"><%= bet.event.away_team %> @ <%= bet.event.home_team %></a> <br/>on <%= bet.event.start_time.strftime("%m-%d") %>	 				
+			 				<br /><%= link_to "Purchase bet info for #{bet.money_price} dollars", pay_money_for_bet_path(bet.user, bet.id),:class => "purchase_bet_info_for_money", :data => {:username => bet.user.username, :home_team => bet.event.home_team, :away_team => bet.event.away_team, :price => bet.money_price } %>		 								
+	 			<% else %>
+			 				<span class="public_bet">VISIBLE: <br/></span><span style="font-weight:bold"><%= bet.amount %>d on <%= bet.event.bet_type(bet.bet_type) %><br/></span> for event <br/><a href="<%= event_path(bet.event.id) %>"><%= bet.event.away_team %> @ <%= bet.event.home_team %></a> <br/>on <%= bet.event.start_time.strftime("%m-%d") %>
 	 			<% end %>
-	 			</td>
- 				</tr>
+	 				</td>
  			<% end %>
- 			<tr><td><br/></td></tr>
+ 			<% if i != 0 && i % 5 == 0 %>
+				</tr>
+				<tr>
+			<% end %>
 	 	<% end %>
+	 	</tr>
 	 <% else %>
 	 	<tr>No pending bets at this time.</tr>
 	 <% end%> 
@@ -103,6 +107,38 @@
 	</tbody>
 </table>
 <% end %>
+
+<% if @past_week_earnings_straight > 0 %>
+<table class="past_week_earnings_graph" style="display:none">
+	<caption>Past Week Earnings</caption>
+	<thead>
+		<th scope="col"></th>
+	</thead>
+	<tbody>
+		<tr>
+			<th scope="row">straight</th>
+			<td><%= @past_week_earnings_straight %></td>
+		</tr>
+		<tr>
+			<th scope="row">nfl</th>
+			<td><%= @past_week_earnings_nfl %></td>
+		</tr>
+		<tr>
+			<th scope="row">nba</th>
+			<td><%= @past_week_earnings_nba %></td>
+		</tr>
+		<tr>
+			<th scope="row">mlb</th>
+			<td><%= @past_week_earnings_mlb %></td>
+		</tr>
+		<tr>
+			<th scope="row">nhl</th>
+			<td><%= @past_week_earnings_nhl %></td>
+		</tr>
+	</tbody>
+</table>
+<% end %>
+
 
 <% if @nfl_past_bets.length > 0 %>
 <table class="earnings_by_sport_graph" style="display:none">

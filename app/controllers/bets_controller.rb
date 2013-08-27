@@ -36,7 +36,11 @@ class BetsController < ApplicationController
     parlay.pending = true
     params[:event_id].each do |event|
       bet = parlay.bets.build
-      bet.update_attributes({:event_id => event, :amount => params[:amount], :bet_type => params[:bet_type][event], :sport => params[:sport][event], :parlay => true})      
+      if params[:sport][event][0]
+        bet.update_attributes({:event_id => event, :amount => params[:amount], :bet_type => params[:bet_type][event], :sport => params[:sport][event][0], :parlay => true})
+      else
+        bet.update_attributes({:event_id => event, :amount => params[:amount], :bet_type => params[:bet_type][event], :sport => params[:sport][event][1], :parlay => true})
+      end      
     end
     
     if parlay.save
@@ -65,8 +69,12 @@ class BetsController < ApplicationController
     bet = Bet.find(params[:id])
     
     if bet.update_attributes params[:bet]
-      flash[:notice] = "Bet has been made purchaseable for #{bet.public_price} ducks!"
-      redirect_to user_path current_user.id
+      if params[:bet][:duck_price]
+        flash[:notice] = "Bet has been made purchaseable for #{bet.duck_price} ducks!"        
+      else 
+        flash[:notice] = "Bet has been made purchaseable for #{bet.money_price} dollars!"     
+      end
+      redirect_to user_path current_user.id        
     else
       flash[:alert] = "An error occured."
       redirect_to root_path

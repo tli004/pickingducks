@@ -1,0 +1,35 @@
+<h1>Pay Money For Pick Info</h1>
+
+<%= form_tag buy_bet_info_path, :id => "buy_bet_info_form" do %>	
+	<%= hidden_field_tag :stripe_card_token %>
+	<%= hidden_field_tag :bet_id, @bet.id %>
+	<%= hidden_field_tag :amount, @bet.money_price * 100, :id => "bet_money_price"%>
+	<p>
+		<div>
+			To see information for this pick by <%= link_to @user.username, user_path(@user.id) %>, you must pay <%= @bet.money_price %> dollars.
+		</div>
+	</p>
+	<p>
+		<%= label_tag :card_number, "Credit Card Number" %>
+		<%= text_field_tag :card_number, nil, name: nil %>
+	</p>
+	<p>
+		<%= label_tag :card_code, "Security Code (CVV) "%>
+		<%= text_field_tag :card_code, nil, name: nil %>
+	</p>
+	<p>
+		<%= label_tag :card_month, "Card Expiration" %>
+		<%= select_month nil, {add_month_numers: true}, {name:nil, id: "card_month"} %>
+		<%= select_year nil, {start_year: Date.today.year, end_year: Date.today.year + 15}, {name: nil, id: "card_year"} %>
+	</p>
+	<p><%= submit_tag 'Buy Pick Info!', :class => 'button submit_btn', :id => "buy_ducks_btn" %></p>
+	<span id="stripe_error" class="flash_error">
+		<noscript>
+			JavaScript is not enabled and is required for this form. First enable it in your web browser settings.
+		</noscript>
+	</span>
+<% end %>
+<div class="confirm_buy_bet_info">
+	<h4>Purchase Bet Info?</h4>
+	<span></span>
+</div>

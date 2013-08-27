@@ -7,7 +7,7 @@ class CreateParlays < ActiveRecord::Migration
       t.boolean :winning
       t.integer :user_id
       t.float :resulting_bankroll
-      t.datetime :finished_at
+      t.datetime :closed_at
       
       t.timestamps
     end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130719230827) do
+ActiveRecord::Schema.define(:version => 20130819004330) do
 
   create_table "bets", :force => true do |t|
     t.integer  "user_id"
@@ -23,25 +23,42 @@ ActiveRecord::Schema.define(:version => 20130719230827) do
     t.integer  "sport"
     t.boolean  "pending",            :default => true, :null => false
     t.boolean  "winning"
-    t.integer  "public_price",       :default => -1
-    t.datetime "finished_at"
+    t.integer  "money_price",        :default => -1
+    t.datetime "closed_at"
     t.integer  "resulting_bankroll"
     t.datetime "created_at",                           :null => false
     t.datetime "updated_at",                           :null => false
   end
 
+  create_table "cashouts", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "amount"
+    t.string   "address1"
+    t.string   "address2"
+    t.string   "city"
+    t.string   "state"
+    t.string   "zip"
+    t.boolean  "paid",       :default => false
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+  end
+
   create_table "events", :force => true do |t|
     t.integer  "sport"
     t.float    "spread"
+    t.float    "moneyline_home"
+    t.float    "moneyline_away"
     t.float    "total_points"
     t.datetime "start_time"
     t.boolean  "live"
-    t.boolean  "finished",     :default => false
+    t.boolean  "finished",       :default => false
     t.string   "home_team"
+    t.string   "home_location"
     t.string   "away_team"
+    t.string   "away_location"
     t.string   "extern_id"
-    t.datetime "created_at",                      :null => false
-    t.datetime "updated_at",                      :null => false
+    t.datetime "created_at",                        :null => false
+    t.datetime "updated_at",                        :null => false
   end
 
   create_table "parlays", :force => true do |t|
@@ -50,7 +67,7 @@ ActiveRecord::Schema.define(:version => 20130719230827) do
     t.boolean  "winning"
     t.integer  "user_id"
     t.float    "resulting_bankroll"
-    t.datetime "finished_at"
+    t.datetime "closed_at"
     t.datetime "created_at",         :null => false
     t.datetime "updated_at",         :null => false
   end
@@ -58,8 +75,10 @@ ActiveRecord::Schema.define(:version => 20130719230827) do
   create_table "purchases", :force => true do |t|
     t.integer  "user_id"
     t.integer  "bet_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.string   "stripe_payment_token"
+    t.float    "amount"
+    t.datetime "created_at",           :null => false
+    t.datetime "updated_at",           :null => false
   end
 
   create_table "users", :force => true do |t|
@@ -77,11 +96,34 @@ ActiveRecord::Schema.define(:version => 20130719230827) do
     t.datetime "banned_until"
     t.boolean  "accept_terms"
     t.integer  "wins",                     :default => 0
-    t.float    "win_percentage",           :default => 0.0
     t.integer  "losses",                   :default => 0
     t.integer  "ties",                     :default => 0
+    t.integer  "nfl_wins",                 :default => 0
+    t.integer  "nfl_losses",               :default => 0
+    t.integer  "nfl_ties",                 :default => 0
+    t.integer  "nba_wins",                 :default => 0
+    t.integer  "nba_losses",               :default => 0
+    t.integer  "nba_ties",                 :default => 0
+    t.integer  "mlb_wins",                 :default => 0
+    t.integer  "mlb_losses",               :default => 0
+    t.integer  "mlb_ties",                 :default => 0
+    t.integer  "nhl_wins",                 :default => 0
+    t.integer  "nhl_losses",               :default => 0
+    t.integer  "nhl_ties",                 :default => 0
+    t.float    "win_percentage",           :default => 0.0
+    t.float    "nfl_win_percentage",       :default => 0.0
+    t.float    "nba_win_percentage",       :default => 0.0
+    t.float    "mlb_win_percentage",       :default => 0.0
+    t.float    "nhl_win_percentage",       :default => 0.0
     t.float    "bankroll",                 :default => 100.0
-    t.integer  "bankruptcies",             :default => 0
+    t.float    "money",                    :default => 0.0
+    t.integer  "resets",                   :default => 0
+    t.boolean  "registered"
+    t.string   "address1"
+    t.string   "address2"
+    t.string   "city"
+    t.string   "state"
+    t.string   "zip"
     t.string   "auth_token"
     t.string   "password_reset_token"
     t.datetime "password_reset_sent_at"

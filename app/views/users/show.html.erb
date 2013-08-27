@@ -3,7 +3,9 @@
  	<ul>
  		<li><a href="#profile">PROFILE</a></li>
  		<li><a href="#manage_account">MANAGE ACCOUNT</a></li>
- 		<li><a href="#sales_summary">SALES SUMMARY</a></li>
+ 		<li><a href="#bet_history">BET HISTORY</a></li>
+ 		<li><a href="#sales_summary">SALES AND PURCHASES</a></li>
+ 		<li><a href="#buy_ducks">BUY DUCKS</a></li>
  	</ul>
  	
  	<div id="profile">
@@ -22,7 +24,7 @@
  		</span>
  		<span class="box_number">
  			<span>DUCKS</span>
- 			<div style="color:#F84A0E"><%= current_user.bankroll %></div>
+ 			<div style="color:#F84A0E"><%= current_user.bankroll.round(2) %></div>
 		</span>
  	</div>
  	
@@ -66,38 +68,126 @@
 		<% end %>
  	</div>
  	
- 	<div id="sales_summary">
- 		<h3>Recent Purchases</h3>
- 		<% current_user.purchases.each do |purchase| %>
- 			<div>
- 				<span style="font-weight:bold;">
- 					<%= link_to purchase.user.username, public_profile_path(purchase.user.id), :class => "important_orange" %> bet <%= purchase.bet.amount %>d on <%= purchase.bet.bet_type %> for event 
- 				<a class="important_orange" href="<%= event_path(purchase.bet.event.id) %>">
- 					<span><%= purchase.bet.event.home_team %> vs. <%= purchase.bet.event.away_team %></span>
-				</a> on <%= purchase.bet.event.start_time.strftime("%m-%d") %>
- 			</div>
+ 	<div id="bet_history">
+ 		<% @past_ten.each do |bet| %>
+ 			<% if bet.winning %>
+ 			<div><%= "&bull; You <span style='color:green'>won</span> a bet of #{bet.amount} ducks for event #{bet.event.away_team} @ #{bet.event.home_team} on #{bet.closed_at.strftime('%B %d')} (bet: #{bet.event.bet_type(bet.bet_type)})".html_safe %></div>
+ 			<% else %>
+ 			<div><%= "&bull; You <span style='color:red'>lost</span> a bet of #{bet.amount} ducks for event #{bet.event.away_team} @ #{bet.event.home_team} on #{bet.closed_at.strftime('%B %d')}".html_safe %></div>
+ 			<% end %>
  		<% end %>
  	</div>
  	
+ 	<div id="sales_summary"> 	
+ 		<% if current_user.money > 0 %>
+ 			<h3>
+ 				Money Balance: <span style="color:green">$<%= current_user.money %></span> 				
+ 			</h3>
+ 			<div class="cashout_btn">Request Cashout</div>
+ 		<% else %>
+ 			<h3>Money Balance: $0</h3>
+ 		<% end %>
+ 		<hr />
+ 		<h3>Pending Payouts</h3>
+ 		<ul>
+ 		<% current_user.cashouts.where(:paid => false).each do |cashout| %>
+ 			<li class="pending_cashout">
+ 				Your cashout for $<%= cashout.amount %> made on <%= cashout.created_at.strftime("%B %d")%> is processing.
+ 			</li>
+ 		<% end %>
+ 		</ul>
+ 		<em>
+ 			***Please contact us at support@pickingducks.com if you do not receive your check within 14 days from making the request.</em>
+ 		<hr />
+ 		<% if current_user.purchases.length > 0 %>	
+	 		<h3>Recent Purchases</h3>
+	 		<% current_user.purchases.order("created_at DESC").limit(10).each do |purchase| %>
+	 			<% if purchase.stripe_payment_token.nil? %>
+		 			<div class="recent_transaction_line">
+		 				
+		 				&bull;<%= link_to purchase.bet.user.username, public_profile_path(purchase.bet.user.id), :class => "important_orange" %> wagered <span style="font-weight:bold;"><%= purchase.bet.amount %>d on <%= purchase.bet.event.bet_type(purchase.bet.bet_type) %> </span>for event 
+		 				<a class="important_orange" href="<%= event_path(purchase.bet.event.id) %>">
+		 					<span><%= purchase.bet.event.away_team %> @ <%= purchase.bet.event.home_team %>
+						</a> on <%= purchase.bet.event.start_time.strftime("%m-%d") %>
+		 			</div>
+		 		<% else %>
+		 			<div class="recent_transaction_line">
+		 				&bull;You purchased <%= purchase.amount %> ducks on <%= purchase.created_at.strftime("%m-%d-%y") %>
+		 			</div>
+		 		<% end %>
+	 		<% end %>
+	 	<% else %>
+	 		<h3>You have not made any purchases!</h3>
+	 	<% end %>
+ 		<hr />
+ 		<% if @bet_sales.length > 0 %>
+ 			<h3>Recent Sales</h3>
+	 		<% @bet_sales.each do |sale| %>
+	 			<div class="recent_transaction_line">
+	 				&bull;<%= link_to sale.user.username, public_profile_path(sale.user.id), :class => "important_orange" %> purchased your pick info for event <a class="important_orange" href="<%= event_path(sale.bet.event.id) %>">
+		 					<span><%= sale.bet.event.away_team %> @ <%= sale.bet.event.home_team %></span>
+						</a> on <%= sale.bet.event.start_time.strftime("%m-%d") %>
+				</div>
+	 		<% end %>
+	 	<% else %>
+	 		<h3>You have not made any sales.</h3>
+	 	<% end %>
+ 	</div>
+ 	
+ 	<div id="buy_ducks">
+ 		<h4>***Ducks priced at $0.05 each</h4>
+ 		<%= form_tag buy_ducks_path, :id => "buy_ducks_form" do %>	
+ 			<%= hidden_field_tag :stripe_card_token %>
+ 			<p>
+ 				<%= label_tag :amount, "Ducks to Purchase"%>
+ 				<%= number_field_tag :amount, 10, :min => 10, :class => "number_input", :id => "num_ducks_to_purchase" %>
+ 			</p>
+	 		<p>
+	 			<%= label_tag :card_number, "Credit Card Number" %>
+	 			<%= text_field_tag :card_number, nil, name: nil %>
+	 		</p>
+	 		<p>
+	 			<%= label_tag :card_code, "Security Code (CVV) "%>
+	 			<%= text_field_tag :card_code, nil, name: nil %>
+	 		</p>
+	 		<p>
+	 			<%= label_tag :card_month, "Card Expiration" %>
+	 			<%= select_month nil, {add_month_numers: true}, {name:nil, id: "card_month"} %>
+	 			<%= select_year nil, {start_year: Date.today.year, end_year: Date.today.year + 15}, {name: nil, id: "card_year"} %>
+	 		</p>
+	 		<p><%= submit_tag 'Buy Ducks', :class => 'button submit_btn', :id => "buy_ducks_btn" %></p>
+	 		<span id="stripe_error" class="flash_error">
+	 			<noscript>
+	 				JavaScript is not enabled and is required for this form. First enable it in your web browser settings.
+	 			</noscript>
+	 		</span>
+	 	<% end %>
+ 	</div>
+ 	 <div class="confirm_buy_ducks">
+	 	<h4>Purchase ducks?</h4>
+	 	<span></span>
+	 </div>
  </div>
  
- <h2>Pending Straight Bets</h2>
+ <h2>Pending Straight Picks</h2>
  <table>
  	<% if @pending_bets.length > 0 %>
  				<tr>
 		 	<% @pending_bets.each_with_index do |bet, i| %>		 		
 		 			<td class="pending_bet_info">
-		 				<h4>Bet Information</h4>
-		 				<%= bet.amount %>d on <%= bet.bet_type %> for event 
+		 				<h4>Pick Information</h4>
+		 				<span style="font-size:20px"><%= bet.amount %>d on <%= bet.event.bet_type(bet.bet_type) %></span><br /> for event 
 		 				<a href="<%= event_path(bet.event.id) %>">
-		 					<div style="font-weight:bold;font-size:24px"><%= bet.event.home_team %> vs. <%= bet.event.away_team %></div>
+		 					<div style="font-weight:bold;font-size:18px"><%= bet.event.away_team %> @ <%= bet.event.home_team %></div>
 	 					</a> on <%= bet.event.start_time.strftime("%m-%d") %>
 	 					 	
-			 <% if bet.public_price < 0 %>	
+			 <% if bet.money_price < 0 %>	
 			 	
 				 <%= form_tag make_bet_public_path(bet), :data => {:home_team => bet.event.home_team, :away_team => bet.event.away_team }, :class=>"make_bet_public" do %>
 				 	<div>
-				 		Make public for <%= number_field_tag 'bet[public_price]', :amount, :min => 1, :value => 1, :class => "number_input_small" %> ducks.
+				 		<span>
+				 			Make private and purchaseable for <%= number_field_tag 'bet[money_price]', :amount, :min => 1, :value => 1, :class => "number_input_small" %> dollars.
+				 		</span>
 				 	</div>
 				 	<div>
 				 		<%= submit_tag 'Set Price!', :class => "set_price_btn" %>
@@ -105,8 +195,8 @@
 				 <% end %>
 				 </td>				 
 			<% else %>
-						<div>This bet is public for a price of <%= bet.public_price %> ducks.</div>
-					</td>
+				<div>This pick is private and purchaseable for a price of <%= bet.money_price %> dollars.</div>
+			</td>
 			<% end %>
 			<% if i != 0 && i % 5 == 0 %>
 				</tr>
@@ -115,7 +205,7 @@
 		<% end %>
 		</tr>
 	 <% else %>
-	 	<tr>You have no pending bets at this time.</tr>
+	 	<tr>You have no pending picks at this time.</tr>
 	 <% end%>	 
  </table>
  <div class="confirm_make_public">
@@ -124,7 +214,7 @@
  </div>
  <br />
  <br />
- <h2>Pending Parlay Bets</h2>
+ <h2>Pending Parlay Picks</h2>
  <table>
  	<% if @parlays.length > 0 %>
 	 	<% @parlays.each do |parlay| %>
@@ -137,7 +227,7 @@
 	 				<li><%= bet.amount %>d on <%= bet.bet_type %> for event 
 	 					<a href="<%= event_path(bet.event.id) %>">
 	 						<span style="font-weight:bold">
-	 							<%= bet.event.home_team %> vs. <%= bet.event.away_team %>	 							
+	 							<%= bet.event.away_team %> @ <%= bet.event.home_team %> 							
 	 						</span>
 	 					</a> on <%= bet.event.start_time.strftime("%m-%d") %></li>	
 	 		<% end %>	
@@ -146,14 +236,15 @@
 	 		</tr>
 	 	<% end %>
 	 <% else %>
-	 	<tr>You have no pending bets at this time.</tr>
+	 	<tr>You have no pending picks at this time.</tr>
 	 <% end%>	 
  </table>
  <br />
  <br />
- 
+
+<% if @straight_change_dates.length > 0 %>
 <table class="track_record_graph" style="display:none">
-	<caption>Earnings: Straight Bets</caption>
+	<caption>Earnings: Straight Picks</caption>
 	<thead>
 		<tr>
 			<th scope="col">0</th>
@@ -174,9 +265,11 @@
 		</tr>
 	</tbody>
 </table>
+<% end %>
 
+<% if @parlay_change_dates.length > 0 %>
 <table class="track_record_graph" style="display:none">
-	<caption>Earnings: Parlay Bets</caption>
+	<caption>Earnings: Parlay Picks</caption>
 	<thead>
 		<tr>
 			<th scope="col">0</th>
@@ -197,7 +290,40 @@
 		</tr>
 	</tbody>
 </table>
+<% end %>
 
+<% if @past_week_earnings_straight > 0 %>
+<table class="past_week_earnings_graph" style="display:none">
+	<caption>Past Week Earnings</caption>
+	<thead>
+		<th scope="col"></th>
+	</thead>
+	<tbody>
+		<tr>
+			<th scope="row">straight</th>
+			<td><%= @past_week_earnings_straight %></td>
+		</tr>
+		<tr>
+			<th scope="row">nfl</th>
+			<td><%= @past_week_earnings_nfl %></td>
+		</tr>
+		<tr>
+			<th scope="row">nba</th>
+			<td><%= @past_week_earnings_nba %></td>
+		</tr>
+		<tr>
+			<th scope="row">mlb</th>
+			<td><%= @past_week_earnings_mlb %></td>
+		</tr>
+		<tr>
+			<th scope="row">nhl</th>
+			<td><%= @past_week_earnings_nhl %></td>
+		</tr>
+	</tbody>
+</table>
+<% end %>
+
+<% if @nfl_change_dates.length > 0 %>
 <table class="earnings_by_sport_graph" style="display:none">
 	<caption>NFL Record</caption>
 	<thead>
@@ -220,7 +346,9 @@
 		</tr>		
 	</tbody>
 </table>
+<% end %>
 
+<% if @nba_change_dates.length > 0 %>
 <table class="earnings_by_sport_graph" style="display:none">
 	<caption>NBA Record</caption>
 	<thead>
@@ -243,7 +371,9 @@
 		</tr>		
 	</tbody>
 </table>
+<% end %>
 
+<% if @mlb_change_dates.length > 0 %>
 <table class="earnings_by_sport_graph" style="display:none">
 	<caption>MLB Record</caption>
 	<thead>
@@ -266,7 +396,9 @@
 		</tr>		
 	</tbody>
 </table>
+<% end %>
 
+<% if @nhl_change_dates.length > 0 %>
 <table class="earnings_by_sport_graph" style="display:none">
 	<caption>NHL Record</caption>
 	<thead>
@@ -289,3 +421,4 @@
 		</tr>		
 	</tbody>
 </table>
+<% end %>
