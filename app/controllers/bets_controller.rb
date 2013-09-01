@@ -65,7 +65,7 @@ class BetsController < ApplicationController
     @sport = 0 # used to set headers in parlay_select_table
   end
   
-  def make_bet_public
+  def make_bet_private
     bet = Bet.find(params[:id])
     
     if bet.update_attributes params[:bet]

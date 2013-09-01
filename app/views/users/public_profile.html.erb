@@ -23,31 +23,45 @@
 	</div>
 </div>
  <hr />
- <h2>Pending Bets</h2>
- <table>
+ <h2 class="pending_wagers_header">Pending Wagers</h2>
+ <table class="pending_wagers_table">
  	<% if @pending_bets.length > 0 %>
- 	<tr>
-	 	<% @pending_bets.each_with_index do |bet, i| %>	 		
-	 		<% if current_user && (current_user.purchases.map(&:bet_id).include?(bet.id) || current_user.id == @user.id) %>
-		 			<td class="public_bet_info">
-		 				<span class="public_bet">VISIBLE: <br/></span><span style="font-weight:bold"><%= bet.amount %>d on <%= bet.event.bet_type(bet.bet_type) %><br/></span> for event <br/><a href="<%= event_path(bet.event.id) %>"><%= bet.event.away_team %> @ <%= bet.event.home_team %></a> <br/>on <%= bet.event.start_time.strftime("%m-%d") %>	 				
-	 				 	
-	 		<% else %>
-		 			<td class="public_bet_info">				 		 								
+ 		<thead>
+ 			<th>Status</th>
+ 			<th>Amount</th>
+ 			<th>Pick</th>
+ 			<th>Event</th>
+ 			<th>Gameday</th>
+ 			<th>Purchase</th>
+ 		</thead>
+	 	<% @pending_bets.each_with_index do |bet, i| %>
+	 		<tr class="pending_bet_info">	 		
+	 		<% if current_user && current_user.purchases.map(&:bet_id).include?(bet.id) %>
+		 			<td><span class="public_bet">Purchased!</span></td>
+		 			<td><%= bet.amount %>d</td>
+		 			<td><%= bet.event.bet_type(bet.bet_type) %></td>
+		 			<td><a href="<%= event_path(bet.event.id) %>"><%= bet.event.away_team %> @ <%= bet.event.home_team %></a></td>
+		 			<td><%= bet.event.start_time.strftime("%m-%d") %></td>
+		 			<td></td>				 	
+	 		<% else %>			 		 								
 	 			<% if bet.money_price > 0 %>	
-	 				<span class="private_bet">HIDDEN:<br/> </span>Made pick on event <br/><a href="<%= event_path(bet.event.id) %>"><%= bet.event.away_team %> @ <%= bet.event.home_team %></a> <br/>on <%= bet.event.start_time.strftime("%m-%d") %>	 				
-			 				<br /><%= link_to "Purchase bet info for #{bet.money_price} dollars", pay_money_for_bet_path(bet.user, bet.id),:class => "purchase_bet_info_for_money", :data => {:username => bet.user.username, :home_team => bet.event.home_team, :away_team => bet.event.away_team, :price => bet.money_price } %>		 								
+	 				<td><span class="private_bet">HIDDEN:</span></td>
+	 				<td>N/A</td>
+	 				<td>N/A</td>
+	 				<td><a href="<%= event_path(bet.event.id) %>"><%= bet.event.away_team %> @ <%= bet.event.home_team %></a></td>
+	 				<td><%= bet.event.start_time.strftime("%m-%d") %></td>
+	 				<td><%= link_to "Purchase bet info for #{bet.money_price} dollars", pay_money_for_bet_path(bet.user, bet.id),:class => "purchase_bet_info_for_money", :data => {:username => bet.user.username, :home_team => bet.event.home_team, :away_team => bet.event.away_team, :price => bet.money_price } %></td>		 								
 	 			<% else %>
-			 				<span class="public_bet">VISIBLE: <br/></span><span style="font-weight:bold"><%= bet.amount %>d on <%= bet.event.bet_type(bet.bet_type) %><br/></span> for event <br/><a href="<%= event_path(bet.event.id) %>"><%= bet.event.away_team %> @ <%= bet.event.home_team %></a> <br/>on <%= bet.event.start_time.strftime("%m-%d") %>
+			 		<td><span class="public_bet">VISIBLE:</span></td>
+			 		<td><%= bet.amount %>d</td>
+			 		<td><%= bet.event.bet_type(bet.bet_type) %></td>
+			 		<td><a href="<%= event_path(bet.event.id) %>"><%= bet.event.away_team %> @ <%= bet.event.home_team %></a></td>
+			 		<td><%= bet.event.start_time.strftime("%m-%d") %></td>
 	 			<% end %>
-	 				</td>
  			<% end %>
- 			<% if i != 0 && i % 5 == 0 %>
-				</tr>
-				<tr>
-			<% end %>
+ 			</tr>
 	 	<% end %>
-	 	</tr>
+	 	
 	 <% else %>
 	 	<tr>No pending bets at this time.</tr>
 	 <% end%> 

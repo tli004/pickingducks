@@ -23,7 +23,7 @@ $(document).ready(function () {
   $(".past_week_earnings_graph").visualize({type: 'bar', width: '420px'});
   $(".earnings_by_sport_graph").visualize({type: 'line', width: '250px'});   
         
-  $(".make_bet_public").submit(function (e) {
+  $(".make_bet_private").submit(function (e) {
   		e.preventDefault();
   		
   		if ($(this).find("[id*='set_money_price'] input").attr('disabled'))

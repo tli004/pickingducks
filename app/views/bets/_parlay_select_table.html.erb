@@ -1,25 +1,40 @@
 <div id="parlay_game_list">
-	<h3>Select Up to 4 games</h3>
+	<h2>Select Up to 4 games</h2>
+	<div id="parlay_wager">
+		<span>Wager: </span><%= number_field_tag :amount, 1, :min => 1, :class => "number_input"%><br />
+		<div>Selected games: 
+			<ul id="parlay_selected_games">
+			</ul>
+			<div>Winning payout: <span class="winning_payout">N/A</span></div>
+			<%= submit_tag "Place Bet!", :class => 'button place_bet' %>
+		</div>
+	</div>
 	<table id="parlay_game_table">
 	<% if games.length > 0 %>	
 			<% games.each do |game| %>
 			
 			<% if sport != game.sport %>
 			<tr>
-				<td class="table_left"><h4><%= LEAGUE_NAMES_ABBR[game.sport-1] %> Games</h4></td>
+				<td class="table_left"><h2><%= LEAGUE_NAMES_ABBR[game.sport-1] %> Games</h2></td>
 				<% sport = game.sport %>
 			</tr>
 			<tr>
-				<th class="table_left">Game Day</th>
-				<th>Matchup</th>
-				<th>Add to Parlay</th>
+				<td class="table_left">Game Day</td>
+				<td>Matchup</td>
+				<td>Add to Parlay</td>
 			</tr>
 			<% end %>
 			
 			<tr>
 				<td class="table_left"> 
 					<span>
-						<%= game.start_time.strftime("%m-%d") %>
+						<span style="font-weight:bold">
+							<%= game.start_time.strftime("%I:%M").upcase %>
+						</span>
+						<br />
+						<%= game.start_time.strftime("%P %Z") %>
+						<br />
+						<%= game.start_time.strftime("%m-%d ") %>
 					</span>
 				</td>
 				<td>
@@ -82,7 +97,7 @@
 				<td class="add_border">
 					<%= hidden_field_tag "sport[#{game.id}]", game.sport %>
 					Pick <%= game.home_team %>: <%= radio_button_tag("bet_type[#{game.id}]", 'home') %>
-					Pick <%= game.away_team %>: <%= radio_button_tag("bet_type[#{game.id}]", 'away') %>
+					Pick <%= game.away_team %>: <%= radio_button_tag("bet_type[#{game.id}]", 'away') %><br/>
 					Pick Over (<%= game.total_points %>): <%= radio_button_tag("bet_type[#{game.id}]", 'over') %>
 					Pick Under (<%= game.total_points %>): <%= radio_button_tag("bet_type[#{game.id}]", 'under') %>
 					<script id="<%= 'parlay_event_bet_' + game.id.to_s %>" type="text/javascript">
@@ -95,12 +110,11 @@
 						})
 					</script>
 				</td>
-				<td class="add_border table_right"
 			</tr>
 			<tr><td class="table_left"><br /></td></tr>
 			<% end %>		
 	<% else %>
-			<tr><th>There are no games today for your selected sport</th></tr>
-	</table>
+			<tr><td>There are no games today for your selected sport</td></tr>	
 	<% end %>
+	</table>
 </div>

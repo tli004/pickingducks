@@ -1,21 +1,72 @@
-<span class="featured_header"><h1>UPCOMING GAMES:</h1>
+
+<!-- Optional plugins -->
+<%= javascript_include_tag "jquery.easing.1.2.js" %>
+<%= javascript_include_tag  "swfobject.js" %>
+
+
+<%= stylesheet_link_tag "anythingslider.css" %>
+<%= javascript_include_tag "jquery.anythingslider.js" %>
+
+<%= stylesheet_link_tag "theme-metallic.css" %>
+<%= stylesheet_link_tag "theme-minimalist-round.css" %>
+<%= stylesheet_link_tag "theme-minimalist-square.css" %>
+<%= stylesheet_link_tag "theme-construction.css" %>
+<%= stylesheet_link_tag "theme-cs-portfolio.css" %>
+
+<!-- AnythingSlider optional extensions -->
+<%= javascript_include_tag "jquery.anythingslider.fx.js" %>
+<%= javascript_include_tag "jquery.anythingslider.video.js" %>
+
+<span class="featured_header">
+	<h2>UPCOMING GAMES:</h2>
 	<span id="menu">
 		<span class="featured_dropdown">
 			<span id="selected_sport" style="font-size:24px"><%= @selected_sport %></span>
 			<%= image_tag (asset_path 'down_arrow.png'), :class => "dropdown_arrow" %>
 		</span>
+		<ul class="sports_list">
+			<li onclick="get_featured(1);">Football</li>
+			<li onclick="get_featured(2);">Basketball</li>
+			<li onclick="get_featured(3);">Baseball</li>
+			<li onclick="get_featured(4);">Hockey</li>
+		</ul>
 	</span>
 </span>
 <span class="featured_date"><%= Time.now.strftime("%A, %B %d") %></span>
-<ul class="sports_list">
-	<li onclick="get_featured(1);">Football</li>
-	<li onclick="get_featured(2);">Basketball</li>
-	<li onclick="get_featured(3);">Baseball</li>
-	<li onclick="get_featured(4);">Hockey</li>
-</ul>
 
-<%= render :partial => 'events/featured_games', :locals => {:featured => @featured } %>
+
+<div id="page_right">
+	<div id="place_bet"></div>
+</div>
+<div id="page_left">
+	<%= render :partial => 'events/featured_games', :locals => {:featured => @featured } %>
 	
+	<% if @consensus_picks.length > 0 %>
+	<h2 class="consensus_header">Consensus</h2>
+	<div style="width:535px;">
+		<ul id="consensus_slider">
+		<% @consensus_picks.each do |event| %>
+			<% if !event.nil? %>
+			<li>
+				<div>
+					<% if event.sport == 3 %>
+						<span><%= "#{event.away_team}(#{event.moneyline_home}) @ #{event.home_team}(#{event.moneyline_away})"%></span><br />
+					<% else %>
+						<span><%= "#{event.away_team}(#{event.spread}) @ #{event.home_team}(#{-event.spread})"%></span><br />				
+					<% end %>		
+					<span><%= "Total Points: #{event.total_points}" %></span><br />			
+					<span><%= "Consensus pick: #{event.consensus[0]} (#{event.consensus[1]}/#{event.bets.length})" %></span><br />
+					<span class="percent_wheel"><%= (event.consensus[1].to_f / event.bets.length * 100).round(1) %>%</span><br />
+					<span>&nbsp;</span>
+				</div>
+			</li>
+			<% end %>
+		<% end %>
+		</ul>
+	</div>
+	<% end %>
+	<%= render :partial => 'users/top_ten_table', :locals => { :top_ten => @top_ten } %>
+</div>
 
-<%= render :partial => 'users/top_ten_table', :locals => { :top_ten => @top_ten } %>
+
 	

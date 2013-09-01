@@ -7,18 +7,13 @@ class User < ActiveRecord::Base
   attr_accessor :password
   attr_accessible :profile_pic, :bio, :dob, :email, :first_name, :active, :last_name, :password, :password_confirmation, :secret_answer, :secret_question, :username, :accept_terms, :wins, :losses, :ties, :bankroll, :money, :nfl_wins, :nfl_losses, :nfl_ties, :nba_wins, :nba_losses, :nba_ties, :mlb_wins, :mlb_losses, :mlb_ties, :nhl_wins, :nhl_losses, :nhl_ties, :registered, :address1, :address2, :city, :state, :zip
   
-   has_attached_file :profile_pic, :styles => { :medium => "200x200", :thumb => "100x100" }, :default_url => "/images/missing.jpg"
+  has_attached_file :profile_pic, :styles => { :medium => "200x200", :thumb => "100x100" }, :default_url => "/images/missing.jpg"
    
   before_create :encrypt_password
-  before_save :assign_win_percentage
-  before_save :assign_nfl_win_percentage  
-  before_save :assign_nba_win_percentage  
-  before_save :assign_mlb_win_percentage  
-  before_save :assign_nhl_win_percentage    
+
   before_create { generate_token(:auth_token) }
   
   validates_presence_of :password, :on => :create
-  validates_presence_of :accept_terms
   validates_presence_of :first_name
   validates_presence_of :last_name
   validates_presence_of :username

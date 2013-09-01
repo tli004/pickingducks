@@ -69,11 +69,15 @@
  	</div>
  	
  	<div id="bet_history">
- 		<% @past_ten.each do |bet| %>
+ 		<% @past_twenty.each do |bet| %>
  			<% if bet.winning %>
- 			<div><%= "&bull; You <span style='color:green'>won</span> a bet of #{bet.amount} ducks for event #{bet.event.away_team} @ #{bet.event.home_team} on #{bet.closed_at.strftime('%B %d')} (bet: #{bet.event.bet_type(bet.bet_type)})".html_safe %></div>
+ 				<% if bet.event.sport == 3 %>
+ 					<div><%= "&bull; You <span style='color:green'>won</span> #{(bet.amount * bet.event.moneyline_home / 100).abs.round(2)} ducks on a bet for event <a class='colorful_link' href=#{event_path(bet.event.id)}>#{bet.event.away_team} @ #{bet.event.home_team}</a> on #{bet.closed_at.strftime('%B %d')} (bet: #{bet.event.bet_type(bet.bet_type)})".html_safe %></div>
+ 				<% else %>
+	 				<div><%= "&bull; You <span style='color:green'>won</span> #{bet.amount} ducks on a bet for event <a class='colorful_link' href=#{event_path(bet.event.id)}>#{bet.event.away_team} @ #{bet.event.home_team}</a> on #{bet.closed_at.strftime('%B %d')} (bet: #{bet.event.bet_type(bet.bet_type)})".html_safe %></div>
+	 			<% end %>
  			<% else %>
- 			<div><%= "&bull; You <span style='color:red'>lost</span> a bet of #{bet.amount} ducks for event #{bet.event.away_team} @ #{bet.event.home_team} on #{bet.closed_at.strftime('%B %d')}".html_safe %></div>
+ 					<div><%= "&bull; You <span style='color:red'>lost</span> #{bet.amount} ducks on a bet for event <a class='colorful_link' href=#{event_path(bet.event.id)}>#{bet.event.away_team} @ #{bet.event.home_team}</a> on #{bet.closed_at.strftime('%B %d')} (bet: #{bet.event.bet_type(bet.bet_type)})".html_safe %></div>
  			<% end %>
  		<% end %>
  	</div>
@@ -169,41 +173,47 @@
 	 </div>
  </div>
  
- <h2>Pending Straight Picks</h2>
- <table>
+ <h2 class="pending_wagers_header">Pending Wagers</h2>
+ <table class="pending_wagers_table">
+ 	
  	<% if @pending_bets.length > 0 %>
- 				<tr>
-		 	<% @pending_bets.each_with_index do |bet, i| %>		 		
-		 			<td class="pending_bet_info">
-		 				<h4>Pick Information</h4>
-		 				<span style="font-size:20px"><%= bet.amount %>d on <%= bet.event.bet_type(bet.bet_type) %></span><br /> for event 
+ 			<thead>
+		 		<tr>
+		 			<th>Amount</th>
+		 			<th>Pick</th>
+		 			<th>Event</th>
+		 			<th>Gameday</th>
+		 			<th>Make Private</th>
+		 		</tr>
+		 	</thead>	
+		 	<% @pending_bets.each_with_index do |bet, i| %>		 	
+		 		<tr class="pending_bet_info">	
+		 			<td><%= bet.amount %>d</td>
+		 			<td><%= bet.event.bet_type(bet.bet_type) %></td>
+		 			<td>
 		 				<a href="<%= event_path(bet.event.id) %>">
-		 					<div style="font-weight:bold;font-size:18px"><%= bet.event.away_team %> @ <%= bet.event.home_team %></div>
-	 					</a> on <%= bet.event.start_time.strftime("%m-%d") %>
-	 					 	
+		 					<%= bet.event.away_team %> @ <%= bet.event.home_team %></span>
+	 					</a>
+	 				</td>	 
+	 				<td>
+	 					<%= bet.event.start_time.strftime("%m-%d") %>
+	 				</td>	
 			 <% if bet.money_price < 0 %>	
-			 	
-				 <%= form_tag make_bet_public_path(bet), :data => {:home_team => bet.event.home_team, :away_team => bet.event.away_team }, :class=>"make_bet_public" do %>
-				 	<div>
-				 		<span>
-				 			Make private and purchaseable for <%= number_field_tag 'bet[money_price]', :amount, :min => 1, :value => 1, :class => "number_input_small" %> dollars.
-				 		</span>
-				 	</div>
-				 	<div>
+			 	<td>
+				 <%= form_tag make_bet_private_path(bet), :data => {:home_team => bet.event.home_team, :away_team => bet.event.away_team }, :class=>"make_bet_private" do %>
+				 	
+			 		<span>
+			 			<%= number_field_tag 'bet[money_price]', :amount, :min => 1, :value => 1, :class => "number_input_small" %> dollars.
+			 		</span>
 				 		<%= submit_tag 'Set Price!', :class => "set_price_btn" %>
-				 	</div>
 				 <% end %>
 				 </td>				 
 			<% else %>
-				<div>This pick is private and purchaseable for a price of <%= bet.money_price %> dollars.</div>
-			</td>
+				<td><div>This pick is private and purchaseable for a price of <%= bet.money_price %> dollars.</div></td>
 			<% end %>
-			<% if i != 0 && i % 5 == 0 %>
-				</tr>
-				<tr>
-			<% end %>
+			</tr>
 		<% end %>
-		</tr>
+		
 	 <% else %>
 	 	<tr>You have no pending picks at this time.</tr>
 	 <% end%>	 
@@ -259,7 +269,7 @@
 			<% total = 0 %>
 			<td>0</td>
 			<% @past_straights.each do |bet| %>
-			<% bet.winning ? total += bet.amount : total -= bet.amount %>
+				<% bet.winning ? total += bet.amount : total -= bet.amount %>
 				<td><%= total %></td>
 			<% end %>	
 		</tr>

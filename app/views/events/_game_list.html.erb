@@ -1,9 +1,9 @@
-<table>
+<table id="featured_games_table">
 <% if games.length > 0 %>	
 	<% games.each do |game| %>
 	<% if sport != game.sport %>
 	<tr>
-		<td><h4><%= LEAGUE_NAMES_ABBR[game.sport-1] %> Games</h4></td>
+		<td style="border:none !important; margin-top:20px;position: relative; display: block;"><h2><%= LEAGUE_NAMES_ABBR[game.sport-1] %> Games</h2></td>
 		<% sport = game.sport %>
 	</tr>
 	<tr>

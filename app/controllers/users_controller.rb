@@ -56,18 +56,18 @@ class UsersController < ApplicationController
     @pending_bets = current_user.bets.where(:pending => true, :parlay => false)
     @parlays = current_user.parlays.where(:pending => true)
        
-    @past_straights = current_user.bets.where(:pending => false, :parlay => false).order('closed_at ASC')
-    @past_ten = current_user.bets.where(:pending => false, :parlay => false).order('closed_at DESC').limit(20)
+    @past_straights = current_user.bets.where(:pending => false, :parlay => false).order('closed_at').reverse
+    @past_twenty = current_user.bets.where(:pending => false, :parlay => false).order('closed_at DESC').limit(20)
     
-    @past_parlays = current_user.parlays.where(:pending => false).order('closed_at ASC')
+    @past_parlays = current_user.parlays.where(:pending => false).order('closed_at').reverse
         
-    @nfl_past_bets = current_user.bets.where(:pending => false, :sport => 1, :parlay => false).order('closed_at ASC')
+    @nfl_past_bets = current_user.bets.where(:pending => false, :sport => 1, :parlay => false).order('closed_at').reverse
     @nfl_change_dates = @nfl_past_bets.map(&:closed_at).map {|date| date.strftime('%b')}
-    @nba_past_bets = current_user.bets.where(:pending => false, :sport => 2, :parlay => false).order('closed_at ASC')   
+    @nba_past_bets = current_user.bets.where(:pending => false, :sport => 2, :parlay => false).order('closed_at').reverse   
     @nba_change_dates = @nba_past_bets.map(&:closed_at).map {|date| date.strftime('%b')}
-    @mlb_past_bets = current_user.bets.where(:pending => false, :sport => 3, :parlay => false).order('closed_at ASC')    
+    @mlb_past_bets = current_user.bets.where(:pending => false, :sport => 3, :parlay => false).order('closed_at').reverse    
     @mlb_change_dates = @mlb_past_bets.map(&:closed_at).map {|date| date.strftime('%b')}
-    @nhl_past_bets = current_user.bets.where(:pending => false, :sport => 4, :parlay => false).order('closed_at ASC')
+    @nhl_past_bets = current_user.bets.where(:pending => false, :sport => 4, :parlay => false).order('closed_at').reverse
     @nhl_change_dates = @nhl_past_bets.map(&:closed_at).map {|date| date.strftime('%b')}
         
     @straight_change_dates = @past_straights.map(&:closed_at).map {|date| date.strftime('%b')}       
@@ -83,6 +83,8 @@ class UsersController < ApplicationController
         break;
       end
     end    
+    
+    @rank = User.where('bankroll > ?', current_user.bankroll).count + 1
     
     @past_week_earnings_straight = current_user.past_week_earnings_straight
     @past_week_earnings_nfl = current_user.past_week_earnings_nfl
@@ -120,6 +122,7 @@ class UsersController < ApplicationController
     @past_week_earnings_mlb = @user.past_week_earnings_mlb
     @past_week_earnings_nhl = @user.past_week_earnings_nhl
     
+    @rank = User.where('bankroll > ?', current_user.bankroll).count + 1
   end
     
   

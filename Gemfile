@@ -27,7 +27,12 @@ gem 'will_paginate'
 gem 'whenever', :require => false
 gem "paperclip", "~> 3.0"
 gem 'stripe'
+gem "less-rails", "~> 2.3.3"
+gem 'therubyracer'
 
+group :development do
+  gem 'rails-dev-boost', :git => 'https://github.com/thedarkone/rails-dev-boost.git'
+end
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
