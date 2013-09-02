@@ -1,1 +1,0 @@
-$(function(){$(document).on("click",".wager_link_home",function(){return $.getScript(this.href),!1})});

@@ -105,7 +105,7 @@ class Bet < ActiveRecord::Base
               end
               
               bet.pending = false
-              bet.closed_at = Time.now.to_date
+              bet.closed_at = Time.zone.now.to_date
               
               bet.save
               puts "$$$$$$$$$$$$$$$$$$$$$$$$$end item$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
@@ -153,7 +153,7 @@ class Bet < ActiveRecord::Base
               end
               
               bet.pending = false
-              bet.closed_at = Time.now.to_date
+              bet.closed_at = Time.zone.now.to_date
               
               bet.save
               puts "$$$$$$$$$$$$$$$$$$$$$$$$$end item$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
@@ -234,7 +234,7 @@ class Bet < ActiveRecord::Base
               end
               
               bet.pending = false
-              bet.closed_at = Time.now
+              bet.closed_at = Time.zone.now
               
               bet.save!
               puts "$$$$$$$$$$$$$$$$$$$$$$$$$end item$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
@@ -283,7 +283,7 @@ class Bet < ActiveRecord::Base
               end
               
               bet.pending = false
-              bet.closed_at = Time.now.to_date
+              bet.closed_at = Time.zone.now.to_date
               
               bet.save
               puts "$$$$$$$$$$$$$$$$$$$$$$$$$end item$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"

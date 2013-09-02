@@ -5,12 +5,12 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
-Event.create(:sport => 4, :start_time => Time.now.to_date, :home_team => "Colts", :away_team => "Patriots", :spread => 12, :total_points => 105)
-Event.create(:sport => 1, :start_time => Time.now.to_date, :home_team => "Browns", :away_team => "Ravens", :spread => -12, :total_points => 90)
-Event.create(:sport => 2, :start_time => Time.now.to_date, :home_team => "Titans", :away_team => "Raiders", :spread => 3, :total_points => 55)
-Event.create(:sport => 3, :start_time => Time.now.to_date, :home_team => "Bengals", :away_team => "Chargers", :spread => -7, :total_points => 75)
-Event.create(:sport => 1, :start_time => Time.now.to_date, :home_team => "Bears", :away_team => "Dolphins", :spread => -6.5, :total_points => 36)
-Event.create(:sport => 1, :start_time => Time.now.to_date, :home_team => "Giants", :away_team => "Saints", :spread => 13.5, :total_points => 88)
+Event.create(:sport => 4, :start_time => Time.zone.now.to_date, :home_team => "Colts", :away_team => "Patriots", :spread => 12, :total_points => 105)
+Event.create(:sport => 1, :start_time => Time.zone.now.to_date, :home_team => "Browns", :away_team => "Ravens", :spread => -12, :total_points => 90)
+Event.create(:sport => 2, :start_time => Time.zone.now.to_date, :home_team => "Titans", :away_team => "Raiders", :spread => 3, :total_points => 55)
+Event.create(:sport => 3, :start_time => Time.zone.now.to_date, :home_team => "Bengals", :away_team => "Chargers", :spread => -7, :total_points => 75)
+Event.create(:sport => 1, :start_time => Time.zone.now.to_date, :home_team => "Bears", :away_team => "Dolphins", :spread => -6.5, :total_points => 36)
+Event.create(:sport => 1, :start_time => Time.zone.now.to_date, :home_team => "Giants", :away_team => "Saints", :spread => 13.5, :total_points => 88)
 
 Event.create(:sport => 2, :start_time => 1.days.from_now.to_date, :home_team => "Lakers", :away_team => "Celtics", :spread => 4, :total_points => 210)
 Event.create(:sport => 2, :start_time => 1.days.from_now.to_date, :home_team => "Suns", :away_team => "Thunder", :spread => -12, :total_points => 199)
