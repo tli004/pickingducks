@@ -5,3 +5,11 @@
 require File.expand_path('../config/application', __FILE__)
 
 PickingDucks::Application.load_tasks
+
+task :close_bets => :environment do 
+  Bet.close_bets 
+end
+
+task :parse_events => :environment do 
+  Event.parse_events 
+end
