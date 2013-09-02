@@ -24,7 +24,11 @@
 
 $(document).ready(function () {		
 	$(".close_button").click(function (e) {
-		$(this).parent().parent().dialog("close");
+		try {
+			$(this).parent().parent().dialog("close");		
+		} catch (e) {
+			$(this).parent().dialog("close");
+		}
 	})		
 	
 	$("#sign_up_form").submit(function (e) {
@@ -68,7 +72,7 @@ function show_log_in() {
 		autoOpen: false,
 		closeOnEscape: true,
 		height: 230,
-		width: 555,
+		width: 500,
 		resizable: false,
 		modal: true,
 		dialogClass: 'overlay'

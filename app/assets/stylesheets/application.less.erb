@@ -198,6 +198,24 @@ h1, h2, h3 {
 	background-color: #ff4200;
     color: #fff;
 }
+.login_link {
+	float: right;
+	height: 40px;
+	position:relative;
+	display: block;
+	text-align:center;
+	vertical-align: center;
+	padding: 5px;
+	box-sizing: border-box;
+}
+.login_link:hover {
+	background-color: #ff4200;
+    color: #fff;
+}
+.reg_login_links:hover {
+	background-color: #ff4200;
+    color: #fff;
+}
 .site-nav li {
     background-origin: padding-box;
     background-size: auto;
@@ -330,17 +348,23 @@ footer p a:hover {
 	height: 75px;
 	display: block;
 	position:absolute;
-	top: -30px;
-	left: -75px;
+	top: -23px;
 }
 
 #sign_up {
 	overflow:hidden;
 	display:none;
+	h6 {
+		margin-bottom: 20px;
+	}
 }
 .sign_up_form_wrapper {
 	position: relative;
 	left: 60px;
+	
+	form input {
+		margin-bottom: 20px;
+	}	
 }
 
 #sign_up_error {
@@ -350,12 +374,18 @@ footer p a:hover {
 }
 
 #log_in {
+	h2 {
+		left: 75px;
+		position: relative;
+	}
 	overflow:hidden;
 	display:none;
+	padding-top: 15px;
 }
 
 .log_in_form {
 	position: relative;
+	line-height: 35px;
 }
 
 .log_in_form a {
@@ -405,10 +435,11 @@ input[type="submit"]:hover {
 	cursor: pointer;
 	padding: 0;
 	margin: 0;
-	left: -60px;
 	top: -20px;
 	display: inline-block;
 	position: relative;
+	width: 5px;
+	height: 5px;
 }
 
 
@@ -424,10 +455,6 @@ input[type="submit"]:hover {
 	font-size: 20px;
 	font-weight: bold;
 	line-height: 0px;
-}
-
-.overlay h6 {
-	line-height:0px;
 }
 
 .overlay label {

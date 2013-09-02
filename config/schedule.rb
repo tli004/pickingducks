@@ -20,10 +20,10 @@
 # Learn more: http://github.com/javan/whenever
 
 every 1.minutes do
-  runner "Bet.close_bets", environment => "development"
+  runner "Bet.close_bets", environment => "production"
 end
 
 every 1.hours do
-  runner "Event.parse_events", environment => "development"
+  runner "Event.parse_events", environment => "production"
 end
 
