@@ -122,7 +122,9 @@ class UsersController < ApplicationController
     @past_week_earnings_mlb = @user.past_week_earnings_mlb
     @past_week_earnings_nhl = @user.past_week_earnings_nhl
     
-    @rank = User.where('bankroll > ?', current_user.bankroll).count + 1
+    if !current_user.nil?
+      @rank = User.where('bankroll > ?', current_user.bankroll).count + 1 
+    end
   end
     
   
