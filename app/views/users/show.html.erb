@@ -137,7 +137,7 @@
 	 		<h3>You have not made any sales.</h3>
 	 	<% end %>
  	</div>
- 	
+ 	<!--
  	<div id="buy_ducks">
  		<h4>***Ducks priced at $0.05 each</h4>
  		<%= form_tag buy_ducks_path, :id => "buy_ducks_form" do %>	
@@ -172,7 +172,7 @@
 	 	<span></span>
 	 </div>
  </div>
- 
+ -->
  <h2 class="pending_wagers_header">Pending Wagers</h2>
  <table class="pending_wagers_table">
  	
@@ -189,10 +189,14 @@
 		 	<% @pending_bets.each_with_index do |bet, i| %>		 	
 		 		<tr class="pending_bet_info">	
 		 			<td><%= bet.amount %>d</td>
-		 			<td><%= bet.event.bet_type(bet.bet_type) %></td>
+		 			<% if bet.bet_type == "over" || bet.bet_type == "under" %>
+		 				<td><%= "#{bet.event.bet_type(bet.bet_type)}(#{bet.event.total_points})" %></td>
+		 			<% else %>
+		 				<td><%= bet.event.bet_type(bet.bet_type) %></td>
+		 			<% end %>
 		 			<td>
 		 				<a href="<%= event_path(bet.event.id) %>">
-		 					<%= bet.event.away_team %> @ <%= bet.event.home_team %></span>
+		 					<%= "#{bet.event.away_team}(#{-bet.event.spread}) @ #{bet.event.home_team}(#{bet.event.spread})" %></span>
 	 					</a>
 	 				</td>	 
 	 				<td>

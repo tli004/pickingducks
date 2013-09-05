@@ -26,10 +26,7 @@ $(document).ready(function () {
   $(".make_bet_private").submit(function (e) {
   		e.preventDefault();
   		
-  		if ($(this).find("[id*='set_money_price'] input").attr('disabled'))
-	  		$('.confirm_make_public span').text('Make bet for event ' + $(this).attr('data-home-team') + ' vs. ' + $(this).attr('data-away-team') + ' public, for ' + $(this).find('input[name="bet[duck_price]"]').val() + ' ducks?');
-	  	else
-	  		$('.confirm_make_public span').text('Make bet for event ' + $(this).attr('data-home-team') + ' vs. ' + $(this).attr('data-away-team') + ' public, for ' + $(this).find('input[name="bet[money_price]"]').val() + ' dollars?');
+  		$('.confirm_make_public span').text('Make bet for event ' + $(this).attr('data-home-team') + ' vs. ' + $(this).attr('data-away-team') + ' private, for ' + $(this).find('input[name="bet[money_price]"]').val() + ' dollars?');
 	  		
 	  	var this_local = this;
 		confirm_popup = $('.confirm_make_public').dialog({

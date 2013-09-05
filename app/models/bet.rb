@@ -168,13 +168,12 @@ class Bet < ActiveRecord::Base
       puts "$$$$$$$$$$$$$$$$$$$$$$$$$start item$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
       event_obj = Event.find_by_extern_id(event_xml.xpath('./event-metadata/@event-key').to_s)
       if !event_obj.nil? && event_xml.xpath("./team/team-metadata[@alignment='home']/../team-stats/@event-outcome").to_s != "undecided" 
-        #event_obj.finished = true
-        #event_obj.save
+        event_obj.finished = true
+        event_obj.save
      
         bets_for_event = Bet.where(:event_id => event_obj.id, :pending => true)
         if bets_for_event.length > 0
-          bets_for_event.each do |bet|
-            puts bet.event.home_team + " vs " + bet.event.away_team         
+          bets_for_event.each do |bet|        
               user = bet.user            
               if bet.won(event_obj, event_xml.xpath("./team/team-metadata[@alignment='home']/../team-stats/@score").to_s.to_i, event_xml.xpath("./team/team-metadata[@alignment='away']/../team-stats/@score").to_s.to_i)
                 
@@ -210,7 +209,6 @@ class Bet < ActiveRecord::Base
                 case bet.sport              
                 when 3
                   user.mlb_losses += 1
-                  user.mlb_wins += 1
                   if bet.bet_type == "home"
                     if event_obj.moneyline_home > 0
                       user.bankroll += 0

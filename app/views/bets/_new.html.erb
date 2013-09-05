@@ -25,8 +25,8 @@
 		 		<%= event.home_team %> (<%= event.moneyline_home %>): <%= f.radio_button(:bet_type, 'home') %><br />
 			 	<%= event.away_team %> (<%= event.moneyline_away %>): <%= f.radio_button(:bet_type, 'away') %>
 		 	<% else %>
-			 	<%= event.home_team %> (<%= -event.spread %>): <%= f.radio_button(:bet_type, 'home') %><br />
-			 	<%= event.away_team %> (<%= event.spread %>): <%= f.radio_button(:bet_type, 'away') %>
+			 	<%= event.home_team %> (<%= event.spread %>): <%= f.radio_button(:bet_type, 'home') %><br />
+			 	<%= event.away_team %> (<%= -event.spread %>): <%= f.radio_button(:bet_type, 'away') %>
 			<% end %><br />
 		 	Wager: <%= f.number_field :amount, :min => 1, :class => "number_input" %>
 		 </p>
