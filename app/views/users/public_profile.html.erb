@@ -52,7 +52,7 @@
 	 				<td><span class="private_bet">HIDDEN:</span></td>
 	 				<td>N/A</td>
 	 				<td>N/A</td>
-	 				<td><a href="<%= event_path(bet.event.id) %>"><%= bet.event.away_team %> @ <%= bet.event.home_team %></a></td>
+	 				<td><a href="<%= event_path(bet.event.id) %>"><%= "#{bet.event.away_team}(#{-bet.event.spread}) @ #{bet.event.home_team}(#{bet.event.spread})" %></a></td>
 	 				<td><%= bet.event.start_time.strftime("%m-%d") %></td>
 	 				<td><%= link_to "Purchase bet info for #{bet.money_price} dollars", pay_money_for_bet_path(bet.user, bet.id),:class => "purchase_bet_info_for_money", :data => {:username => bet.user.username, :home_team => bet.event.home_team, :away_team => bet.event.away_team, :price => bet.money_price } %></td>		 								
 	 			<% else %>
