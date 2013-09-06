@@ -5,7 +5,7 @@
  		<li><a href="#manage_account">MANAGE ACCOUNT</a></li>
  		<li><a href="#bet_history">BET HISTORY</a></li>
  		<li><a href="#sales_summary">SALES AND PURCHASES</a></li>
- 		<li><a href="#buy_ducks">BUY DUCKS</a></li>
+ 		<!--<li><a href="#buy_ducks">BUY DUCKS</a></li>-->
  	</ul>
  	
  	<div id="profile">
@@ -194,11 +194,19 @@
 		 			<% else %>
 		 				<td><%= bet.event.bet_type(bet.bet_type) %></td>
 		 			<% end %>
-		 			<td>
-		 				<a href="<%= event_path(bet.event.id) %>">
-		 					<%= "#{bet.event.away_team}(#{-bet.event.spread}) @ #{bet.event.home_team}(#{bet.event.spread})" %></span>
-	 					</a>
-	 				</td>	 
+		 			<% if !bet.event.spread.nil? %>
+			 			<td>
+			 				<a href="<%= event_path(bet.event.id) %>">
+			 					<%= "#{bet.event.away_team}(#{-bet.event.spread}) @ #{bet.event.home_team}(#{bet.event.spread})" %></span>
+		 					</a>
+		 				</td>	 
+	 				<% else %>
+	 					<td>
+			 				<a href="<%= event_path(bet.event.id) %>">
+			 					<%= "#{bet.event.away_team}(#{bet.event.moneyline_away}) @ #{bet.event.home_team}(#{bet.event.moneyline_home})" %></span>
+		 					</a>
+		 				</td>	
+	 				<% end %>
 	 				<td>
 	 					<%= bet.event.start_time.strftime("%m-%d") %>
 	 				</td>	
