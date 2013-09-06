@@ -52,7 +52,7 @@
 	 				<td><span class="private_bet">HIDDEN:</span></td>
 	 				<td>N/A</td>
 	 				<td>N/A</td>
-	 				<% if bet.event.spread > 0 %>
+	 				<% if !bet.event.spread.nil? && bet.event.spread > 0 %>
 	 					<td><a href="<%= event_path(bet.event.id) %>"><%= "#{bet.event.away_team}(#{-bet.event.spread}) @ #{bet.event.home_team}(#{bet.event.spread})" %></a></td>
 	 				<% else %>
 	 					<td><a href="<%= event_path(bet.event.id) %>"><%= "#{bet.event.away_team}(0) @ #{bet.event.home_team}(0)" %></a></td>
