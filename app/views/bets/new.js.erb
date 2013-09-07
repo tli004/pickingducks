@@ -1,5 +1,5 @@
 $("#place_bet, #place_bet_sport, #place_bet_bet_home").html("<%= escape_javascript(render :partial => 'bets/new', :locals => {:event => @event, :bet => @bet}) %>")
 if (window.scrollY > 500)
-	$("#place_bet, #place_bet_sport, #place_bet_bet_home").css('top', window.scrollY - 250);
+	$("#place_bet, #place_bet_sport, #place_bet_bet_home").css('top', window.pageY - 250);
 else
 	$("#place_bet, #place_bet_sport, #place_bet_bet_home").css('top', 0);
