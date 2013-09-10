@@ -377,11 +377,6 @@
 <%= stylesheet_link_tag "visualize" %>
 <%= stylesheet_link_tag "visualize-dark" %>
 <%= stylesheet_link_tag "calendar" %>
-<script type="text/javascript">
-	$(".track_record_graph").visualize({type: 'line', width: '520px'});
- 	$(".past_week_earnings_graph").visualize({type: 'bar', width: '420px'});
-  	$(".earnings_by_sport_graph").visualize({type: 'line', width: '250px'}); 
-</script>
 
 <%= javascript_include_tag "js-class" %> 
 <%= javascript_include_tag "excanvas" %>  
@@ -389,3 +384,10 @@
 <%= javascript_include_tag 'enhance' %>
 <%= javascript_include_tag 'visualize.jQuery' %> 
 <%= javascript_include_tag 'coda' %>
+<script type="text/javascript">
+$(function () {
+	$(".track_record_graph").visualize({type: 'line', width: '520px'});
+ 	$(".past_week_earnings_graph").visualize({type: 'bar', width: '420px'});
+  	$(".earnings_by_sport_graph").visualize({type: 'line', width: '250px'}); 
+ })
+</script>
