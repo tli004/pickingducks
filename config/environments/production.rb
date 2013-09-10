@@ -23,8 +23,8 @@ PickingDucks::Application.configure do
     :address                => "smtp.gmail.com",
     :port                   => "587",
     :domain                 => "gmail.com",
-    :user_name              => "",
-    :password               => "",
+    :user_name              => "cwood32k@gmail.com",
+    :password               => "I like money!",
     :authentication         => "plain",
     :enable_starttls_auto   => true
   }

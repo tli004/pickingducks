@@ -84,7 +84,7 @@ class Bet < ActiveRecord::Base
                 case bet.sport
                 when 1
                   user.nfl_wins += 1
-                  user.bankroll += bet.amount
+                  user.bankroll += bet.amount + bet.amount
                   user.assign_nfl_win_percentage              
                 end
                 user.save
@@ -96,7 +96,7 @@ class Bet < ActiveRecord::Base
                 case bet.sport
                 when 1
                   user.nfl_losses += 1
-                  user.bankroll -= bet.amount
+                  user.bankroll -= 0
                   user.assign_nfl_win_percentage              
                 end
                 user.save
