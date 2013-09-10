@@ -39,16 +39,16 @@
 				</td>
 				<td>
 					<span class="featured_team_name"><%= game.away_team %><span class="spread_text">(
-						<%= if !game.spread.nil? %>
-							-game.spread
+						<% if !game.spread.nil? %>
+							<%= "#{-game.spread}" %>
 						<% else %>
-							game.moneyline_home 							 
+							<%= "#{game.moneyline_home}" %> 							 
 						<% end %> 
 						)</span></span> @ <span class="featured_team_name"><%= game.home_team %><span class="spread_text">(
-							<%= if !game.spread.nil? %> 
-								game.spread
+							<% if !game.spread.nil? %> 
+								<%= "#{game.spread}" %>
 							<% else %>
-								game.moneyline_away 
+								<%= "#{game.moneyline_away}" %>
 							<% end %>)</span></span>
 				</td>
 				<td style="display:none" id="<%= 'parlay_event_checkbox_' + game.id.to_s %>" class="table_right">				
