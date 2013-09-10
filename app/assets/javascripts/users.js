@@ -18,10 +18,7 @@ $(document).ready(function () {
   	$.get(this.action, $(this).serialize(), null, "script");
   	return false;
   });
-  
-  $(".track_record_graph").visualize({type: 'line', width: '520px'});
-  $(".past_week_earnings_graph").visualize({type: 'bar', width: '420px'});
-  $(".earnings_by_sport_graph").visualize({type: 'line', width: '250px'});   
+     
         
   $(".make_bet_private").submit(function (e) {
   		e.preventDefault();
@@ -53,7 +50,7 @@ $(document).ready(function () {
 		confirm_popup = $('.confirm_purchase_bet_info').dialog({
 			autoOpen: false,
 			closeOnEscape: true,
-			height: 225,
+			height: 80,
 			width: 450,
 			resizable: false,
 			modal: true,
@@ -110,7 +107,7 @@ var payment = {
 			confirm_popup = $('.confirm_buy_bet_info').dialog({
 				autoOpen: false,
 				closeOnEscape: true,
-				height: 250,
+				height: 185,
 				width: 400,
 				resizable: false,
 				modal: true,

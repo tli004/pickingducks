@@ -6,11 +6,11 @@
 	<%= hidden_field_tag :amount, @bet.money_price * 100, :id => "bet_money_price"%>
 	<p>
 		<div>
-			<% if !bet.event.spread.nil? %>
+			<% if !@bet.event.spread.nil? %>
 			To see information for this pick for event <%= "#{bet.event.away_team}(#{-bet.event.spread}) @ #{bet.event.home_team}(#{bet.event.spread}) on #{@bet.event.start_time.strftime('%m-%d ')} " %> by <%= link_to @user.username, user_path(@user.id) %>, you must pay <%= @bet.money_price %> dollars.
 			<% else %>
-			To see information for this pick for event <%= "#{bet.event.away_team}(#{bet.event.moneyline_away}) @ #{bet.event.home_team}(#{bet.event.moneyline_home}) on #{@bet.event.start_time.strftime('%m-%d ')} " %> by <%= link_to @user.username, user_path(@user.id) %>, you must pay <%= @bet.money_price %> dollars.
-			<% end %
+			To see information for this pick for event <%= "#{@bet.event.away_team}(#{@bet.event.moneyline_away}) @ #{@bet.event.home_team}(#{@bet.event.moneyline_home}) on #{@bet.event.start_time.strftime('%m-%d ')} " %> by <%= link_to @user.username, user_path(@user.id) %>, you must pay <%= @bet.money_price %> dollars.
+			<% end %>
 		</div>
 	</p>
 	<p>
