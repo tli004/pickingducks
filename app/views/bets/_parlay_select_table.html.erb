@@ -71,7 +71,7 @@
 											<% if !game.spread.nil? %>
 													"<%= game.moneyline_home %>" 
 											<% else %> 
-													"<%= game.spread} %>" 
+													"<%= game.spread %>" 
 											<% end %> + ")" + "</li>");					
 										if (num_games > 1)	
 											$(".winning_payout").text("$" + (parseInt($(".number_input").val()) * parlay_odds[num_games-2]).toFixed(2).toString());
