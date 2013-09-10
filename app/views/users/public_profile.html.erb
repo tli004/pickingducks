@@ -84,6 +84,114 @@
  </div>
  <br />
  <br /> 
+ 
+ <h2 class="pending_wagers_header">Pick History</h2>
+ <div id="bet_history">
+	<% if @past_twenty.length > 0 %>
+	 		<table class="past_wagers_table">
+	 			<thead>
+			 		<tr>
+			 			<th>Amount</th>
+			 			<th>Pick</th>
+			 			<th>Event</th>
+			 			<th>Total Points</th>
+			 			<th>Gameday</th>
+			 			<th>Outcome</th>
+			 		</tr>
+			 	</thead>	
+	 		<% @past_twenty.each do |bet| %>
+	 		<tbody>
+	 			<tr class="past_bet_info">
+	 			<td><%= bet.amount %></td>
+	 			<td><%= bet.event.bet_type(bet.bet_type) %></td>
+	 			<% if !bet.event.spread.nil? %>
+	 				<td><%= "#{bet.event.away_team}(#{-bet.event.spread})@#{bet.event.home_team}(#{bet.event.spread})"%></td>
+	 			<% else %>
+	 				<td><%= "#{bet.event.away_team}(#{bet.event.moneyline_away})@#{bet.event.home_team}(#{bet.event.moneyline_home})"%></td>
+	 			<% end %>
+	 			<td><%= bet.event.total_points %></td>
+	 			<td>
+ 					<%= bet.event.start_time.strftime("%m-%d") %>
+ 				</td>	
+	 			<% if bet.winning? %>
+	 				<td>WIN</td>
+	 			<% else %>
+	 				<td>LOSS</td>
+	 			<% end %>
+	 			</tr>
+	 		</tbody>
+	 		<% end %>
+	 		</table>
+	 	<% else %>
+	 	No bet history.
+	 	<% end %>
+</div>
+<br />
+<br />
+<h1><%= Date.today.strftime("%B") %></h1>
+<table class="user_calendar" cellspacing="0">
+	<thead>
+		<tr>
+			<th>Mon</th><th>Tue</th><th>Wed</th>
+			<th>Thu</th><th>Fri</th><th>Sat</th>
+			<th>Sun</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td class="padding" colspan="3"></td>
+			<% Time.now.end_of_month.day.times do |i| %>
+				<% date_bets = @user.bets.where("closed_at between ? and ?", Time.new(Date.today.year, Date.today.month, i+1).beginning_of_day, Time.new(Date.today.year, Date.today.month, i+1).end_of_day) %>
+				<% if date_bets.length > 0 %>	
+					<td class="date_has_event red">
+					<% else %>	
+					<td class="date_has_event">
+					<% end %>
+					<%= i + 1 %>					
+					<% if date_bets.length > 0 %>							
+							<div class="events">
+								<ul>
+									<% date_bets.each do |bet| %>
+									<li>
+										<span class="title">
+											<% if !bet.event.spread.nil? %>
+									 			<%= "#{bet.event.away_team}(#{-bet.event.spread}) @ #{bet.event.home_team}(#{bet.event.spread})" %></span>
+							 				<% else %>
+									 			<%= "#{bet.event.away_team}(#{bet.event.moneyline_away}) @ #{bet.event.home_team}(#{bet.event.moneyline_home})" %></span>
+							 				<% end %>
+										</span>
+										<span class="desc">												
+											<%= "Total Points: #{bet.event.total_points}" %><br />
+											<%= "#{@user.username} put #{bet.amount} ducks on #{bet.event.bet_type(bet.bet_type)}" %><br />
+											<% if bet.winning? %>
+											 <%= "#{@user.username} Won!" %>
+											<% else %>
+											 <%= "#{@user.username} Lost..." %>
+											<% end %>
+										</span>
+									</li>
+									<% end %>
+								</ul>
+							</div>							
+					<% end %>
+				</td>
+				<% if i == 3 || i == 10 || i == 17 || i == 24 %>				
+				</tr>
+				<tr>
+				<% end %>
+			<% end %>
+			<td class="padding"></td>
+		</tr>
+	</tbody>
+	<tfoot>
+		<th>Mon</th><th>Tue</th><th>Wed</th>
+		<th>Thu</th><th>Fri</th><th>Sat</th>
+		<th>Sun</th>
+	</tfoot>
+</table>
+<br />
+<br />
+
  <% if @past_straights.length > 0 %>
 <table class="track_record_graph" style="display:none">
 	<caption>Earnings: Straight Bets</caption>
@@ -265,3 +373,14 @@
 	</tbody>
 </table>
 <% end %>
+
+<%= stylesheet_link_tag "visualize" %>
+<%= stylesheet_link_tag "visualize-dark" %>
+<%= stylesheet_link_tag "calendar" %>
+
+<%= javascript_include_tag "js-class" %> 
+<%= javascript_include_tag "excanvas" %>  
+<%= javascript_include_tag "bluff-min" %>
+<%= javascript_include_tag 'enhance' %>
+<%= javascript_include_tag 'visualize.jQuery' %> 
+<%= javascript_include_tag 'coda' %>

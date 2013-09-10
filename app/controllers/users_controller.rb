@@ -96,7 +96,7 @@ class UsersController < ApplicationController
   
   def public_profile
     @user = User.find(params[:id])    
-    
+    @past_twenty = @user.bets.where(:pending => false, :parlay => false).order('closed_at DESC').limit(20)
     @pending_bets = @user.bets.where(:pending => true, :parlay => false)
     
     @past_straights = @user.bets.where(:pending => false, :parlay => false).order('closed_at ASC')
@@ -127,7 +127,7 @@ class UsersController < ApplicationController
     end
   end
     
-  
+=begin  
   def pay_for_bet
     bet = Bet.find(params[:bet_id])
     user = User.find(params[:user_id])
@@ -150,11 +150,10 @@ class UsersController < ApplicationController
     else
       flash[:alert] = "You do not have enough ducks to purchase this information"
       return redirect_to public_profile user
-    end
-    
+    end  
     return redirect_to public_profile_path(user.id)  
   end
-  
+=end  
   def pay_money_for_bet
     @bet = Bet.find(params[:bet_id])
     @user = User.find(params[:user_id])    
@@ -179,7 +178,7 @@ class UsersController < ApplicationController
     @user.wins = 0
     @user.losses = 0
     @user.ties = 0
-    @user.bankroll = 100.0
+    @user.bankroll = 1000.0
     
     if @user.save
       #UserMailer.registration_confirmation(@user).deliver

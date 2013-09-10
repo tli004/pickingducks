@@ -48,11 +48,11 @@
 		<div class="nav">
 			<ul class="site-nav">
 				<a href="/"><li>HOME.</li></a>
-				<a href="<%= users_path %>"><li>USER SEARCH.</li></a>
+				<a href="<%= users_path %>"><li>PLAYER SEARCH.</li></a>
 				<a href="<">
 				<% if current_user %>
 					<a href="<%= user_path current_user %>"><li>MY PROFILE</li></a>
-					<a href="<%= bets_home_path %>"><li>PICKING HOME</li></a>
+					<a href="<%= bets_home_path %>"><li>MAKE PICKS</li></a>
 				<% end %>
 				<a href="<%= sport_home_path(1) %>"><li>NFL</li></a>
 				<a href="<%= sport_home_path(2) %>"><li>NBA</li></a>

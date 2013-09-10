@@ -8,7 +8,7 @@ class BetsController < ApplicationController
   def create
     @event = Event.find(params[:event_id])    
     
-    if params[:bet][:amount].to_i < current_user.bankroll
+    if params[:bet][:amount].to_i <= current_user.bankroll
       bet = Bet.new(params[:bet])
       if bet.save
         current_user.bets << bet        

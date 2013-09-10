@@ -16,7 +16,7 @@
 				<td><%= user.username %></td>
 				<td><%= "#{user.wins}-#{user.losses}-#{user.ties}" %></td>
 				<td><%= ((user.wins.to_f / (user.wins + user.losses + user.ties))*100).round(2) %></td>
-				<td><%= user.bankroll %></td>
+				<td><%= user.bankroll.round(2) %></td>
 			</tr>
 		<% else %>
 			<tr>

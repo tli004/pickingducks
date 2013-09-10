@@ -69,17 +69,44 @@
  	</div>
  	
  	<div id="bet_history">
- 		<% @past_twenty.each do |bet| %>
- 			<% if bet.winning %>
- 				<% if bet.event.sport == 3 %>
- 					<div><%= "&bull; You <span style='color:green'>won</span> #{(bet.amount * bet.event.moneyline_home / 100).abs.round(2)} ducks on a bet for event <a class='colorful_link' href=#{event_path(bet.event.id)}>#{bet.event.away_team} @ #{bet.event.home_team}</a> on #{bet.closed_at.strftime('%B %d')} (bet: #{bet.event.bet_type(bet.bet_type)})".html_safe %></div>
- 				<% else %>
-	 				<div><%= "&bull; You <span style='color:green'>won</span> #{bet.amount} ducks on a bet for event <a class='colorful_link' href=#{event_path(bet.event.id)}>#{bet.event.away_team} @ #{bet.event.home_team}</a> on #{bet.closed_at.strftime('%B %d')} (bet: #{bet.event.bet_type(bet.bet_type)})".html_safe %></div>
+ 		<% if @past_twenty.length > 0 %>
+	 		<table class="past_wagers_table">
+	 			<thead>
+			 		<tr>
+			 			<th>Amount</th>
+			 			<th>Pick</th>
+			 			<th>Event</th>
+			 			<th>Total Points</th>
+			 			<th>Gameday</th>
+			 			<th>Outcome</th>
+			 		</tr>
+			 	</thead>	
+	 		<% @past_twenty.each do |bet| %>
+	 		<tbody>
+	 			<tr class="past_bet_info">
+	 			<td><%= bet.amount %></td>
+	 			<td><%= bet.event.bet_type(bet.bet_type) %></td>
+	 			<% if !bet.event.spread.nil? %>
+	 				<td><%= "#{bet.event.away_team}(#{-bet.event.spread})@#{bet.event.home_team}(#{bet.event.spread})"%></td>
+	 			<% else %>
+	 				<td><%= "#{bet.event.away_team}(#{bet.event.moneyline_away})@#{bet.event.home_team}(#{bet.event.moneyline_home})"%></td>
 	 			<% end %>
- 			<% else %>
- 					<div><%= "&bull; You <span style='color:red'>lost</span> #{bet.amount} ducks on a bet for event <a class='colorful_link' href=#{event_path(bet.event.id)}>#{bet.event.away_team} @ #{bet.event.home_team}</a> on #{bet.closed_at.strftime('%B %d')} (bet: #{bet.event.bet_type(bet.bet_type)})".html_safe %></div>
- 			<% end %>
- 		<% end %>
+	 			<td><%= bet.event.total_points %></td>
+	 			<td>
+ 					<%= bet.event.start_time.strftime("%m-%d") %>
+ 				</td>	
+	 			<% if bet.winning? %>
+	 				<td>WIN</td>
+	 			<% else %>
+	 				<td>LOSS</td>
+	 			<% end %>
+	 			</tr>
+	 		</tbody>
+	 		<% end %>
+	 		</table>
+	 	<% else %>
+	 	No pick history.
+	 	<% end %>
  	</div>
  	
  	<div id="sales_summary"> 	
@@ -277,9 +304,13 @@
 			<tr>
 				<td class="padding" colspan="3"></td>
 				<% Time.now.end_of_month.day.times do |i| %>
+					<% date_bets = current_user.bets.where("closed_at between ? and ?", Time.new(Date.today.year, Date.today.month, i+1).beginning_of_day, Time.new(Date.today.year, Date.today.month, i+1).end_of_day) %>
+					<% if date_bets.length > 0 %>	
+					<td class="date_has_event red">
+					<% else %>	
 					<td class="date_has_event">
+					<% end %>
 						<%= i + 1 %>
-						<% date_bets = current_user.bets.where("closed_at between ? and ?", Time.new(Date.today.year, Date.today.month, i+1).beginning_of_day, Time.new(Date.today.year, Date.today.month, i+1).end_of_day) %>
 						<% if date_bets.length > 0 %>							
 								<div class="events">
 									<ul>
@@ -296,9 +327,9 @@
 												<%= "Total Points: #{bet.event.total_points}" %><br />
 												<%= "You put #{bet.amount} ducks on #{bet.event.bet_type(bet.bet_type)}" %><br />
 												<% if bet.winning? %>
-												 "You Won!"
+												You Won!
 												<% else %>
-												"You Lost..."
+												You Lost...
 												<% end %>
 											</span>
 										</li>
