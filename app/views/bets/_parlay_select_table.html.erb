@@ -39,17 +39,17 @@
 				</td>
 				<td>
 					<span class="featured_team_name"><%= game.away_team %><span class="spread_text">(
-						<%= if game.sport == 3 
-								game.moneyline_home 
-							else 
-								-game.spread 
-							end 
-						%>)</span></span> @ <span class="featured_team_name"><%= game.home_team %><span class="spread_text">(
-							<%= if game.sport == 3 
-									game.moneyline_away 
-								else 
-									game.spread 
-								end %>)</span></span>
+						<%= if !game.spread.nil? %>
+							-game.spread
+						<% else %>
+							game.moneyline_home 							 
+						<% end %> 
+						)</span></span> @ <span class="featured_team_name"><%= game.home_team %><span class="spread_text">(
+							<%= if !game.spread.nil? %> 
+								game.spread
+							<% else %>
+								game.moneyline_away 
+							<% end %>)</span></span>
 				</td>
 				<td style="display:none" id="<%= 'parlay_event_checkbox_' + game.id.to_s %>" class="table_right">				
 					<%= check_box_tag 'event_id[]', game.id %>
@@ -63,16 +63,16 @@
 									} else {
 										num_games += 1;
 										$("#parlay_selected_games").append("<li data-id='<%= game.id %>'>Picked <strong>" + $(this).parent().attr('data-bet') + "</strong> on <%= game.away_team %> (" + 
-										"<%= if game.sport == 3 
-												game.moneyline_away 
-											else 
-												-game.spread 
-											end %>" + ")" + " @ " + "<%= game.home_team %> (" + 
-											"<%= if game.sport == 3 
-													game.moneyline_home 
-												 else 
-													game.spread 
-												 end %>" + ")" + "</li>");					
+										<%= if !game.spread.nil? %>
+											<%= "#{game.moneyline_home}" %> 
+										<% else %> 
+											<%= "#{game.spread}" %> 
+										<% end %> + ")" + " @ " + "<%= game.home_team %> (" + 
+											<%= if !game.spread.nil? %>
+													<%= "#{game.moneyline_home}" %> 
+											<% else %> 
+													<%= "#{game.spread}" %> 
+											<% end %> + ")" + "</li>");					
 										if (num_games > 1)	
 											$(".winning_payout").text("$" + (parseInt($(".number_input").val()) * parlay_odds[num_games-2]).toFixed(2).toString());
 										else
