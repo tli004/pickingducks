@@ -96,9 +96,9 @@
  					<%= bet.event.start_time.strftime("%m-%d") %>
  				</td>	
 	 			<% if bet.winning? %>
-	 				<td>WIN</td>
+	 				<td style="color:green">WIN</td>
 	 			<% else %>
-	 				<td>LOSS</td>
+	 				<td style="color:red">LOSS</td>
 	 			<% end %>
 	 			</tr>
 	 		</tbody>
