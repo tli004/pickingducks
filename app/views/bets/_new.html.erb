@@ -10,7 +10,7 @@
 		 <p>
 		 	<h3>
 		 		<% if event.sport == 3 %>
-		 			<%= "This is a moneyline bet: " %>
+		 			<%= "This is a moneyline pick: " %>
 		 		<% elsif event.spread > 0 %>
 		 			The <%= event.home_team %> are favored by <%= event.spread %> points
 		 		<% else %>
@@ -28,9 +28,9 @@
 			 	<%= event.home_team %> (<%= event.spread %>): <%= f.radio_button(:bet_type, 'home') %><br />
 			 	<%= event.away_team %> (<%= -event.spread %>): <%= f.radio_button(:bet_type, 'away') %>
 			<% end %><br />
-		 	Wager: <%= f.number_field :amount, :min => 1, :class => "number_input" %>
+		 	Amount: <%= f.number_field :amount, :min => 1, :class => "number_input" %>
 		 </p>
-		 <p><%= f.submit 'Place Bet!', :class => 'button place_bet' %></p>
+		 <p><%= f.submit 'Place Pick!', :class => 'button place_bet' %></p>
 		 <% end %>
 	</div>
 	<div id="over_under">
@@ -45,8 +45,8 @@
 		 	<%= f.hidden_field 'parlay', :value => false %>
 		 	Over: <%= f.radio_button(:bet_type, 'over') %><br />
 		 	Under: <%= f.radio_button(:bet_type, 'under') %><br/>
-		 	Wager: <%= f.number_field :amount, :min => 1, :class => "number_input" %>
-		 	<p><%= f.submit 'Place Bet!', :class => 'button place_bet' %></p>
+		 	Amount: <%= f.number_field :amount, :min => 1, :class => "number_input" %>
+		 	<p><%= f.submit 'Place Pick!', :class => 'button place_bet' %></p>
 		 </p>
 		 <% end %>
 	</div>	 

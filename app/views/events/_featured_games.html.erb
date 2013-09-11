@@ -36,12 +36,12 @@
 		</td>
 		<% if current_user %>
 		<td>
-			<a href="<%= new_event_bet_path(game.id) %>" class="wager_link_home button black_gradient">Wager</a>
+			<a href="<%= new_event_bet_path(game.id) %>" class="wager_link_home button black_gradient">Pick</a>
 		</td>
 		<% end %>
 	</tr>
 	<% end %>
 <% else %>
-	<tr><th>There are no games to show for your selected sport</th></tr>
+	<tr style="height:100px;"><th>There are no games to show for your selected sport</th></tr>
 <% end %>
 </table>

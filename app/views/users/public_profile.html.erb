@@ -23,7 +23,7 @@
 	</div>
 </div>
  <hr />
- <h2 class="pending_wagers_header">Pending Wagers</h2>
+ <h2 class="pending_wagers_header">Pending Picks</h2>
  <table class="pending_wagers_table">
  	<% if @pending_bets.length > 0 %>
  		<thead>
@@ -75,11 +75,11 @@
 	 	<% end %>
 	 	
 	 <% else %>
-	 	<tr>No pending bets at this time.</tr>
+	 	<tr>No pending picks at this time.</tr>
 	 <% end%> 
  </table>
  <div class="confirm_purchase_bet_info">
- 	<h4>Purchase bet info?</h4>
+ 	<h4>Purchase pick info?</h4>
  	<span> </span>
  </div>
  <br />
@@ -123,7 +123,7 @@
 	 		<% end %>
 	 		</table>
 	 	<% else %>
-	 	No bet history.
+	 	No pick history.
 	 	<% end %>
 </div>
 <br />
@@ -194,7 +194,7 @@
 
  <% if @past_straights.length > 0 %>
 <table class="track_record_graph" style="display:none">
-	<caption>Earnings: Straight Bets</caption>
+	<caption>Earnings: Straight Picks</caption>
 	<thead>
 		<tr>
 			<th scope="col">0</th>
@@ -219,7 +219,7 @@
 
 <% if @past_parlays.length > 0 %>
 <table class="track_record_graph" style="display:none">
-	<caption>Earnings: Parlay Bets</caption>
+	<caption>Earnings: Parlay Picks</caption>
 	<thead>
 		<tr>
 			<th scope="col">0</th>

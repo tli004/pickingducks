@@ -17,28 +17,29 @@
 <%= javascript_include_tag "jquery.anythingslider.fx.js" %>
 <%= javascript_include_tag "jquery.anythingslider.video.js" %>
 
-<span class="featured_header">
-	<h2>UPCOMING GAMES:</h2>
-	<span id="menu">
-		<span class="featured_dropdown">
-			<span id="selected_sport" style="font-size:24px"><%= @selected_sport %></span>
-			<%= image_tag (asset_path 'down_arrow.png'), :class => "dropdown_arrow" %>
-		</span>
-		<ul class="sports_list">
-			<li onclick="get_featured(1);">Football</li>
-			<li onclick="get_featured(2);">Basketball</li>
-			<li onclick="get_featured(3);">Baseball</li>
-			<li onclick="get_featured(4);">Hockey</li>
-		</ul>
-	</span>
-</span>
-<span class="featured_date"><%= Time.zone.now.strftime("%A, %B %d") %></span>
-
-
 <div id="page_right">
 	<div id="place_bet"></div>
 </div>
 <div id="page_left">
+	<%= render :partial => 'users/top_ten_table', :locals => { :top_ten => @top_ten } %>
+	
+	<span class="featured_header">
+		<h2>UPCOMING GAMES:</h2>
+		<span id="menu">
+			<span class="featured_dropdown">
+				<span id="selected_sport" style="font-size:24px"><%= @selected_sport %></span>
+				<%= image_tag (asset_path 'down_arrow.png'), :class => "dropdown_arrow" %>
+			</span>
+			<ul class="sports_list">
+				<li onclick="get_featured(1);">Football</li>
+				<li onclick="get_featured(2);">Basketball</li>
+				<li onclick="get_featured(3);">Baseball</li>
+				<li onclick="get_featured(4);">Hockey</li>
+			</ul>
+		</span>
+	</span>
+	<span class="featured_date"><%= Time.zone.now.strftime("%A, %B %d") %></span>
+	
 	<%= render :partial => 'events/featured_games', :locals => {:featured => @featured } %>
 	
 	<% if @consensus_picks.length > 0 %>
@@ -65,7 +66,7 @@
 		</ul>
 	</div>
 	<% end %>
-	<%= render :partial => 'users/top_ten_table', :locals => { :top_ten => @top_ten } %>
+	
 </div>
 
 

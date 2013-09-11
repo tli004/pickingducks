@@ -20,6 +20,7 @@ class User < ActiveRecord::Base
   validates_confirmation_of :password
   validates_presence_of :email
   validates_uniqueness_of :email
+  validates_numericality_of :bankroll, :greater_than => 0
   
   def assign_win_percentage
     self.win_percentage = wins.to_f / (wins + losses + ties)

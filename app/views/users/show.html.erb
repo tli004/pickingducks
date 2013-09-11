@@ -3,7 +3,7 @@
  	<ul>
  		<li><a href="#profile">PROFILE</a></li>
  		<li><a href="#manage_account">MANAGE ACCOUNT</a></li>
- 		<li><a href="#bet_history">BET HISTORY</a></li>
+ 		<li><a href="#bet_history">PICK HISTORY</a></li>
  		<li><a href="#sales_summary">SALES AND PURCHASES</a></li>
  		<!--<li><a href="#buy_ducks">BUY DUCKS</a></li>-->
  	</ul>
@@ -68,38 +68,65 @@
 		<% end %>
  	</div>
  	
+ 	
+ 	
+
  	<div id="bet_history">
  		<% if @past_twenty.length > 0 %>
 	 		<table class="past_wagers_table">
 	 			<thead>
 			 		<tr>
-			 			<th>Amount</th>
-			 			<th>Pick</th>
+			 			<th>Gameday</th>
 			 			<th>Event</th>
 			 			<th>Total Points</th>
-			 			<th>Gameday</th>
+			 			<th>Pick</th>
+			 			<th>Amount</th>		 			
 			 			<th>Outcome</th>
+			 			<th>Ducks(+)(-)</th>
 			 		</tr>
 			 	</thead>	
 	 		<% @past_twenty.each do |bet| %>
 	 		<tbody>
 	 			<tr class="past_bet_info">
-	 			<td><%= bet.amount %></td>
-	 			<td><%= bet.event.bet_type(bet.bet_type) %></td>
-	 			<% if !bet.event.spread.nil? %>
+ 				<td>
+ 					<%= bet.event.start_time.strftime("%m-%d") %>
+ 				</td>
+ 				<% if !bet.event.spread.nil? %>
 	 				<td><%= "#{bet.event.away_team}(#{-bet.event.spread})@#{bet.event.home_team}(#{bet.event.spread})"%></td>
 	 			<% else %>
 	 				<td><%= "#{bet.event.away_team}(#{bet.event.moneyline_away})@#{bet.event.home_team}(#{bet.event.moneyline_home})"%></td>
-	 			<% end %>
-	 			<td><%= bet.event.total_points %></td>
-	 			<td>
- 					<%= bet.event.start_time.strftime("%m-%d") %>
- 				</td>	
+	 			<% end %>	 
+	 			<td><%= bet.event.total_points %></td>			
+	 			<td><%= bet.event.bet_type(bet.bet_type) %></td>
+	 			<td><%= bet.amount %></td> 				
 	 			<% if bet.winning? %>
 	 				<td style="color:green">WIN</td>
 	 			<% else %>
 	 				<td style="color:red">LOSS</td>
 	 			<% end %>
+	 			<% if !bet.winning? %>
+	 				<td>(-)<%= bet.amount %></td>
+	 			<% else %>
+		 			<% if !bet.event.spread.nil? %>	 				
+		 				<td>(+)<%= bet.amount %></td>
+		 			<% else %>
+		 			  <% if bet.bet_type == "home" %>
+			                <% if event_obj.moneyline_home > 0 %>
+			                  <td>(+)<%= bet.amount * bet.event.moneyline_home / 100 %></td>
+			                <% else %>
+			                  <td>(+)<%= bet.amount * 100 / bet.event.moneyline_home.abs %></td>
+			                <% end %>
+		              <% elsif bet.bet_type == "away" %>
+		                <% if bet.event.moneyline_away > 0 %>
+		                  <td>(+)<%= bet.amount * bet.event.moneyline_away / 100 %></td>
+		                <% else %>
+		                  <td>(+)<%= bet.amount * 100 / bet.event.moneyline_away.abs %></td>
+		                <% end %>
+		              <% else %>
+		 				<td>(+)<%= bet.amount %></td>
+		 			  <% end %>
+		 			<% end %>
+		 		<% end %>
 	 			</tr>
 	 		</tbody>
 	 		<% end %>
@@ -201,7 +228,7 @@
  </div>
  -->
  </div>
- <h2 class="pending_wagers_header">Pending Wagers</h2>
+ <h2 class="pending_wagers_header">Pending Picks</h2>
  <table class="pending_wagers_table">
  	
  	<% if @pending_bets.length > 0 %>
@@ -249,7 +276,7 @@
 				 <% end %>
 				 </td>				 
 			<% else %>
-				<td><div>This pick is private and purchaseable for a price of <%= bet.money_price %> dollars.</div></td>
+				<td><div>Private. View Price $<%= bet.money_price %><%= link_to 'edit', edit_bet_path(bet.id), :style=>"font-size:10px;padding-left:5px;" %></div></td>
 			<% end %>
 			</tr>
 		<% end %>
@@ -259,7 +286,7 @@
 	 <% end%>	 
  </table>
  <div class="confirm_make_public">
- 	<h4>Make bet for sale?</h4><br/>
+ 	<h4>Make pick for sale?</h4><br/>
  	<span></span>
  </div>
  <br />
@@ -356,7 +383,7 @@
 
 <% if @straight_change_dates.length > 0 %>
 <table class="track_record_graph" style="display:none">
-	<caption>Earnings: Straight Picks</caption>
+	<caption>Bankroll History</caption>
 	<thead>
 		<tr>
 			<th scope="col">0</th>
@@ -368,7 +395,7 @@
 	<tbody>
 		<tr>
 			<th scope="row">Ducks</th>
-			<% total = 0 %>
+			<% total = 1000 %>
 			<td>0</td>
 			<% @past_straights.each do |bet| %>
 				<% bet.winning ? total += bet.amount : total -= bet.amount %>

@@ -60,7 +60,6 @@ class Bet < ActiveRecord::Base
   end
   
   def self.close_bets
-    logger.info "Closing Bets!!!!!!!!!!!!!!!!!!!!!!!!" 
     nfl_game_url = "http://sportscaster.xmlteam.com/gateway/php_ci/searchEvents.php?league-keys=l.nfl.com&date-offset=-1&date-offset-span=2&date-offset-midnight=1600&sort-order=asc&publisher-keys=sportsnetwork.com&max-result-count=200&content-returned=metadata-and-scores&content-format=sportsml&rendering-engine=mvc-view&gateway-theme=default&query-debug=false"
     nba_game_url = ""
     mlb_game_url = "http://sportscaster.xmlteam.com/gateway/php_ci/searchEvents.php?league-keys=l.mlb.com&date-offset=-1&date-offset-span=2&date-offset-midnight=1600&sort-order=asc&publisher-keys=sportsnetwork.com&max-result-count=200&content-returned=metadata-and-scores&content-format=sportsml&rendering-engine=mvc-view&gateway-theme=default&query-debug=false"
@@ -68,7 +67,6 @@ class Bet < ActiveRecord::Base
 
     xml_doc = Nokogiri::XML(open(nfl_game_url, :http_basic_authentication => ["prosperitech", "l1v3l0ng"]))
     xml_doc.xpath('//sports-event').each do |event_xml|      
-      puts "$$$$$$$$$$$$$$$$$$$$$$$$$start item$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
       event_obj = Event.find_by_extern_id(event_xml.xpath('./event-metadata/@event-key').to_s)
       if !event_obj.nil? && event_xml.xpath("./team/team-metadata[@alignment='home']/../team-stats/@event-outcome").to_s != "undecided" 
          event_obj.finished = true
@@ -108,7 +106,6 @@ class Bet < ActiveRecord::Base
               bet.closed_at = Time.zone.now.to_date
               
               bet.save
-              puts "$$$$$$$$$$$$$$$$$$$$$$$$$end item$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
              end
            end
         end
@@ -116,7 +113,6 @@ class Bet < ActiveRecord::Base
 =begin
     xml_doc = Nokogiri::XML(open(nba_game_url, :http_basic_authentication => ["prosperitech", "l1v3l0ng"]))
     xml_doc.xpath('//sports-event').each do |event_xml|
-      puts "$$$$$$$$$$$$$$$$$$$$$$$$$start item$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
       event_obj = Event.find_by_extern_id(event_xml.xpath('./event-metadata/@event-key').to_s)
       if !event_obj.nil? && event_xml.xpath("./team/team-metadata[@alignment='home']/../team-stats/@event-outcome").to_s != "undecided" 
          event_obj.finished = true
@@ -132,7 +128,7 @@ class Bet < ActiveRecord::Base
                 case bet.sport
                 when 2
                   user.nba_wins += 1
-                  user.bankroll += bet.amount
+                  user.bankroll += bet.amount + bet.amount
                   user.assign_nba_win_percentage              
                 end
                 user.save
@@ -144,7 +140,7 @@ class Bet < ActiveRecord::Base
                 case bet.sport
                 when 2
                   user.nba_losses += 1
-                  user.bankroll -= bet.amount
+                  user.bankroll -= 0
                   user.assign_nba_win_percentage              
                 end
                 user.save
@@ -165,7 +161,6 @@ class Bet < ActiveRecord::Base
 =end
     xml_doc = Nokogiri::XML(open(mlb_game_url, :http_basic_authentication => ["prosperitech", "l1v3l0ng"]))
     xml_doc.xpath('//sports-event').each do |event_xml|
-      puts "$$$$$$$$$$$$$$$$$$$$$$$$$start item$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
       event_obj = Event.find_by_extern_id(event_xml.xpath('./event-metadata/@event-key').to_s)
       if !event_obj.nil? && event_xml.xpath("./team/team-metadata[@alignment='home']/../team-stats/@event-outcome").to_s != "undecided" 
         event_obj.finished = true
@@ -235,7 +230,6 @@ class Bet < ActiveRecord::Base
               bet.closed_at = Time.zone.now
               
               bet.save!
-              puts "$$$$$$$$$$$$$$$$$$$$$$$$$end item$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
              end
            end
         end
@@ -244,7 +238,6 @@ class Bet < ActiveRecord::Base
 =begin
   xml_doc = Nokogiri::XML(open(nhl_game_url, :http_basic_authentication => ["prosperitech", "l1v3l0ng"]))
     xml_doc.xpath('//sports-event').each do |event_xml|
-      puts "$$$$$$$$$$$$$$$$$$$$$$$$$start item$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
       event_obj = Event.find_by_extern_id(event_xml.xpath('./event-metadata/@event-key').to_s)
       if !event_obj.nil? && event_xml.xpath("./team/team-metadata[@alignment='home']/../team-stats/@event-outcome").to_s != "undecided" 
          event_obj.finished = true
@@ -260,7 +253,7 @@ class Bet < ActiveRecord::Base
                 case bet.sport              
                 when 4
                   user.nhl_wins += 1
-                  user.bankroll += bet.amount
+                  user.bankroll += bet.amount + bet.amount
                   user.assign_nhl_win_percentage
                 end
                 user.save
@@ -284,7 +277,6 @@ class Bet < ActiveRecord::Base
               bet.closed_at = Time.zone.now.to_date
               
               bet.save
-              puts "$$$$$$$$$$$$$$$$$$$$$$$$$end item$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
              end
            end
         end

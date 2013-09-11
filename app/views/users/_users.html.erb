@@ -40,7 +40,7 @@
 				<td><%= (100* user.nba_win_percentage).round(2) %>%</td>
 				<td><%= (100* user.mlb_win_percentage).round(2) %>%</td>
 				<td><%= (100* user.nhl_win_percentage).round(2) %>%</td>
-				<td><%= user.bankroll %></td>
+				<td><%= user.bankroll.round(2) %></td>
 			</tr>		
 	<% end %>
 	<tr>

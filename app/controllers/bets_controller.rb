@@ -30,6 +30,18 @@ class BetsController < ApplicationController
     end  
   end
   
+  def edit
+    @bet = Bet.find(params[:id])
+  end
+  
+  def update
+    @bet = Bet.find(params[:id])
+    @bet.money_price = params[:bet][:money_price]
+    @bet.save!
+    
+    redirect_to user_path(current_user)
+  end
+  
   def add_bets_to_parlay
     parlay = current_user.parlays.build
     parlay.amount = params[:amount]

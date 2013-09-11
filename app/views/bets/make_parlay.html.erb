@@ -1,5 +1,5 @@
 <%= form_tag '/add_bets_to_parlay' do %>		
-	<h1 class="basic_header">Parlay Bet<span class="switch_link"><a href="/bets_home"> Straight Bets</a></span></h1>
+	<h1 class="basic_header">Parlay Pick<span class="switch_link"><a href="/bets_home"> Straight Bets</a></span></h1>
 	
 	<div id="parlay_left">
 		<%= render :partial => 'parlay_select_table', :locals => { :games => @games, :sport => @sport } %>

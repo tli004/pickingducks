@@ -1,12 +1,12 @@
 <div id="parlay_game_list">
 	<h2>Select Up to 4 games</h2>
 	<div id="parlay_wager">
-		<span>Wager: </span><%= number_field_tag :amount, 1, :min => 1, :class => "number_input"%><br />
+		<span>Amount: </span><%= number_field_tag :amount, 1, :min => 1, :class => "number_input"%><br />
 		<div>Selected games: 
 			<ul id="parlay_selected_games">
 			</ul>
 			<div>Winning payout: <span class="winning_payout">N/A</span></div>
-			<%= submit_tag "Place Bet!", :class => 'button place_bet' %>
+			<%= submit_tag "Place Pick!", :class => 'button place_bet' %>
 		</div>
 	</div>
 	<table id="parlay_game_table">
@@ -59,7 +59,7 @@
 								if (this.checked) {
 									if (num_games == 4) {
 										this.checked = false;
-										alert("maximum of 4 games in parlay bet!");
+										alert("maximum of 4 games in parlay pick!");
 									} else {
 										num_games += 1;
 										$("#parlay_selected_games").append("<li data-id='<%= game.id %>'>Picked <strong>" + $(this).parent().attr('data-bet') + "</strong> on <%= game.away_team %> (" + 

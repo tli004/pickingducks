@@ -1,6 +1,25 @@
-<h1>Editing bet</h1>
-
-<%= render 'form' %>
-
-<%= link_to 'Show', @bet %> |
-<%= link_to 'Back', bets_path %>
+<h1>Editing Pick Viewing Price</h1>
+<div style="padding:20px">
+	<div>
+		<span style="font-weight:bold">Event Info:</span>
+		<% if !@bet.event.spread.nil? %>
+			<%= "#{bet.event.away_team}(#{-bet.event.spread}) @ #{bet.event.home_team}(#{bet.event.spread}) on #{@bet.event.start_time.strftime('%m-%d ')} " %>
+		<% else %>
+			<%= "#{@bet.event.away_team}(#{@bet.event.moneyline_away}) @ #{@bet.event.home_team}(#{@bet.event.moneyline_home}) on #{@bet.event.start_time.strftime('%m-%d ')} " %> 
+		<% end %>
+	</div>
+	<div>
+		<span style="font-weight:bold">Total Points:</span> <%= @bet.event.total_points %>
+	</div>
+	<div style="margin-bottom:25px;">
+		<span style="font-weight:bold">Your Pick:</span> <%= @bet.event.bet_type(@bet.bet_type) %>
+	</div>
+	<%= form_for(@bet) do |f| %>
+	  <div style="margin-bottom:25px;">
+	    Price (USD): <%= f.number_field :money_price, :min => 1, :class => "number_input" %>
+	  </div>
+	  <div class="actions">
+	    <%= f.submit 'Update Pick', :class => "button place_bet" %>
+	  </div>
+	<% end %>
+</div>
