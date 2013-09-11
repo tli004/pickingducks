@@ -23,7 +23,7 @@
 			<span class="featured_team_name"><%= game.away_team %>@</span><br/> <span class="featured_team_name"><%= game.home_team %></span>
 		</td>
 		<td>
-			<% if game.sport == 3 %>
+			<% if game.spread.nil? %>
 				<%= game.moneyline_away %><br />
 				<%= game.moneyline_home %>
 			<% else %>
