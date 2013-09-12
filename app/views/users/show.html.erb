@@ -396,7 +396,7 @@
 		<tr>
 			<th scope="row">Ducks</th>
 			<% total = 1000 %>
-			<td>0</td>
+			<td>1000</td>
 			<% @past_straights.each do |bet| %>
 				<% bet.winning ? total += bet.amount : total -= bet.amount %>
 				<td><%= total %></td>
