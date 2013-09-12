@@ -111,7 +111,7 @@
 		 				<td>(+)<%= bet.amount %></td>
 		 			<% else %>
 		 			  <% if bet.bet_type == "home" %>
-			                <% if event_obj.moneyline_home > 0 %>
+			                <% if bet.event.moneyline_home > 0 %>
 			                  <td>(+)<%= bet.amount * bet.event.moneyline_home / 100 %></td>
 			                <% else %>
 			                  <td>(+)<%= bet.amount * 100 / bet.event.moneyline_home.abs %></td>
