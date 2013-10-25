@@ -62,4 +62,23 @@ module ApplicationHelper
       ['Wyoming', 'WY']
     ]
   end
+
+  def set_calendar_days(day)
+    case day
+    when 0
+      "<th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th>".html_safe
+    when 1
+      "<th>Fri</th><th>Sat</th><th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th>".html_safe
+    when 2
+      "<th>Sat</th><th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th>".html_safe
+    when 3
+      "<th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th>".html_safe
+    when 4
+      "<th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th>".html_safe
+    when 5
+      "<th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th><th>Mon</th>".html_safe
+    when 6
+      "<th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th><th>Mon</th><th>Tue</th>".html_safe
+    end
+  end
 end

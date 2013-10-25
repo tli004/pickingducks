@@ -22,11 +22,11 @@
 		 	<%= f.hidden_field 'pending', :value => true %>
 		 	<%= f.hidden_field 'parlay', :value => false %>
 		 	<% if event.moneyline_home %>
-		 		<%= event.home_team %> (<%= event.moneyline_home %>): <%= f.radio_button(:bet_type, 'home') %><br />
-			 	<%= event.away_team %> (<%= event.moneyline_away %>): <%= f.radio_button(:bet_type, 'away') %>
+		 		<%= event.home_team %> (<%= event.moneyline_home %>): <%= f.radio_button(:bet_type, 'home', :data => {:team => "#{event.home_team}(#{event.moneyline_home})"}) %><br />
+			 	<%= event.away_team %> (<%= event.moneyline_away %>): <%= f.radio_button(:bet_type, 'away', :data => {:team => "#{event.away_team}(#{event.moneyline_away})"}) %>
 		 	<% else %>
-			 	<%= event.home_team %> (<%= event.spread %>): <%= f.radio_button(:bet_type, 'home') %><br />
-			 	<%= event.away_team %> (<%= -event.spread %>): <%= f.radio_button(:bet_type, 'away') %>
+			 	<%= event.home_team %> (<%= event.spread %>): <%= f.radio_button(:bet_type, 'home', :data => {:team => "#{event.home_team}(#{event.spread})"}) %><br />
+			 	<%= event.away_team %> (<%= -event.spread %>): <%= f.radio_button(:bet_type, 'away', :data => {:team => "#{event.away_team}(#{-event.spread})"}) %>
 			<% end %><br />
 		 	Amount: <%= f.number_field :amount, :min => 1, :class => "number_input" %>
 		 </p>
@@ -43,9 +43,9 @@
 		 	<%= f.hidden_field 'sport', :value => event.sport %>
 		 	<%= f.hidden_field 'pending', :value => true %>
 		 	<%= f.hidden_field 'parlay', :value => false %>
-		 	Over: <%= f.radio_button(:bet_type, 'over') %><br />
-		 	Under: <%= f.radio_button(:bet_type, 'under') %><br/>
-		 	Amount: <%= f.number_field :amount, :min => 1, :class => "number_input" %>
+		 	Over: <%= f.radio_button(:bet_type, 'over', :data => {:team => event.home_team, :pick => "over"}) %><br />
+		 	Under: <%= f.radio_button(:bet_type, 'under', :data => {:team => event.away_team, :pick => "under"}) %><br/>
+		 	Amount: <%= f.number_field :amount, :id => "bet_amount2", :min => 1, :class => "number_input", :data => {:total => event.total_points} %>
 		 	<p><%= f.submit 'Place Pick!', :class => 'button place_bet' %></p>
 		 </p>
 		 <% end %>
@@ -55,16 +55,64 @@
 	$("#bet_tabs").tabs();
 	  $("#handicap_bet_form").submit(function (e) {
 	  	e.preventDefault();
-	  	if ($(this).children('input[name="bet[bet_type]"]:checked').length > 0 && $(this).children('input[type="number"]').val() > 0)
-	  		this.submit();
+	  	if ($(this).children('input[name="bet[bet_type]"]:checked').length > 0 && $(this).children('input[type="number"]').val() > 0) {
+	  		var payout = 0;
+	  		var calc_payout = function () {
+	  			jQuery.ajax({
+				  dataType: 'html',
+				  async: false,
+				  url: "/calc_payout/" + <%= "#{event.id}" %> + "/" + $("#bet_amount").val() + "/" + $('input[name="bet[bet_type]"]:checked').attr("data-team"),
+				  success: function (data, status) {if (status == 'success') payout = data; else alert("an error occured");}
+				});
+			}
+			calc_payout();
+
+	  		$('#confirm_place_bet div').html('You are about to place a bet on event <strong>' + $('input[name="bet[bet_type]"]:checked').attr('data-team') + ' vs. ' + $('input[name="bet[bet_type]"]:checked').siblings('input[name="bet[bet_type]"]:not(:checked)').attr('data-team') + '</strong><br/><br/>Pick Info...<br>Bet Amount: ' + $("#bet_amount").val() + "<br/>Pick: " + $('input[name="bet[bet_type]"]:checked').attr("data-team") + "<br/>Payout: " + payout);
+	  		
+		  	var this_local = this;
+			confirm_popup = $('#confirm_place_bet').dialog({
+				autoOpen: false,
+				closeOnEscape: true,
+				height: 200,
+				width: 400,
+				resizable: false,
+				modal: true,
+				dialogClass: 'overlay',
+				buttons: {
+					"Confirm" : function () { this_local.submit(); },
+					"Cancel" : function () { $(this).dialog("close"); }
+				}
+			});
+			$(".ui-dialog-titlebar").remove();
+			confirm_popup.dialog("open");
+		}
 	  	else
 	  		alert("You must select a team to beat the spread, and your wager must be greater than zero.");
 	  });
 	  
 	  $("#over_under_bet_form").submit(function (e) {
 	  	e.preventDefault();
-	  	if ($(this).children('input[name="bet[bet_type]"]:checked').length > 0 && $(this).children('input[type="number"]').val() > 0)
-	  		this.submit();
+	  	if ($(this).children('input[name="bet[bet_type]"]:checked').length > 0 && $(this).children('input[type="number"]').val() > 0) {
+
+			$('#confirm_place_bet div').html('You are about to place a bet on event <strong>' + $('input[name="bet[bet_type]"]:checked').attr('data-team') + ' vs. ' + $('input[name="bet[bet_type]"]:checked').siblings('input[name="bet[bet_type]"]:not(:checked)').attr('data-team') + '</strong><br/><br/>Pick Info...<br>Total Points: ' + $("#bet_amount2").attr('data-total') + '<br/>Bet Amount: ' + $("#bet_amount2").val() + "<br/>Pick: " + $('input[name="bet[bet_type]"]:checked').attr("data-pick") + "<br/>Payout: " + $("#bet_amount2").val());
+
+		  	var this_local = this;
+			confirm_popup = $('#confirm_place_bet').dialog({
+				autoOpen: false,
+				closeOnEscape: true,
+				height: 200,
+				width: 400,
+				resizable: false,
+				modal: true,
+				dialogClass: 'overlay',
+				buttons: {
+					"Confirm" : function () { this_local.submit(); },
+					"Cancel" : function () { $(this).dialog("close"); }
+				}
+			});
+			$(".ui-dialog-titlebar").remove();
+			confirm_popup.dialog("open");
+		}
 	  	else
 	  		alert("You must predict whether the actual total points will be over/under the predicted total, and your wager must be greater than zero.");
 	  });

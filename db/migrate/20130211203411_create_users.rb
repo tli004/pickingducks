@@ -34,7 +34,8 @@ class CreateUsers < ActiveRecord::Migration
       t.float :nba_win_percentage, :default => 0
       t.float :mlb_win_percentage, :default => 0
       t.float :nhl_win_percentage, :default => 0      
-      t.float :bankroll, :default => 100.00
+      t.float :bankroll, :default => 1000.00
+      t.float :available_bankroll, :default => 1000.00
       t.float :money, :default => 0.0
       t.integer :resets, :default => 0
       

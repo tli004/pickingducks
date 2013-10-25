@@ -6,6 +6,8 @@ class CreateEvents < ActiveRecord::Migration
       t.float :moneyline_home
       t.float :moneyline_away
       t.float :total_points
+      t.integer :home_total, :default => 0
+      t.integer :away_total, :default => 0
       t.datetime :start_time
       t.boolean :live
       t.boolean :finished, :default => false

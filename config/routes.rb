@@ -23,11 +23,11 @@ PickingDucks::Application.routes.draw do
   get "/bets_home" => "bets#bets_home", :as => "bets_home"
   get "/make_parlay" => "bets#make_parlay", :as => "make_parlay"
   get "/request_cashout" => "users#request_cashout", :as => "request_cashout"
+  get '/calc_payout/:event_id/:amount/:pick' => "bets#calc_payout", :as => "calc_payout"
   post "/add_bets_to_parlay" => "bets#add_bets_to_parlay", :as => "add_bets_to_parlay"
   post '/make_bet_private/:id' => "bets#make_bet_private", :as => "make_bet_private"
   post '/buy_ducks' => "users#buy_duck", :as => "buy_ducks"
   post '/buy_bet_info' => "users#buy_bet_info", :as => "buy_bet_info"
-  
   
   get "log_in" => "sessions#new", :as => "log_in"
   get "log_out" => "sessions#destroy", :as => "log_out"

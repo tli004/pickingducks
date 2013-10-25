@@ -87,7 +87,7 @@ class Event < ActiveRecord::Base
     
     nfl_odds_url = "http://sportscaster.xmlteam.com/gateway/php_ci/searchDocuments.php?sport-keys=l.nfl.com&league-keys=l.nfl.com&fixture-keys=odds&date-window=16800revision-control=all&publisher-keys=sportsnetwork.com&max-result-count=5&content-returned=all-content&content-format=sportsml&rendering-engine=xslt&gateway-theme=default&query-debug=false"
     
-    #nba_odds_url = ""
+    nba_odds_url = "http://sportscaster.xmlteam.com/gateway/php_ci/searchDocuments.php?sport-keys=l.nba.com&league-keys=l.nba.com&fixture-keys=odds&date-window=16800revision-control=all&publisher-keys=sportsnetwork.com&max-result-count=5&content-returned=all-content&content-format=sportsml&rendering-engine=xslt&gateway-theme=default&query-debug=false"
     
     mlb_odds_url = "http://sportscaster.xmlteam.com/gateway/php_ci/searchDocuments.php?sport-keys=l.mlb.com&league-keys=l.mlb.com&fixture-keys=odds&date-window=16800&revision-control=all&publisher-keys=sportsnetwork.com&max-result-count=5&content-returned=all-content&content-format=sportsml&rendering-engine=xslt&gateway-theme=default&query-debug=false"
     
@@ -118,29 +118,29 @@ class Event < ActiveRecord::Base
      end     
     end  
     
-    #xml_doc = Nokogiri::XML(open(nba_odds_url, :http_basic_authentication => ["prosperitech", "l1v3l0ng"]))
-    #xml_doc.xpath('//sports-event').each do |event|      
-    #  event_key = event.xpath('./event-metadata/@event-key').to_s
-    #  if Event.find_by_extern_id(event_key).nil?
-    #    new_event = Event.new
-    #    new_event.extern_id = event_key
-    #    new_event.start_time = DateTime.parse(event.xpath('./event-metadata/@start-date-time').to_s)
-    #    new_event.sport = 2
-    #    event.xpath('./team').each do |team|
-    #      if team.xpath('./team-metadata/@alignment').to_s == 'home'
-    #        new_event.home_location = team.xpath('./team-metadata/name/@first').to_s
-    #        new_event.home_team = team.xpath('./team-metadata/name/@last').to_s
-    #      else
-    #        new_event.away_location = team.xpath('./team-metadata/name/@first').to_s
-    #        new_event.away_team = team.xpath('./team-metadata/name/@last').to_s
-    #      end
-    #    end        
-    #    new_event.spread = event.xpath('./team/team-metadata[@alignment="home"]/../wagering-stats/').to_s 
-    #    new_event.total_points = event.xpath('./team/team-metadata[@alignment="home"]/../wagering-stats/wagering-total-score[1]/@total').to_s       
+    xml_doc = Nokogiri::XML(open(nba_odds_url, :http_basic_authentication => ["prosperitech", "l1v3l0ng"]))
+    xml_doc.xpath('//sports-event').each do |event|      
+      event_key = event.xpath('./event-metadata/@event-key').to_s
+      if Event.find_by_extern_id(event_key).nil?
+        new_event = Event.new
+        new_event.extern_id = event_key
+        new_event.start_time = DateTime.parse(event.xpath('./event-metadata/@start-date-time').to_s)
+        new_event.sport = 2
+        event.xpath('./team').each do |team|
+          if team.xpath('./team-metadata/@alignment').to_s == 'home'
+            new_event.home_location = team.xpath('./team-metadata/name/@first').to_s
+            new_event.home_team = team.xpath('./team-metadata/name/@last').to_s
+          else
+            new_event.away_location = team.xpath('./team-metadata/name/@first').to_s
+            new_event.away_team = team.xpath('./team-metadata/name/@last').to_s
+          end
+        end        
+        new_event.spread = event.xpath('./team/team-metadata[@alignment="home"]/../wagering-stats/').to_s 
+        new_event.total_points = event.xpath('./team/team-metadata[@alignment="home"]/../wagering-stats/wagering-total-score[1]/@total').to_s       
         
-    #    new_event.save!
-    #  end     
-    #end      
+        new_event.save!
+      end     
+    end      
         
     xml_doc = Nokogiri::XML(open(mlb_odds_url, :http_basic_authentication => ["prosperitech", "l1v3l0ng"]))
     xml_doc.xpath('//sports-event').each do |event|      
@@ -194,6 +194,23 @@ class Event < ActiveRecord::Base
     
       
     
+  end
+
+  def self.calc_payout(id, amount, pick)
+    event = find_by_id(id)
+    if event.sport != 3
+      return amount
+    else
+      if !event.moneyline_home.nil? && event.moneyline_home > 0
+        if pick == event.home_team
+          return bet.amount * event_obj.moneyline_home / 100
+        else
+          return bet.amount * event_obj.moneyline_away / 100
+        end
+      else
+        return amount
+      end
+    end
   end
   
   

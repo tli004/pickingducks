@@ -8,11 +8,11 @@ class BetsController < ApplicationController
   def create
     @event = Event.find(params[:event_id])    
     
-    if params[:bet][:amount].to_i <= current_user.bankroll
+    if params[:bet][:amount].to_i <= current_user.available_bankroll
       bet = Bet.new(params[:bet])
       if bet.save
         current_user.bets << bet        
-        current_user.bankroll = current_user.bankroll - params[:bet][:amount].to_i
+        current_user.available_bankroll = current_user.available_bankroll - params[:bet][:amount].to_i
         current_user.save
         update_current_user
         @event.bets << bet
@@ -92,5 +92,9 @@ class BetsController < ApplicationController
       redirect_to root_path
     end    
   end
+
+  def calc_payout
+    render :text => Event.calc_payout(params[:event_id], params[:amount], params[:pick])
+  end  
 
 end

@@ -49,6 +49,8 @@ ActiveRecord::Schema.define(:version => 20130819004330) do
     t.float    "moneyline_home"
     t.float    "moneyline_away"
     t.float    "total_points"
+    t.integer  "home_total",     :default => 0
+    t.integer  "away_total",     :default => 0
     t.datetime "start_time"
     t.boolean  "live"
     t.boolean  "finished",       :default => false
@@ -115,7 +117,8 @@ ActiveRecord::Schema.define(:version => 20130819004330) do
     t.float    "nba_win_percentage",       :default => 0.0
     t.float    "mlb_win_percentage",       :default => 0.0
     t.float    "nhl_win_percentage",       :default => 0.0
-    t.float    "bankroll",                 :default => 100.0
+    t.float    "bankroll",                 :default => 1000.0
+    t.float    "available_bankroll",       :default => 1000.0
     t.float    "money",                    :default => 0.0
     t.integer  "resets",                   :default => 0
     t.boolean  "registered"
@@ -127,8 +130,8 @@ ActiveRecord::Schema.define(:version => 20130819004330) do
     t.string   "auth_token"
     t.string   "password_reset_token"
     t.datetime "password_reset_sent_at"
-    t.datetime "created_at",                                  :null => false
-    t.datetime "updated_at",                                  :null => false
+    t.datetime "created_at",                                   :null => false
+    t.datetime "updated_at",                                   :null => false
     t.string   "profile_pic_file_name"
     t.string   "profile_pic_content_type"
     t.integer  "profile_pic_file_size"

@@ -1,8 +1,6 @@
 <div id="profile">	
 	<h2>
-		<% if @user.profile_pic.url != "/images/missing.jpg" %>
-	 		<%= image_tag @user.profile_pic.url(:medium), :class => "public_profile_pic" %>
-		<% end %> <%= @user.username.upcase %>
+		<%= @user.username.upcase %>
 	</h2>  	
 	<hr />
 	<div class="box_number">
@@ -28,47 +26,51 @@
  	<% if @pending_bets.length > 0 %>
  		<thead>
  			<th>Status</th>
- 			<th>Amount</th>
- 			<th>Pick</th>
- 			<th>Event</th>
  			<th>Gameday</th>
+ 			<th>Event</th>
+ 			<th>Pick</th>
+ 			<th>Amount</th>
+ 			<th>Payout</th>
  			<th>Purchase</th>
  		</thead>
 	 	<% @pending_bets.each_with_index do |bet, i| %>
 	 		<tr class="pending_bet_info">	 		
 	 		<% if current_user && current_user.purchases.map(&:bet_id).include?(bet.id) %>
 		 			<td><span class="public_bet">Purchased!</span></td>
-		 			<td><%= bet.amount %>d</td>
+		 			<td><%= bet.event.start_time.strftime("%m-%d") %></td>
+		 			<td><a href="<%= event_path(bet.event.id) %>"><%= "#{bet.event.away_team}(#{-bet.event.spread}) @ #{bet.event.home_team}(#{bet.event.spread})"%></a></td>
 		 			<% if bet.bet_type == "over" || bet.bet_type == "under" %>
 		 				<td><%= "#{bet.event.bet_type(bet.bet_type)}(#{bet.event.total_points})" %></td>
 		 			<% else %>
 		 				<td><%= bet.event.bet_type(bet.bet_type) %></td>
 		 			<% end %>
-		 			<td><a href="<%= event_path(bet.event.id) %>"><%= "#{bet.event.away_team}(#{-bet.event.spread}) @ #{bet.event.home_team}(#{bet.event.spread})"%></a></td>
-		 			<td><%= bet.event.start_time.strftime("%m-%d") %></td>
+		 			<td><%= bet.amount %>d</td>
+		 			<td><%= Event.calc_payout(bet.event.id, bet.amount, bet.event(bet.bet_type)) %>d</td>
 		 			<td></td>				 	
 	 		<% else %>			 		 								
 	 			<% if bet.money_price > 0 %>	
 	 				<td><span class="private_bet">HIDDEN:</span></td>
-	 				<td>N/A</td>
-	 				<td>N/A</td>
+	 				<td><%= bet.event.start_time.strftime("%m-%d") %></td>
 	 				<% if !bet.event.spread.nil? %>
 	 					<td><a href="<%= event_path(bet.event.id) %>"><%= "#{bet.event.away_team}(#{-bet.event.spread}) @ #{bet.event.home_team}(#{bet.event.spread})" %></a></td>
 	 				<% else %>
 	 					<td><a href="<%= event_path(bet.event.id) %>"><%= "#{bet.event.away_team}(#{bet.event.moneyline_away}) @ #{bet.event.home_team}(#{bet.event.moneyline_home})" %></a></td>
 	 				<% end %>
-	 				<td><%= bet.event.start_time.strftime("%m-%d") %></td>
+	 				<td>N/A</td>
+	 				<td>N/A</td>
+	 				<td>N/A</td>
 	 				<td><%= link_to "Purchase bet info for #{bet.money_price} dollars", pay_money_for_bet_path(bet.user, bet.id),:class => "purchase_bet_info_for_money", :data => {:username => bet.user.username, :home_team => bet.event.home_team, :away_team => bet.event.away_team, :price => bet.money_price } %></td>		 								
 	 			<% else %>
 			 		<td><span class="public_bet">VISIBLE:</span></td>
-			 		<td><%= bet.amount %>d</td>
-			 		<td><%= bet.event.bet_type(bet.bet_type) %></td>
+			 		<td><%= bet.event.start_time.strftime("%m-%d") %></td>
 			 		<% if !bet.event.spread.nil? %>
 			 			<td><a href="<%= event_path(bet.event.id) %>"><%= "#{bet.event.away_team}(#{-bet.event.spread}) @ #{bet.event.home_team}(#{bet.event.spread})" %></a></td>
 			 		<% else %>
 			 			<td><a href="<%= event_path(bet.event.id) %>"><%= "#{bet.event.away_team}(#{bet.event.moneyline_away}) @ #{bet.event.home_team}(#{bet.event.moneyline_home})" %></a></td>
 			 		<% end %>
-			 		<td><%= bet.event.start_time.strftime("%m-%d") %></td>
+			 		<td><%= bet.event.bet_type(bet.bet_type) %></td>
+			 		<td><%= bet.amount %>d</td>
+			 		<td><%= Event.calc_payout(bet.event.id, bet.amount, bet.event(bet.bet_type)) %>d</td>
 	 			<% end %>
  			<% end %>
  			</tr>
@@ -91,33 +93,59 @@
 	 		<table class="past_wagers_table">
 	 			<thead>
 			 		<tr>
-			 			<th>Amount</th>
-			 			<th>Pick</th>
-			 			<th>Event</th>
-			 			<th>Total Points</th>
 			 			<th>Gameday</th>
+			 			<th>Event</th>
+			 			<th>Final Score</th>
+			 			<th>Pick</th>
+			 			<th>Amount</th>
 			 			<th>Outcome</th>
+			 			<th>Ducks+-</th>
+			 			<th>Resulting Bankroll</th>
 			 		</tr>
 			 	</thead>	
 	 		<% @past_twenty.each do |bet| %>
 	 		<tbody>
 	 			<tr class="past_bet_info">
-	 			<td><%= bet.amount %></td>
-	 			<td><%= bet.event.bet_type(bet.bet_type) %></td>
-	 			<% if !bet.event.spread.nil? %>
-	 				<td><%= "#{bet.event.away_team}(#{-bet.event.spread})@#{bet.event.home_team}(#{bet.event.spread})"%></td>
-	 			<% else %>
-	 				<td><%= "#{bet.event.away_team}(#{bet.event.moneyline_away})@#{bet.event.home_team}(#{bet.event.moneyline_home})"%></td>
-	 			<% end %>
-	 			<td><%= bet.event.total_points %></td>
-	 			<td>
- 					<%= bet.event.start_time.strftime("%m-%d") %>
- 				</td>	
-	 			<% if bet.winning? %>
-	 				<td style="color:green">WIN</td>
-	 			<% else %>
-	 				<td style="color:red">LOSS</td>
-	 			<% end %>
+	 				<td>
+	 					<%= bet.event.start_time.strftime("%m-%d") %>
+	 				</td>
+	 				<% if !bet.event.spread.nil? %>
+		 				<td><%= "#{bet.event.away_team}(#{-bet.event.spread})@#{bet.event.home_team}(#{bet.event.spread})"%></td>
+		 			<% else %>
+		 				<td><%= "#{bet.event.away_team}(#{bet.event.moneyline_away})@#{bet.event.home_team}(#{bet.event.moneyline_home})"%></td>
+		 			<% end %>
+		 			<td><%= "#{bet.event.home_total.round(0)}-#{bet.event.away_total.round(0)}" %></td>	
+		 			<td><%= bet.event.bet_type(bet.bet_type) %></td>
+	 				<td><%= bet.amount %>d</td>
+		 			<% if bet.winning? %>
+		 				<td style="color:green">WIN</td>
+		 			<% else %>
+		 				<td style="color:red">LOSS</td>
+		 			<% end %>
+		 			<% if !bet.winning? %>
+		 				<td>(-)<%= bet.amount %></td>
+		 			<% else %>
+			 			<% if !bet.event.spread.nil? %>	 				
+			 				<td>(+)<%= bet.amount %></td>
+			 			<% else %>
+			 			  <% if bet.bet_type == "home" %>
+				                <% if event_obj.moneyline_home > 0 %>
+				                  <td>(+)<%= bet.amount * bet.event.moneyline_home / 100 %></td>
+				                <% else %>
+				                  <td>(+)<%= bet.amount * 100 / bet.event.moneyline_home.abs %></td>
+				                <% end %>
+			              <% elsif bet.bet_type == "away" %>
+			                <% if bet.event.moneyline_away > 0 %>
+			                  <td>(+)<%= bet.amount * bet.event.moneyline_away / 100 %></td>
+			                <% else %>
+			                  <td>(+)<%= bet.amount * 100 / bet.event.moneyline_away.abs %></td>
+			                <% end %>
+			              <% else %>
+			 				<td>(+)<%= bet.amount %></td>
+			 			  <% end %>
+			 			<% end %>
+			 		<% end %>
+		 			<td><%= bet.resulting_bankroll %>d</td>
 	 			</tr>
 	 		</tbody>
 	 		<% end %>
@@ -217,6 +245,7 @@
 </table>
 <% end %>
 
+<!--
 <% if @past_parlays.length > 0 %>
 <table class="track_record_graph" style="display:none">
 	<caption>Earnings: Parlay Picks</caption>
@@ -241,6 +270,7 @@
 	</tbody>
 </table>
 <% end %>
+-->
 
 <% if @past_week_earnings_straight > 0 %>
 <table class="past_week_earnings_graph" style="display:none">
