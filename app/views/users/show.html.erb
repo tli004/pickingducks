@@ -376,7 +376,7 @@
 								</div>							
 						<% end %>
 					</td>
-					<% if i.days.ago.strftime("%w").to_i == 30.days.ago.strftime("%w").to_i + 3 %>				
+					<% if i.days.ago.strftime("%w").to_i == ((30.days.ago.strftime("%w").to_i + 3) % 7) %>		
 					</tr>
 					<tr>
 					<% end %>
