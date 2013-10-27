@@ -222,7 +222,7 @@
 
  <% if @past_straights.length > 0 %>
 <table class="track_record_graph" style="display:none">
-	<caption>Earnings: Straight Picks</caption>
+	<caption>Bankroll History</caption>
 	<thead>
 		<tr>
 			<th scope="col">0</th>
@@ -234,8 +234,8 @@
 	<tbody>
 		<tr>
 			<th scope="row">Ducks</th>
-			<% total = 0 %>
-			<td>0</td>
+			<% total = 100 %>
+			<td>1000</td>
 			<% @past_straights.each do |bet| %>
 			<% bet.winning ? total += bet.amount : total -= bet.amount %>
 				<td><%= total %></td>

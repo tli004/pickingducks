@@ -117,7 +117,7 @@
 		 				<td>(+)<%= bet.amount %></td>
 		 			<% else %>
 		 			  <% if bet.bet_type == "home" %>
-			                <% if event_obj.moneyline_home > 0 %>
+			                <% if bet.event.moneyline_home > 0 %>
 			                  <td>(+)<%= bet.amount * bet.event.moneyline_home / 100 %></td>
 			                <% else %>
 			                  <td>(+)<%= bet.amount * 100 / bet.event.moneyline_home.abs %></td>
@@ -403,8 +403,8 @@
 	<tbody>
 		<tr>
 			<th scope="row">Ducks</th>
-			<% total = 1000 %>
-			<td>0</td>
+			<% total = 100 %>
+			<td>1000</td>
 			<% @past_straights.each do |bet| %>
 				<% bet.winning ? total += bet.amount : total -= bet.amount %>
 				<td><%= total %></td>
