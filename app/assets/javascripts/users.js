@@ -19,6 +19,26 @@ $(document).ready(function () {
   	return false;
   });
      
+ $(".reset_bankroll a").on("click", function (e) {
+ 		e.preventDefault();
+	  		
+	  	var this_local = this;
+		confirm_popup = $('.confirm_reset_bankroll').dialog({
+			autoOpen: false,
+			closeOnEscape: true,
+			height: 200,
+			width: 400,
+			resizable: false,
+			modal: true,
+			dialogClass: 'overlay',
+			buttons: {
+				"Confirm" : function () { window.location = this.href; },
+				"Cancel" : function () { $(this).dialog("close"); }
+			}
+		});
+		$(".ui-dialog-titlebar").remove();
+		confirm_popup.dialog("open");
+ }); 
         
   $(".make_bet_private").submit(function (e) {
   		e.preventDefault();

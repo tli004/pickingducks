@@ -25,8 +25,8 @@ class BetsController < ApplicationController
         render :action => 'new'
       end 
     else
-      flash[:alert] = "This bet exceeds your current bankroll of Ducks!"
-      redirect_to 'new'
+      flash[:alert] = "The bet you were attempting to make exceeds your current bankroll of Ducks!"
+      redirect_to :action => 'bets_home'
     end  
   end
   

@@ -30,6 +30,10 @@
 			<span>AVAILABLE DUCKS</span>
 			<div style="color:#FFD700"><%= current_user.available_bankroll.round(2) %></div>
 		</span>
+		<br />
+		<span class="reset_bankroll">
+			<button><a href="/reset_ducks">RESET BANKROLL TO 1000</a></button>
+		</span>
  	</div>
  	
  	<div id="manage_account">
@@ -299,6 +303,10 @@
  <div class="confirm_make_public">
  	<h4>Make pick for sale?</h4><br/>
  	<span></span>
+ </div>
+ <div class="confirm_reset_bankroll">
+ 	<h4><strong>YOU ARE ABOUT TO RESET YOUR BANKROLL TO 1000 DUCKS</strong></h4><br/>
+ 	<span>Are you sure you want to do this? Once you reset your bankroll, it cannot be undone.</span>
  </div>
  <br />
  <br />
