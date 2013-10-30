@@ -338,7 +338,7 @@
  </table>
  <br />
  <br />
--->
+
  <h1>Past 30 Days</h1>
 	<table class="user_calendar" cellspacing="0">
 		<thead>
@@ -351,15 +351,11 @@
 				<td class="padding" colspan="3"></td>
 				<% 30.downto(1) do |i| %>
 					<% date_bets = current_user.bets.where("closed_at between ? and ?", i.days.ago.beginning_of_day, i.days.ago.end_of_day) %>
-					<% if date_bets.length > 0 %>	
-					<td class="date_has_event red">
-					<% else %>	
 					<td class="date_has_event">
-					<% end %>
-						<%= i.days.ago.strftime("%m-%d") %>
 						<% if date_bets.length > 0 %>							
 								<div class="events">
 									<ul>
+										<% total = 0 %>
 										<% date_bets.each do |bet| %>
 										<li>
 											<span class="title">
@@ -373,15 +369,33 @@
 												<%= "Total Points: #{bet.event.total_points}" %><br />
 												<%= "You put #{bet.amount} ducks on #{bet.event.bet_type(bet.bet_type)}" %><br />
 												<% if bet.winning? %>
-												You Won!
+													<% total += bet.amount %>
+													You Won!
 												<% else %>
-												You Lost...
+													<% total -= bet.amount %>
+													You Lost...
 												<% end %>
 											</span>
 										</li>
 										<% end %>
 									</ul>
-								</div>							
+								</div>	
+							<%= total >= 0 ? "+#{total}" : total %>
+							<% if total > 0 %>
+								<script type="text/javascript">
+									var scripts = document.getElementsByTagName( 'script' );
+									var thisScriptTag = scripts[ scripts.length - 1 ];
+									$(thisScriptTag).parent().addClass("green");
+								</script>
+							<% else %>
+								<script type="text/javascript">
+									var scripts = document.getElementsByTagName( 'script' );
+									var thisScriptTag = scripts[ scripts.length - 1 ];
+									$(thisScriptTag).parent().addClass("red");
+								</script>
+							<% end %>
+						<% else %>
+							+0						
 						<% end %>
 					</td>
 					<% if i.days.ago.strftime("%w").to_i == ((30.days.ago.strftime("%w").to_i + 3) % 7) %>		
@@ -396,7 +410,6 @@
 			<%= set_calendar_days(30.days.ago.strftime("%w").to_i) %>
 		</tfoot>
 	</table>
-<!--
 <% if @straight_change_dates.length > 0 %>
 <table class="track_record_graph" style="display:none">
 	<caption>Bankroll History</caption>

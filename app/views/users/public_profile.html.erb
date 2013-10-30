@@ -156,29 +156,23 @@
 </div>
 <br />
 <br />
-<h1><%= Date.today.strftime("%B") %></h1>
+<h1>Past 30 Days</h1>
 <table class="user_calendar" cellspacing="0">
 	<thead>
 		<tr>
-			<th>Mon</th><th>Tue</th><th>Wed</th>
-			<th>Thu</th><th>Fri</th><th>Sat</th>
-			<th>Sun</th>
+			<%= set_calendar_days(30.days.ago.strftime("%w").to_i) %>
 		</tr>
 	</thead>
 	<tbody>
 		<tr>
 			<td class="padding" colspan="3"></td>
-			<% Time.now.end_of_month.day.times do |i| %>
-				<% date_bets = @user.bets.where("closed_at between ? and ?", Time.new(Date.today.year, Date.today.month, i+1).beginning_of_day, Time.new(Date.today.year, Date.today.month, i+1).end_of_day) %>
-				<% if date_bets.length > 0 %>	
-					<td class="date_has_event red">
-					<% else %>	
-					<td class="date_has_event">
-					<% end %>
-					<%= i + 1 %>					
+			<% 30.downto(1) do |i| %>
+				<% date_bets = current_user.bets.where("closed_at between ? and ?", i.days.ago.beginning_of_day, i.days.ago.end_of_day) %>
+				<td class="date_has_event">
 					<% if date_bets.length > 0 %>							
 							<div class="events">
 								<ul>
+									<% total = 0 %>
 									<% date_bets.each do |bet| %>
 									<li>
 										<span class="title">
@@ -190,20 +184,38 @@
 										</span>
 										<span class="desc">												
 											<%= "Total Points: #{bet.event.total_points}" %><br />
-											<%= "#{@user.username} put #{bet.amount} ducks on #{bet.event.bet_type(bet.bet_type)}" %><br />
+											<%= "You put #{bet.amount} ducks on #{bet.event.bet_type(bet.bet_type)}" %><br />
 											<% if bet.winning? %>
-											 <%= "#{@user.username} Won!" %>
+												<% total += bet.amount %>
+												You Won!
 											<% else %>
-											 <%= "#{@user.username} Lost..." %>
+												<% total -= bet.amount %>
+												You Lost...
 											<% end %>
 										</span>
 									</li>
 									<% end %>
 								</ul>
-							</div>							
+							</div>	
+						<%= total >= 0 ? "+#{total}" : total %>
+						<% if total > 0 %>
+							<script type="text/javascript">
+								var scripts = document.getElementsByTagName( 'script' );
+								var thisScriptTag = scripts[ scripts.length - 1 ];
+								$(thisScriptTag).parent().addClass("green");
+							</script>
+						<% else %>
+							<script type="text/javascript">
+								var scripts = document.getElementsByTagName( 'script' );
+								var thisScriptTag = scripts[ scripts.length - 1 ];
+								$(thisScriptTag).parent().addClass("red");
+							</script>
+						<% end %>
+					<% else %>
+						+0						
 					<% end %>
 				</td>
-				<% if i == 3 || i == 10 || i == 17 || i == 24 %>				
+				<% if i.days.ago.strftime("%w").to_i == ((30.days.ago.strftime("%w").to_i + 3) % 7) %>		
 				</tr>
 				<tr>
 				<% end %>
@@ -212,9 +224,7 @@
 		</tr>
 	</tbody>
 	<tfoot>
-		<th>Mon</th><th>Tue</th><th>Wed</th>
-		<th>Thu</th><th>Fri</th><th>Sat</th>
-		<th>Sun</th>
+		<%= set_calendar_days(30.days.ago.strftime("%w").to_i) %>
 	</tfoot>
 </table>
 <br />
