@@ -114,7 +114,7 @@
 		 			<% else %>
 		 				<td><%= "#{bet.event.away_team}(#{bet.event.moneyline_away})@#{bet.event.home_team}(#{bet.event.moneyline_home})"%></td>
 		 			<% end %>
-		 			<td><%= "#{bet.event.home_total.round(0)}-#{bet.event.away_total.round(0)}" %></td>	
+		 			<td><%= "#{bet.event.away_total.round(0)}-#{bet.event.home_total.round(0)}" %></td>	
 		 			<td><%= bet.event.bet_type(bet.bet_type) %></td>
 	 				<td><%= bet.amount %>d</td>
 		 			<% if bet.winning? %>
