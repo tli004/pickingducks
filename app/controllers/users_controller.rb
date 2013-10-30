@@ -66,7 +66,7 @@ class UsersController < ApplicationController
     @parlays = current_user.parlays.where(:pending => true)
        
     @past_straights = current_user.bets.where(:pending => false, :parlay => false).order('closed_at').reverse
-    @past_twenty = current_user.bets.where(:pending => false, :parlay => false).order('closed_at DESC').limit(20)
+    @past_twenty = current_user.bets.where(:pending => false, :parlay => false).where('closed_at >= ?', 30.days.ago).order('closed_at DESC')
     
     @past_parlays = current_user.parlays.where(:pending => false).order('closed_at').reverse
         
@@ -105,7 +105,7 @@ class UsersController < ApplicationController
   
   def public_profile
     @user = User.find(params[:id])    
-    @past_twenty = @user.bets.where(:pending => false, :parlay => false).order('closed_at DESC').limit(20)
+    @past_twenty = @user.bets.where(:pending => false, :parlay => false).where('closed_at >= ?', 30.days.ago).order('closed_at DESC')
     @pending_bets = @user.bets.where(:pending => true, :parlay => false)
     
     @past_straights = @user.bets.where(:pending => false, :parlay => false).order('closed_at ASC')
