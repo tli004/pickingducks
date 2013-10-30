@@ -32,8 +32,8 @@ class UsersController < ApplicationController
   def reset_ducks
     current_user.bankroll = 1000
     current_user.available_bankroll = 1000
-    current_user.bets.destroy_all
-    current_user.save
+    current_user.bets.where(:pending => true).destroy_all
+    current_user.save!
     flash[:notice] = "Your ducks have been reset to 1000, and any open picks were destroyed."
     redirect_to user_path(current_user)
   end

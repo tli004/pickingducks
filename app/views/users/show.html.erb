@@ -2,9 +2,10 @@
  	
  	<ul>
  		<li><a href="#profile">PROFILE</a></li>
- 		<li><a href="#manage_account">MANAGE ACCOUNT</a></li>
  		<li><a href="#bet_history">PICK HISTORY</a></li>
  		<li><a href="#sales_summary">SALES AND PURCHASES</a></li>
+ 		<li><a href="#manage_account">MANAGE ACCOUNT</a></li>
+ 		
  		<!--<li><a href="#buy_ducks">BUY DUCKS</a></li>-->
  	</ul>
  	
@@ -32,54 +33,72 @@
 		</span>
 		<br />
 		<span class="reset_bankroll">
-			<button><a href="/reset_ducks">RESET BANKROLL TO 1000</a></button>
+			<button><a href="/">RESET BANKROLL TO 1000</a></button>
 		</span>
- 	</div>
- 	
- 	<div id="manage_account">
- 		<%= form_for current_user do |f| %>	 		
- 		<!--
-	 		<div class="profile_header">
-				<% if current_user.profile_pic.url != "/images/missing.jpg" %>
-				<%= image_tag current_user.profile_pic.url(:medium), :class => "profile_pic"%>
-				<div style="font-size:28px"><%= current_user.first_name + " " + current_user.last_name %></div>
-				<span style="color:orange">aka</span><span><%= " " + current_user.username%></span>
-				<br />
-				<span class="upload_text">Change profile picture: </span>	 				
-				<%= image_tag (asset_path 'change_upload.png'), :class=> "upload_image change_upload_btn"%>
-				<%= f.file_field :profile_pic, :class => "hidden_upload_field" %>
-				<% else %>	 				
-				<%= image_tag current_user.profile_pic.url, :class => "missing_pic" %>
-				<div style="font-size:28px"><%= current_user.first_name + " " + current_user.last_name %></div>
-				<div>
-					<span style="color:orange">aka</span><span><%= " " + current_user.username%></span>
-				</div>
-				<br />
-				<span class="upload_text">Upload a profile picture!</span>	 				
-				<%= image_tag (asset_path 'upload_btn.png'), :class => 'upload_image upload_btn'%>
-				<%= f.file_field :profile_pic, :class => "hidden_upload_field" %>
-				<% end %>
-	 		</div>
- 		-->
- 			<p>
-			 	<%= f.label :first_name, :class => "reg_label" %>: 
-			 	<%= f.text_field :first_name %>
-			 </p>
-			 <p>
-			 	<%= f.label :last_name, :class => "reg_label" %>: 
-			 	<%= f.text_field :last_name %>
-			 </p>
-			 <p>
-			 	<%= f.label :username, :class => "reg_label" %>: 
-			 	<%= f.text_field :username %>
-			 </p>				 
-			 <p><%= f.submit 'Update Account', :class => 'button submit_btn' %></p>
-		<% end %>
- 	</div>
- 	
- 	
- 	
 
+		<br />
+		<h2 class="pending_wagers_header">Pending Picks</h2>
+		 <table class="pending_wagers_table">
+		 	
+		 	<% if @pending_bets.length > 0 %>
+		 			<thead>
+				 		<tr>
+				 			<th>Gameday</th>
+				 			<th>Event</th>
+				 			<th>Pick</th>
+				 			<th>Amount</th>
+				 			<th>Payout</th>
+				 			<th>Make Private</th>
+				 		</tr>
+				 	</thead>	
+				 	<% @pending_bets.each_with_index do |bet, i| %>		 	
+				 		<tr class="pending_bet_info">	
+				 			<td>
+			 					<%= bet.event.start_time.strftime("%m-%d") %>
+			 				</td>	
+			 				<% if !bet.event.spread.nil? %>
+					 			<td>
+					 				<a href="<%= event_path(bet.event.id) %>">
+					 					<%= "#{bet.event.away_team}(#{-bet.event.spread}) @ #{bet.event.home_team}(#{bet.event.spread})" %></span>
+				 					</a>
+				 				</td>	 
+			 				<% else %>
+			 					<td>
+					 				<a href="<%= event_path(bet.event.id) %>">
+					 					<%= "#{bet.event.away_team}(#{bet.event.moneyline_away}) @ #{bet.event.home_team}(#{bet.event.moneyline_home})" %></span>
+				 					</a>
+				 				</td>	
+			 				<% end %>
+			 				<% if bet.bet_type == "over" || bet.bet_type == "under" %>
+				 				<td><%= "#{bet.event.bet_type(bet.bet_type)}(#{bet.event.total_points})" %></td>
+				 			<% else %>
+				 				<td><%= bet.event.bet_type(bet.bet_type) %></td>
+				 			<% end %>
+				 			<td><%= bet.amount %>d</td>
+			 				<td>
+			 					<%= Event.calc_payout(bet.event.id, bet.amount, bet.event(bet.bet_type)) %>d
+			 				</td>
+					 <% if bet.money_price < 0 %>	
+					 	<td>
+						 <%= form_tag make_bet_private_path(bet), :data => {:home_team => bet.event.home_team, :away_team => bet.event.away_team }, :class=>"make_bet_private" do %>
+						 	
+					 		<span>
+					 			<%= number_field_tag 'bet[money_price]', :amount, :min => 1, :value => 1, :class => "number_input_small" %> dollars.
+					 		</span>
+						 		<%= submit_tag 'Set Price!', :class => "set_price_btn" %>
+						 <% end %>
+						 </td>				 
+					<% else %>
+						<td><div>Private. View Price $<%= bet.money_price %><%= link_to 'edit', edit_bet_path(bet.id), :style=>"font-size:10px;padding-left:5px;" %></div></td>
+					<% end %>
+					</tr>
+				<% end %>
+				
+			 <% else %>
+			 	<tr>You have no pending picks at this time.</tr>
+			 <% end%>	 
+	 	</table>
+ 	</div>
  	<div id="bet_history">
  		<% if @past_twenty.length > 0 %>
 	 		<table class="past_wagers_table">
@@ -142,6 +161,79 @@
 	 		</tbody>
 	 		<% end %>
 	 		</table>
+	 		<br />
+	 		<br />
+	 		<h1>Past 30 Days</h1>
+	 		<table class="user_calendar" cellspacing="0">
+				<thead>
+					<tr>
+						<%= set_calendar_days(30.days.ago.strftime("%w").to_i) %>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="padding" colspan="3"></td>
+						<% 30.downto(1) do |i| %>
+							<% date_bets = current_user.bets.where("closed_at between ? and ?", i.days.ago.beginning_of_day, i.days.ago.end_of_day) %>
+							<td class="date_has_event">
+								<% if date_bets.length > 0 %>							
+										<div class="events">
+											<ul>
+												<% total = 0 %>
+												<% date_bets.each do |bet| %>
+												<li>
+													<span class="title">
+														<% if !bet.event.spread.nil? %>
+												 			<%= "#{bet.event.away_team}(#{-bet.event.spread}) @ #{bet.event.home_team}(#{bet.event.spread})" %></span>
+										 				<% else %>
+												 			<%= "#{bet.event.away_team}(#{bet.event.moneyline_away}) @ #{bet.event.home_team}(#{bet.event.moneyline_home})" %></span>
+										 				<% end %>
+													</span>
+													<span class="desc">												
+														<%= "Total Points: #{bet.event.total_points}" %><br />
+														<%= "You put #{bet.amount} ducks on #{bet.event.bet_type(bet.bet_type)}" %><br />
+														<% if bet.winning? %>
+															<% total += bet.amount %>
+															You Won!
+														<% else %>
+															<% total -= bet.amount %>
+															You Lost...
+														<% end %>
+													</span>
+												</li>
+												<% end %>
+											</ul>
+										</div>	
+									<%= total >= 0 ? "+#{total}" : total %>
+									<% if total > 0 %>
+										<script type="text/javascript">
+											var scripts = document.getElementsByTagName( 'script' );
+											var thisScriptTag = scripts[ scripts.length - 1 ];
+											$(thisScriptTag).parent().addClass("green");
+										</script>
+									<% else %>
+										<script type="text/javascript">
+											var scripts = document.getElementsByTagName( 'script' );
+											var thisScriptTag = scripts[ scripts.length - 1 ];
+											$(thisScriptTag).parent().addClass("red");
+										</script>
+									<% end %>
+								<% else %>
+									+0						
+								<% end %>
+							</td>
+							<% if i.days.ago.strftime("%w").to_i == ((30.days.ago.strftime("%w").to_i + 3) % 7) %>		
+							</tr>
+							<tr>
+							<% end %>
+						<% end %>
+						<td class="padding"></td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<%= set_calendar_days(30.days.ago.strftime("%w").to_i) %>
+				</tfoot>
+			</table>
 	 	<% else %>
 	 	No pick history.
 	 	<% end %>
@@ -202,6 +294,47 @@
 	 		<h3>You have not made any sales.</h3>
 	 	<% end %>
  	</div>
+
+ 	<div id="manage_account">
+ 		<%= form_for current_user do |f| %>	 		
+ 		<!--
+	 		<div class="profile_header">
+				<% if current_user.profile_pic.url != "/images/missing.jpg" %>
+				<%= image_tag current_user.profile_pic.url(:medium), :class => "profile_pic"%>
+				<div style="font-size:28px"><%= current_user.first_name + " " + current_user.last_name %></div>
+				<span style="color:orange">aka</span><span><%= " " + current_user.username%></span>
+				<br />
+				<span class="upload_text">Change profile picture: </span>	 				
+				<%= image_tag (asset_path 'change_upload.png'), :class=> "upload_image change_upload_btn"%>
+				<%= f.file_field :profile_pic, :class => "hidden_upload_field" %>
+				<% else %>	 				
+				<%= image_tag current_user.profile_pic.url, :class => "missing_pic" %>
+				<div style="font-size:28px"><%= current_user.first_name + " " + current_user.last_name %></div>
+				<div>
+					<span style="color:orange">aka</span><span><%= " " + current_user.username%></span>
+				</div>
+				<br />
+				<span class="upload_text">Upload a profile picture!</span>	 				
+				<%= image_tag (asset_path 'upload_btn.png'), :class => 'upload_image upload_btn'%>
+				<%= f.file_field :profile_pic, :class => "hidden_upload_field" %>
+				<% end %>
+	 		</div>
+ 		-->
+ 			<p>
+			 	<%= f.label :first_name, :class => "reg_label" %>: 
+			 	<%= f.text_field :first_name %>
+			 </p>
+			 <p>
+			 	<%= f.label :last_name, :class => "reg_label" %>: 
+			 	<%= f.text_field :last_name %>
+			 </p>
+			 <p>
+			 	<%= f.label :username, :class => "reg_label" %>: 
+			 	<%= f.text_field :username %>
+			 </p>				 
+			 <p><%= f.submit 'Update Account', :class => 'button submit_btn' %></p>
+		<% end %>
+ 	</div>
  	<!--
  	<div id="buy_ducks">
  		<h4>***Ducks priced at $0.05 each</h4>
@@ -239,67 +372,7 @@
  </div>
  -->
  </div>
- <h2 class="pending_wagers_header">Pending Picks</h2>
- <table class="pending_wagers_table">
- 	
- 	<% if @pending_bets.length > 0 %>
- 			<thead>
-		 		<tr>
-		 			<th>Gameday</th>
-		 			<th>Event</th>
-		 			<th>Pick</th>
-		 			<th>Amount</th>
-		 			<th>Payout</th>
-		 			<th>Make Private</th>
-		 		</tr>
-		 	</thead>	
-		 	<% @pending_bets.each_with_index do |bet, i| %>		 	
-		 		<tr class="pending_bet_info">	
-		 			<td>
-	 					<%= bet.event.start_time.strftime("%m-%d") %>
-	 				</td>	
-	 				<% if !bet.event.spread.nil? %>
-			 			<td>
-			 				<a href="<%= event_path(bet.event.id) %>">
-			 					<%= "#{bet.event.away_team}(#{-bet.event.spread}) @ #{bet.event.home_team}(#{bet.event.spread})" %></span>
-		 					</a>
-		 				</td>	 
-	 				<% else %>
-	 					<td>
-			 				<a href="<%= event_path(bet.event.id) %>">
-			 					<%= "#{bet.event.away_team}(#{bet.event.moneyline_away}) @ #{bet.event.home_team}(#{bet.event.moneyline_home})" %></span>
-		 					</a>
-		 				</td>	
-	 				<% end %>
-	 				<% if bet.bet_type == "over" || bet.bet_type == "under" %>
-		 				<td><%= "#{bet.event.bet_type(bet.bet_type)}(#{bet.event.total_points})" %></td>
-		 			<% else %>
-		 				<td><%= bet.event.bet_type(bet.bet_type) %></td>
-		 			<% end %>
-		 			<td><%= bet.amount %>d</td>
-	 				<td>
-	 					<%= Event.calc_payout(bet.event.id, bet.amount, bet.event(bet.bet_type)) %>d
-	 				</td>
-			 <% if bet.money_price < 0 %>	
-			 	<td>
-				 <%= form_tag make_bet_private_path(bet), :data => {:home_team => bet.event.home_team, :away_team => bet.event.away_team }, :class=>"make_bet_private" do %>
-				 	
-			 		<span>
-			 			<%= number_field_tag 'bet[money_price]', :amount, :min => 1, :value => 1, :class => "number_input_small" %> dollars.
-			 		</span>
-				 		<%= submit_tag 'Set Price!', :class => "set_price_btn" %>
-				 <% end %>
-				 </td>				 
-			<% else %>
-				<td><div>Private. View Price $<%= bet.money_price %><%= link_to 'edit', edit_bet_path(bet.id), :style=>"font-size:10px;padding-left:5px;" %></div></td>
-			<% end %>
-			</tr>
-		<% end %>
-		
-	 <% else %>
-	 	<tr>You have no pending picks at this time.</tr>
-	 <% end%>	 
- </table>
+ 
  <div class="confirm_make_public">
  	<h4>Make pick for sale?</h4><br/>
  	<span></span>

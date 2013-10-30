@@ -18,12 +18,9 @@ $(document).ready(function () {
   	$.get(this.action, $(this).serialize(), null, "script");
   	return false;
   });
-     
  $(".reset_bankroll a").on("click", function (e) {
  		e.preventDefault();
-	  		
-	  	var this_local = this;
-		confirm_popup = $('.confirm_reset_bankroll').dialog({
+		var confirm_popup = $('.confirm_reset_bankroll').dialog({
 			autoOpen: false,
 			closeOnEscape: true,
 			height: 200,
@@ -32,7 +29,7 @@ $(document).ready(function () {
 			modal: true,
 			dialogClass: 'overlay',
 			buttons: {
-				"Confirm" : function () { window.location = this.href; },
+				"Confirm" : function () { window.location = "/reset_ducks"; },
 				"Cancel" : function () { $(this).dialog("close"); }
 			}
 		});
