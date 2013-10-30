@@ -135,7 +135,7 @@ class Event < ActiveRecord::Base
             new_event.away_team = team.xpath('./team-metadata/name/@last').to_s
           end
         end        
-        new_event.spread = event.xpath('./team/team-metadata[@alignment="home"]/../wagering-stats/').to_s 
+        new_event.spread = event.xpath('./team/team-metadata[@alignment="home"]/../wagering-stats/wagering-straight-spread[1]/@value').to_s 
         new_event.total_points = event.xpath('./team/team-metadata[@alignment="home"]/../wagering-stats/wagering-total-score[1]/@total').to_s       
         
         new_event.save!
