@@ -79,6 +79,10 @@ function get_featured(sport_id) {
 	$(".sports_list").hide();
 }
 
+function get_bets_for_date(date) {
+	$.getScript('/get_bets_for_date?date=' + date);
+}
+
 function getURLParameter(name) {
     return decodeURI(
         (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]

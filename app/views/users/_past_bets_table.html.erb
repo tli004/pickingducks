@@ -1,0 +1,66 @@
+<% if past_bets.length > 0 %>
+	<table class="past_wagers_table">
+		<thead>
+			<tr>
+				<th>Gameday</th>
+				<th>Event</th>
+				<th>Final Score</th>
+				<th>Pick</th>
+				<th>Amount</th>		 			
+				<th>Outcome</th>
+				<th>Ducks+-</th>
+				<th>Resulting Bankroll</th>
+			</tr>
+		</thead>	
+	<% past_bets.each do |bet| %>
+	<tbody>
+		<tr class="past_bet_info">
+		<td>
+			<%= bet.event.start_time.strftime("%m-%d") %>
+		</td>
+		<% if !bet.event.spread.nil? %>
+			<td><%= "#{bet.event.away_team}(#{-bet.event.spread})@#{bet.event.home_team}(#{bet.event.spread})"%></td>
+		<% else %>
+			<td><%= "#{bet.event.away_team}(#{bet.event.moneyline_away})@#{bet.event.home_team}(#{bet.event.moneyline_home})"%></td>
+		<% end %>	 
+		<td><%= "#{bet.event.away_total.round(0)}-#{bet.event.home_total.round(0)}" %></td>			
+		<td><%= bet.event.bet_type(bet.bet_type) %></td>
+		<td><%= bet.amount %>d</td> 				
+		<% if bet.winning? %>
+			<td style="color:green">WIN</td>
+		<% else %>
+			<td style="color:red">LOSS</td>
+		<% end %>
+		<% if !bet.winning? %>
+			<td>(-)<%= bet.amount %></td>
+		<% else %>
+			<% if !bet.event.spread.nil? %>	 				
+				<td>(+)<%= bet.amount %></td>
+			<% else %>
+			  <% if bet.bet_type == "home" %>
+	            <% if bet.event.moneyline_home > 0 %>
+	              <td>(+)<%= bet.amount * bet.event.moneyline_home / 100 %></td>
+	            <% else %>
+	              <td>(+)<%= bet.amount * 100 / bet.event.moneyline_home.abs %></td>
+	            <% end %>
+	      <% elsif bet.bet_type == "away" %>
+	        <% if bet.event.moneyline_away > 0 %>
+	          <td>(+)<%= bet.amount * bet.event.moneyline_away / 100 %></td>
+	        <% else %>
+	          <td>(+)<%= bet.amount * 100 / bet.event.moneyline_away.abs %></td>
+	        <% end %>
+	      <% else %>
+				<td>(+)<%= bet.amount %></td>
+			  <% end %>
+			<% end %>
+		<% end %>
+		<td><%= bet.resulting_bankroll %>d</td>
+		</tr>
+	</tbody>
+	<% end %>
+	</table>
+<% else %>
+<span>
+	No pick history for this date.
+</span>
+<% end %>

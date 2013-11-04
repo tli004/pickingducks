@@ -254,7 +254,7 @@ $.fn.visualize = function(options, container){
 					if(i == 0){ leftOffset = 0; }
 					else if(i== xLabels.length-1){ leftOffset = -label.width(); }
 					label
-						.css('margin-left', leftOffset)
+						.css('margin-left', 0)
 						.addClass('label');
 				});
 

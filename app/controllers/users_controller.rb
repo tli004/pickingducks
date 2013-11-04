@@ -66,17 +66,17 @@ class UsersController < ApplicationController
     @parlays = current_user.parlays.where(:pending => true)
        
     @past_straights = current_user.bets.where(:pending => false, :parlay => false).order('closed_at').reverse
-    @past_twenty = current_user.bets.where(:pending => false, :parlay => false).where('closed_at >= ?', 30.days.ago).order('closed_at DESC')
+    @past_thirty_days = current_user.bets.where(:pending => false, :parlay => false).where('closed_at >= ?', 30.days.ago).order('closed_at DESC')
     
     @past_parlays = current_user.parlays.where(:pending => false).order('closed_at').reverse
         
-    @nfl_past_bets = current_user.bets.where(:pending => false, :sport => 1, :parlay => false).order('closed_at').reverse
+    @nfl_past_bets = current_user.bets.where(:pending => false, :sport => 1, :parlay => false).where('closed_at >= ?', 30.days.ago).order('closed_at DESC').reverse
     @nfl_change_dates = @nfl_past_bets.map(&:closed_at).map {|date| date.strftime('%b')}
-    @nba_past_bets = current_user.bets.where(:pending => false, :sport => 2, :parlay => false).order('closed_at').reverse   
+    @nba_past_bets = current_user.bets.where(:pending => false, :sport => 2, :parlay => false).where('closed_at >= ?', 30.days.ago).order('closed_at DESC').reverse   
     @nba_change_dates = @nba_past_bets.map(&:closed_at).map {|date| date.strftime('%b')}
-    @mlb_past_bets = current_user.bets.where(:pending => false, :sport => 3, :parlay => false).order('closed_at').reverse    
+    @mlb_past_bets = current_user.bets.where(:pending => false, :sport => 3, :parlay => false).where('closed_at >= ?', 30.days.ago).order('closed_at DESC').reverse    
     @mlb_change_dates = @mlb_past_bets.map(&:closed_at).map {|date| date.strftime('%b')}
-    @nhl_past_bets = current_user.bets.where(:pending => false, :sport => 4, :parlay => false).order('closed_at').reverse
+    @nhl_past_bets = current_user.bets.where(:pending => false, :sport => 4, :parlay => false).where('closed_at >= ?', 30.days.ago).order('closed_at DESC').reverse
     @nhl_change_dates = @nhl_past_bets.map(&:closed_at).map {|date| date.strftime('%b')}
         
     @straight_change_dates = @past_straights.map(&:closed_at).map {|date| date.strftime('%b')}       
@@ -102,22 +102,27 @@ class UsersController < ApplicationController
     @past_week_earnings_nhl = current_user.past_week_earnings_nhl
     
   end
+
+  def get_bets_for_date
+    @date_bets = current_user.bets.where("closed_at between ? and ?", params[:date].to_i.days.ago.beginning_of_day, params[:date].to_i.days.ago.end_of_day) 
+    render 'users/get_bets_for_date.js.erb'
+  end
   
   def public_profile
     @user = User.find(params[:id])    
-    @past_twenty = @user.bets.where(:pending => false, :parlay => false).where('closed_at >= ?', 30.days.ago).order('closed_at DESC')
+    @past_thirty_days = @user.bets.where(:pending => false, :parlay => false).where('closed_at >= ?', 30.days.ago).order('closed_at DESC')
     @pending_bets = @user.bets.where(:pending => true, :parlay => false)
     
-    @past_straights = @user.bets.where(:pending => false, :parlay => false).order('closed_at ASC')
+    @past_straights = @user.bets.where(:pending => false, :parlay => false).where('closed_at >= ?', 30.days.ago).order('closed_at ASC')
     @past_parlays = @user.parlays.where(:pending => false).order('closed_at ASC')        
     
-    @nfl_past_bets = @user.bets.where(:pending => false, :sport => 1, :parlay => false).order('closed_at ASC')
+    @nfl_past_bets = @user.bets.where(:pending => false, :sport => 1, :parlay => false).where('closed_at >= ?', 30.days.ago).order('closed_at ASC')
     @nfl_change_dates = @nfl_past_bets.map(&:closed_at).map {|date| date.strftime('%b')}
-    @nba_past_bets = @user.bets.where(:pending => false, :sport => 2, :parlay => false).order('closed_at ASC')   
+    @nba_past_bets = @user.bets.where(:pending => false, :sport => 2, :parlay => false).where('closed_at >= ?', 30.days.ago).order('closed_at ASC')   
     @nba_change_dates = @nba_past_bets.map(&:closed_at).map {|date| date.strftime('%b')}
-    @mlb_past_bets = @user.bets.where(:pending => false, :sport => 3, :parlay => false).order('closed_at ASC')    
+    @mlb_past_bets = @user.bets.where(:pending => false, :sport => 3, :parlay => false).where('closed_at >= ?', 30.days.ago).order('closed_at ASC')    
     @mlb_change_dates = @mlb_past_bets.map(&:closed_at).map {|date| date.strftime('%b')}
-    @nhl_past_bets = @user.bets.where(:pending => false, :sport => 4, :parlay => false).order('closed_at ASC')
+    @nhl_past_bets = @user.bets.where(:pending => false, :sport => 4, :parlay => false).where('closed_at >= ?', 30.days.ago).order('closed_at ASC')
     @nhl_change_dates = @nhl_past_bets.map(&:closed_at).map {|date| date.strftime('%b')}    
     
     @straight_change_dates = @past_straights.map(&:closed_at).map {|date| date.strftime('%b')}       

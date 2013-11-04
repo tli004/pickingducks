@@ -101,13 +101,11 @@
 	 	<br />
 	 	<% if @straight_change_dates.length > 0 %>
 			<table class="track_record_graph" style="display:none">
-				<caption>Bankroll History</caption>
+				<caption>Total Ducks Earned/Lost (past 30 days)</caption>
 				<thead>
 					<tr>
 					<% @straight_change_dates.each_with_index do |date, i| %>
-						<% if i % 2 == 0 %>
-						<th scope="col"><%= i %></th>
-						<% end %>
+						<th scope="col">|</th>
 					<% end %>
 					</tr>
 				</thead>
@@ -183,12 +181,12 @@
 
 			<% if @nfl_change_dates.length > 0 %>
 			<table class="earnings_by_sport_graph" style="display:none">
-				<caption>NFL Record</caption>
+				<caption>NFL (past 30 days)</caption>
 				<thead>
 					<tr>
 						<th scope="col">0</th>
 						<% @nfl_change_dates.each do |date| %>
-						<th scope="col"><%= date %></th>
+						<th scope="col">|</th>
 						<% end %>
 					</tr>
 				</thead>
@@ -208,12 +206,12 @@
 
 			<% if @nba_change_dates.length > 0 %>
 			<table class="earnings_by_sport_graph" style="display:none">
-				<caption>NBA Record</caption>
+				<caption>NBA (past 30 days)</caption>
 				<thead>
 					<tr>
 						<th scope="col">0</th>
 						<% @nba_change_dates.each do |date| %>
-						<th scope="col"><%= date %></th>
+						<th scope="col">|</th>
 						<% end %>
 					</tr>
 				</thead>
@@ -233,12 +231,12 @@
 
 			<% if @mlb_change_dates.length > 0 %>
 			<table class="earnings_by_sport_graph" style="display:none">
-				<caption>MLB Record</caption>
+				<caption>MLB (past 30 days)</caption>
 				<thead>
 					<tr>
 						<th scope="col">0</th>
 						<% @mlb_change_dates.each do |date| %>
-						<th scope="col"><%= date %></th>
+						<th scope="col">|</th>
 						<% end %>
 					</tr>
 				</thead>
@@ -258,12 +256,12 @@
 
 			<% if @nhl_change_dates.length > 0 %>
 			<table class="earnings_by_sport_graph" style="display:none">
-				<caption>NHL Record</caption>
+				<caption>NHL (past 30 days)</caption>
 				<thead>
 					<tr>
 						<th scope="col">0</th>
 						<% @nhl_change_dates.each do |date| %>
-						<th scope="col"><%= date %></th>
+						<th scope="col">|</th>
 						<% end %>
 					</tr>
 				</thead>
@@ -299,67 +297,10 @@
 			</script>
  	</div>
  	<div id="bet_history">
- 		<% if @past_twenty.length > 0 %>
-	 		<table class="past_wagers_table">
-	 			<thead>
-			 		<tr>
-			 			<th>Gameday</th>
-			 			<th>Event</th>
-			 			<th>Final Score</th>
-			 			<th>Pick</th>
-			 			<th>Amount</th>		 			
-			 			<th>Outcome</th>
-			 			<th>Ducks+-</th>
-			 			<th>Resulting Bankroll</th>
-			 		</tr>
-			 	</thead>	
-	 		<% @past_twenty.each do |bet| %>
-	 		<tbody>
-	 			<tr class="past_bet_info">
- 				<td>
- 					<%= bet.event.start_time.strftime("%m-%d") %>
- 				</td>
- 				<% if !bet.event.spread.nil? %>
-	 				<td><%= "#{bet.event.away_team}(#{-bet.event.spread})@#{bet.event.home_team}(#{bet.event.spread})"%></td>
-	 			<% else %>
-	 				<td><%= "#{bet.event.away_team}(#{bet.event.moneyline_away})@#{bet.event.home_team}(#{bet.event.moneyline_home})"%></td>
-	 			<% end %>	 
-	 			<td><%= "#{bet.event.away_total.round(0)}-#{bet.event.home_total.round(0)}" %></td>			
-	 			<td><%= bet.event.bet_type(bet.bet_type) %></td>
-	 			<td><%= bet.amount %>d</td> 				
-	 			<% if bet.winning? %>
-	 				<td style="color:green">WIN</td>
-	 			<% else %>
-	 				<td style="color:red">LOSS</td>
-	 			<% end %>
-	 			<% if !bet.winning? %>
-	 				<td>(-)<%= bet.amount %></td>
-	 			<% else %>
-		 			<% if !bet.event.spread.nil? %>	 				
-		 				<td>(+)<%= bet.amount %></td>
-		 			<% else %>
-		 			  <% if bet.bet_type == "home" %>
-			                <% if bet.event.moneyline_home > 0 %>
-			                  <td>(+)<%= bet.amount * bet.event.moneyline_home / 100 %></td>
-			                <% else %>
-			                  <td>(+)<%= bet.amount * 100 / bet.event.moneyline_home.abs %></td>
-			                <% end %>
-		              <% elsif bet.bet_type == "away" %>
-		                <% if bet.event.moneyline_away > 0 %>
-		                  <td>(+)<%= bet.amount * bet.event.moneyline_away / 100 %></td>
-		                <% else %>
-		                  <td>(+)<%= bet.amount * 100 / bet.event.moneyline_away.abs %></td>
-		                <% end %>
-		              <% else %>
-		 				<td>(+)<%= bet.amount %></td>
-		 			  <% end %>
-		 			<% end %>
-		 		<% end %>
-		 		<td><%= bet.resulting_bankroll %>d</td>
-	 			</tr>
-	 		</tbody>
-	 		<% end %>
-	 		</table>
+ 		<% if @past_thirty_days.length > 0 %>
+ 			<span id="past_bets_table">
+		 		Click a date on the calendar to see picking info from that day.
+		 	</span>
 	 		<br />
 	 		<br />
 	 		<h1>Past 30 Days</h1>
@@ -374,7 +315,7 @@
 						<td class="padding" colspan="3"></td>
 						<% 30.downto(1) do |i| %>
 							<% date_bets = current_user.bets.where("closed_at between ? and ?", i.days.ago.beginning_of_day, i.days.ago.end_of_day) %>
-							<td class="date_has_event">
+							<td class="date_has_event calendar_date" onclick="get_bets_for_date(<%= i %>);">
 								<% if date_bets.length > 0 %>							
 										<div class="events">
 											<ul>
@@ -672,275 +613,6 @@
  </table>
  <br />
  <br />
-
- <h1>Past 30 Days</h1>
-	<table class="user_calendar" cellspacing="0">
-		<thead>
-			<tr>
-				<%= set_calendar_days(30.days.ago.strftime("%w").to_i) %>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td class="padding" colspan="3"></td>
-				<% 30.downto(1) do |i| %>
-					<% date_bets = current_user.bets.where("closed_at between ? and ?", i.days.ago.beginning_of_day, i.days.ago.end_of_day) %>
-					<td class="date_has_event">
-						<% if date_bets.length > 0 %>							
-								<div class="events">
-									<ul>
-										<% total = 0 %>
-										<% date_bets.each do |bet| %>
-										<li>
-											<span class="title">
-												<% if !bet.event.spread.nil? %>
-										 			<%= "#{bet.event.away_team}(#{-bet.event.spread}) @ #{bet.event.home_team}(#{bet.event.spread})" %></span>
-								 				<% else %>
-										 			<%= "#{bet.event.away_team}(#{bet.event.moneyline_away}) @ #{bet.event.home_team}(#{bet.event.moneyline_home})" %></span>
-								 				<% end %>
-											</span>
-											<span class="desc">												
-												<%= "Total Points: #{bet.event.total_points}" %><br />
-												<%= "You put #{bet.amount} ducks on #{bet.event.bet_type(bet.bet_type)}" %><br />
-												<% if bet.winning? %>
-													<% total += bet.amount %>
-													You Won!
-												<% else %>
-													<% total -= bet.amount %>
-													You Lost...
-												<% end %>
-											</span>
-										</li>
-										<% end %>
-									</ul>
-								</div>	
-							<%= total >= 0 ? "+#{total}" : total %>
-							<% if total > 0 %>
-								<script type="text/javascript">
-									var scripts = document.getElementsByTagName( 'script' );
-									var thisScriptTag = scripts[ scripts.length - 1 ];
-									$(thisScriptTag).parent().addClass("green");
-								</script>
-							<% else %>
-								<script type="text/javascript">
-									var scripts = document.getElementsByTagName( 'script' );
-									var thisScriptTag = scripts[ scripts.length - 1 ];
-									$(thisScriptTag).parent().addClass("red");
-								</script>
-							<% end %>
-						<% else %>
-							+0						
-						<% end %>
-					</td>
-					<% if i.days.ago.strftime("%w").to_i == ((30.days.ago.strftime("%w").to_i + 3) % 7) %>		
-					</tr>
-					<tr>
-					<% end %>
-				<% end %>
-				<td class="padding"></td>
-			</tr>
-		</tbody>
-		<tfoot>
-			<%= set_calendar_days(30.days.ago.strftime("%w").to_i) %>
-		</tfoot>
-	</table>
-<% if @straight_change_dates.length > 0 %>
-<table class="track_record_graph" style="display:none">
-	<caption>Bankroll History</caption>
-	<thead>
-		<tr>
-			<th scope="col">0</th>
-		<% @straight_change_dates.each do |date| %>
-			<th scope="col"><%= date %></th>
-		<% end %>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<th scope="row">Ducks</th>
-			<% total = 100 %>
-			<td>1000</td>
-			<% @past_straights.each do |bet| %>
-				<% bet.winning ? total += bet.amount : total -= bet.amount %>
-				<td><%= total %></td>
-			<% end %>	
-		</tr>
-	</tbody>
-</table>
-<% end %>
-
-<% if @parlay_change_dates.length > 0 %>
-<table class="track_record_graph" style="display:none">
-	<caption>Earnings: Parlay Picks</caption>
-	<thead>
-		<tr>
-			<th scope="col">0</th>
-		<% @parlay_change_dates.each do |date| %>
-			<th scope="col"><%= date %></th>
-		<% end %>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<th scope="row">Ducks</th>
-			<td>0</td>
-			<% total = 0 %>
-			<% @past_parlays.each do |parlay| %>
-			<% parlay.winning ? total += parlay.amount * PARLAY_ODDS[parlay.bets.length-1]: total -= parlay.amount %>
-				<td><%= total %></td>
-			<% end %>	
-		</tr>
-	</tbody>
-</table>
-<% end %>
-
-<% if @past_week_earnings_straight > 0 %>
-<table class="past_week_earnings_graph" style="display:none">
-	<caption>Past Week Earnings</caption>
-	<thead>
-		<th scope="col"></th>
-	</thead>
-	<tbody>
-		<tr>
-			<th scope="row">straight</th>
-			<td><%= @past_week_earnings_straight %></td>
-		</tr>
-		<tr>
-			<th scope="row">nfl</th>
-			<td><%= @past_week_earnings_nfl %></td>
-		</tr>
-		<tr>
-			<th scope="row">nba</th>
-			<td><%= @past_week_earnings_nba %></td>
-		</tr>
-		<tr>
-			<th scope="row">mlb</th>
-			<td><%= @past_week_earnings_mlb %></td>
-		</tr>
-		<tr>
-			<th scope="row">nhl</th>
-			<td><%= @past_week_earnings_nhl %></td>
-		</tr>
-	</tbody>
-</table>
-<% end %>
-
-<% if @nfl_change_dates.length > 0 %>
-<table class="earnings_by_sport_graph" style="display:none">
-	<caption>NFL Record</caption>
-	<thead>
-		<tr>
-			<th scope="col">0</th>
-			<% @nfl_change_dates.each do |date| %>
-			<th scope="col"><%= date %></th>
-			<% end %>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<th scope="row">NFL Earnings</th>
-				<% total = 0 %>
-				<td>0</td>
-				<% @nfl_past_bets.each do |bet| %>
-				<% bet.winning ? total += bet.amount : total -= bet.amount %>
-				<td><%= total %></td>
-				<% end %>	
-		</tr>		
-	</tbody>
-</table>
-<% end %>
-
-<% if @nba_change_dates.length > 0 %>
-<table class="earnings_by_sport_graph" style="display:none">
-	<caption>NBA Record</caption>
-	<thead>
-		<tr>
-			<th scope="col">0</th>
-			<% @nba_change_dates.each do |date| %>
-			<th scope="col"><%= date %></th>
-			<% end %>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<th scope="row">NBA Earnings</th>
-				<% total = 0 %>
-				<td>0</td>
-				<% @nba_past_bets.each do |bet| %>
-				<% bet.winning ? total += bet.amount : total -= bet.amount %>
-				<td><%= total %></td>
-			<% end %>	
-		</tr>		
-	</tbody>
-</table>
-<% end %>
-
-<% if @mlb_change_dates.length > 0 %>
-<table class="earnings_by_sport_graph" style="display:none">
-	<caption>MLB Record</caption>
-	<thead>
-		<tr>
-			<th scope="col">0</th>
-			<% @mlb_change_dates.each do |date| %>
-			<th scope="col"><%= date %></th>
-			<% end %>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<th scope="row">MLB Earnings</th>
-				<% total = 0 %>
-				<td>0</td>
-				<% @mlb_past_bets.each do |bet| %>
-				<% bet.winning ? total += bet.amount : total -= bet.amount %>
-				<td><%= total %></td>
-			<% end %>	
-		</tr>		
-	</tbody>
-</table>
-<% end %>
-
-<% if @nhl_change_dates.length > 0 %>
-<table class="earnings_by_sport_graph" style="display:none">
-	<caption>NHL Record</caption>
-	<thead>
-		<tr>
-			<th scope="col">0</th>
-			<% @nhl_change_dates.each do |date| %>
-			<th scope="col"><%= date %></th>
-			<% end %>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<th scope="row">NHL Earnings</th>
-				<% total = 0 %>
-				<td>0</td>
-				<% @nhl_past_bets.each do |bet| %>
-				<% bet.winning ? total += bet.amount : total -= bet.amount %>
-				<td><%= total %></td>
-				<% end %>	
-		</tr>		
-	</tbody>
-</table>
-<% end %>
-
-
-<%= stylesheet_link_tag "visualize" %>
-<%= stylesheet_link_tag "visualize-dark" %>
-<%= javascript_include_tag "js-class" %>
-<%= javascript_include_tag 'visualize.jQuery' %> 
-<%= javascript_include_tag "excanvas" %>  
-<%= javascript_include_tag "bluff-min" %>
-<%= javascript_include_tag 'enhance' %>
- 
-<script type="text/javascript">
-$(function () {
-	$(".track_record_graph").visualize({type: 'line', width: '520px'});
- 	$(".past_week_earnings_graph").visualize({type: 'bar', width: '420px'});
-  	$(".earnings_by_sport_graph").visualize({type: 'line', width: '250px'}); 
- })
-</script>
 -->
 
 <%= javascript_include_tag 'coda' %>

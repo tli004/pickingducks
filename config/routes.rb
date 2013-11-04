@@ -23,6 +23,7 @@ PickingDucks::Application.routes.draw do
   get "/bets_home" => "bets#bets_home", :as => "bets_home"
   get "/make_parlay" => "bets#make_parlay", :as => "make_parlay"
   get "/request_cashout" => "users#request_cashout", :as => "request_cashout"
+  get "/get_bets_for_date" => "users#get_bets_for_date", :as => "get_bets_for_date"
   get '/calc_payout/:event_id/:amount/:pick' => "bets#calc_payout", :as => "calc_payout"
   get '/reset_ducks' => 'users#reset_ducks', :as => "reset_ducks"
   post "/add_bets_to_parlay" => "bets#add_bets_to_parlay", :as => "add_bets_to_parlay"
