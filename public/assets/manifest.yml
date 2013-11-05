@@ -33,8 +33,8 @@ up_arrow.png: up_arrow-57a9a20253d107a4e94a0b2de3beaae1.png
 up_arrow/index.png: up_arrow-57a9a20253d107a4e94a0b2de3beaae1.png
 upload_btn.png: upload_btn-f59706c359055a4cc68c48b7a6d516e6.png
 upload_btn/index.png: upload_btn-f59706c359055a4cc68c48b7a6d516e6.png
-application.js: application-510669bcd719bd645155c2b15185be90.js
-application/index.js: application-510669bcd719bd645155c2b15185be90.js
+application.js: application-f72244ab1f8aac1cab1551d245fa5495.js
+application/index.js: application-f72244ab1f8aac1cab1551d245fa5495.js
 bets.js: bets-5306de3145960331d72a8dd73d07f4f7.js
 bets/index.js: bets-5306de3145960331d72a8dd73d07f4f7.js
 bluff-min.js: bluff-min-86c79dbcd36cd9bd899e1835805d34a2.js
@@ -365,8 +365,8 @@ jquery.ui.spinner.js: jquery.ui.spinner-3e3e8fed3626517d2ec80017862060e9.js
 jquery/index.ui.spinner.js: jquery.ui.spinner-3e3e8fed3626517d2ec80017862060e9.js
 jquery.ui.tabs.js: jquery.ui.tabs-9f35260fbe027488a950d723c101b805.js
 jquery/index.ui.tabs.js: jquery.ui.tabs-9f35260fbe027488a950d723c101b805.js
-jquery.ui.tooltip.js: jquery.ui.tooltip-974d8d72b9c6c8e949bf6452a7878734.js
-jquery/index.ui.tooltip.js: jquery.ui.tooltip-974d8d72b9c6c8e949bf6452a7878734.js
+jquery.ui.tooltip.js: jquery.ui.tooltip-5b0c65a6d77d86222ee972e63bbfe47a.js
+jquery/index.ui.tooltip.js: jquery.ui.tooltip-5b0c65a6d77d86222ee972e63bbfe47a.js
 jquery.ui.widget.js: jquery.ui.widget-f471d679791ed91bf16218503e65ef76.js
 jquery/index.ui.widget.js: jquery.ui.widget-f471d679791ed91bf16218503e65ef76.js
 jquery.ui.accordion.css: jquery.ui.accordion-bbbf48e1489a9aedb7d48296c0787909.css

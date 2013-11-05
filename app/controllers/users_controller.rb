@@ -104,7 +104,12 @@ class UsersController < ApplicationController
   end
 
   def get_bets_for_date
-    @date_bets = current_user.bets.where("closed_at between ? and ?", params[:date].to_i.days.ago.beginning_of_day, params[:date].to_i.days.ago.end_of_day) 
+    if params[:user]
+      user = User.find(params[:user].to_i)
+      @date_bets = user.bets.where("closed_at between ? and ?", params[:date].to_i.days.ago.beginning_of_day, params[:date].to_i.days.ago.end_of_day) 
+    else
+      @date_bets = current_user.bets.where("closed_at between ? and ?", params[:date].to_i.days.ago.beginning_of_day, params[:date].to_i.days.ago.end_of_day) 
+    end
     render 'users/get_bets_for_date.js.erb'
   end
   

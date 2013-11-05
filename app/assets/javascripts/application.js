@@ -83,6 +83,10 @@ function get_bets_for_date(date) {
 	$.getScript('/get_bets_for_date?date=' + date);
 }
 
+function get_bets_for_date_public(date, user) {
+	$.getScript('/get_bets_for_date?date=' + date + '&user=' + user);
+}
+
 function getURLParameter(name) {
     return decodeURI(
         (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
