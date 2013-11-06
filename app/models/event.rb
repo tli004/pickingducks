@@ -91,14 +91,13 @@ class Event < ActiveRecord::Base
     
     mlb_odds_url = "http://sportscaster.xmlteam.com/gateway/php_ci/searchDocuments.php?sport-keys=l.mlb.com&league-keys=l.mlb.com&fixture-keys=odds&date-window=16800&revision-control=all&publisher-keys=sportsnetwork.com&max-result-count=5&content-returned=all-content&content-format=sportsml&rendering-engine=xslt&gateway-theme=default&query-debug=false"
     
-    
-    #nhl_odds_url = ""
+    nhl_odds_url = "http://sportscaster.xmlteam.com/gateway/php_ci/searchDocuments.php?sport-keys=l.nhl.com&league-keys=l.nhl.com&fixture-keys=odds&date-window=16800revision-control=all&publisher-keys=sportsnetwork.com&max-result-count=5&content-returned=all-content&content-format=sportsml&rendering-engine=xslt&gateway-theme=default&query-debug=false"
     
     xml_doc = Nokogiri::XML(open(nfl_odds_url, :http_basic_authentication => ["prosperitech", "l1v3l0ng"]))
     xml_doc.xpath('//sports-event').each do |event|      
       event_key = event.xpath('./event-metadata/@event-key').to_s
       one_event = Event.find_by_extern_id(event_key)
-      if one_event.nil? || one_event.spread.nil? || one_event.moneyline_home.nil?
+      if one_event.nil? || (one_event.spread.nil? && one_event.moneyline_home.nil?)
         one_event.destroy if !one_event.nil?
         new_event = Event.new
         new_event.extern_id = event_key
@@ -116,7 +115,7 @@ class Event < ActiveRecord::Base
         new_event.spread = event.xpath('./team/team-metadata[@alignment="home"]/../wagering-stats/wagering-straight-spread[1]/@value').to_s     
         new_event.total_points = event.xpath('./team/team-metadata[@alignment="home"]/../wagering-stats/wagering-total-score[1]/@total').to_s       
         
-       new_event.save!
+        new_event.save!
      end     
     end  
     
@@ -124,7 +123,7 @@ class Event < ActiveRecord::Base
     xml_doc.xpath('//sports-event').each do |event|      
       event_key = event.xpath('./event-metadata/@event-key').to_s
       one_event = Event.find_by_extern_id(event_key)
-      if one_event.nil? || one_event.spread.nil? || one_event.moneyline_home.nil?
+      if one_event.nil? || (one_event.spread.nil? && one_event.moneyline_home.nil?)
         one_event.destroy if !one_event.nil?
         new_event = Event.new
         new_event.extern_id = event_key
@@ -150,7 +149,7 @@ class Event < ActiveRecord::Base
     xml_doc.xpath('//sports-event').each do |event|      
       event_key = event.xpath('./event-metadata/@event-key').to_s
       one_event = Event.find_by_extern_id(event_key)
-      if one_event.nil? || one_event.spread.nil? || one_event.moneyline_home.nil?
+      if one_event.nil? || (one_event.spread.nil? && one_event.moneyline_home.nil?)
         one_event.destroy if !one_event.nil?
         new_event = Event.new
         new_event.extern_id = event_key
@@ -173,30 +172,32 @@ class Event < ActiveRecord::Base
       end     
     end  
     
-    #xml_doc = Nokogiri::XML(open(nhl_odds_url, :http_basic_authentication => ["prosperitech", "l1v3l0ng"]))
-    #xml_doc.xpath('//sports-event').each do |event|      
-    #  event_key = event.xpath('./event-metadata/@event-key').to_s
-    #  if Event.find_by_extern_id(event_key).nil?
-    #    new_event = Event.new
-    #    new_event.extern_id = event_key
-    #    new_event.start_time = DateTime.parse(event.xpath('./event-metadata/@start-date-time').to_s)
-    #    new_event.sport = 4
-    #    event.xpath('./team').each do |team|
-    #      if team.xpath('./team-metadata/@alignment').to_s == 'home'
-    #        new_event.home_location = team.xpath('./team-metadata/name/@first').to_s
-    #        new_event.home_team = team.xpath('./team-metadata/name/@last').to_s
-    #      else
-    #        new_event.away_location = team.xpath('./team-metadata/name/@first').to_s
-    #        new_event.away_team = team.xpath('./team-metadata/name/@last').to_s
-    #      end
-    #    end        
-    #    new_event.moneyline_home = event.xpath('./team/team-metadata[@alignment="home"]/../wagering-stats/wagering-moneyline[1]/@line').to_s   
-    #    new_event.moneyline_away = event.xpath('./team/team-metadata[@alignment="away"]/../wagering-stats/wagering-moneyline[1]/@line').to_s     
-    #    new_event.total_points = event.xpath('./team/team-metadata[@alignment="home"]/../wagering-stats/wagering-total-score[1]/@total').to_s       
+    xml_doc = Nokogiri::XML(open(nhl_odds_url, :http_basic_authentication => ["prosperitech", "l1v3l0ng"]))
+    xml_doc.xpath('//sports-event').each do |event|      
+      event_key = event.xpath('./event-metadata/@event-key').to_s
+      one_event = Event.find_by_extern_id(event_key)
+      if one_event.nil? || (one_event.spread.nil? && one_event.moneyline_home.nil?)
+        one_event.destroy if !one_event.nil?
+        new_event = Event.new
+        new_event.extern_id = event_key
+        new_event.start_time = DateTime.parse(event.xpath('./event-metadata/@start-date-time').to_s)
+        new_event.sport = 4
+        event.xpath('./team').each do |team|
+          if team.xpath('./team-metadata/@alignment').to_s == 'home'
+            new_event.home_location = team.xpath('./team-metadata/name/@first').to_s
+            new_event.home_team = team.xpath('./team-metadata/name/@last').to_s
+          else
+            new_event.away_location = team.xpath('./team-metadata/name/@first').to_s
+            new_event.away_team = team.xpath('./team-metadata/name/@last').to_s
+          end
+        end        
+        new_event.moneyline_home = event.xpath('./team/team-metadata[@alignment="home"]/../wagering-stats/wagering-moneyline[1]/@line').to_s   
+        new_event.moneyline_away = event.xpath('./team/team-metadata[@alignment="away"]/../wagering-stats/wagering-moneyline[1]/@line').to_s     
+        new_event.total_points = event.xpath('./team/team-metadata[@alignment="home"]/../wagering-stats/wagering-total-score[1]/@total').to_s       
         
-    #    new_event.save!
-    #  end     
-    #end  
+        new_event.save!
+      end     
+    end  
     
       
     

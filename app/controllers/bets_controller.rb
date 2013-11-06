@@ -68,7 +68,7 @@ class BetsController < ApplicationController
   end
   
   def bets_home
-    @games = Event.where('start_time > ? and start_time < ?', Time.zone.now.to_date, 7.days.from_now.to_date).order("sport ASC")
+    @games = Event.where('start_time > ? and start_time < ? and (spread is not null or moneyline_home is not null)', Time.zone.now.to_date, 7.days.from_now.to_date).order("sport ASC")
     @sport = 0
   end
   
