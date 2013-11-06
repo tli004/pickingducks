@@ -101,7 +101,7 @@
 	 	<br />
 	 	<% if @straight_change_dates.length > 0 %>
 			<table class="track_record_graph" style="display:none">
-				<caption>Total Ducks Earned/Lost (past 30 days)</caption>
+				<caption>Ducks Earned/Lost</caption>
 				<thead>
 					<tr>
 					<% @straight_change_dates.each_with_index do |date, i| %>
@@ -181,7 +181,7 @@
 
 			<% if @nfl_change_dates.length > 0 %>
 			<table class="earnings_by_sport_graph" style="display:none">
-				<caption>NFL (past 30 days)</caption>
+				<caption>NFL</caption>
 				<thead>
 					<tr>
 						<th scope="col">0</th>
@@ -206,7 +206,7 @@
 
 			<% if @nba_change_dates.length > 0 %>
 			<table class="earnings_by_sport_graph" style="display:none">
-				<caption>NBA (past 30 days)</caption>
+				<caption>NBA</caption>
 				<thead>
 					<tr>
 						<th scope="col">0</th>
@@ -231,7 +231,7 @@
 
 			<% if @mlb_change_dates.length > 0 %>
 			<table class="earnings_by_sport_graph" style="display:none">
-				<caption>MLB (past 30 days)</caption>
+				<caption>MLB</caption>
 				<thead>
 					<tr>
 						<th scope="col">0</th>
@@ -256,7 +256,7 @@
 
 			<% if @nhl_change_dates.length > 0 %>
 			<table class="earnings_by_sport_graph" style="display:none">
-				<caption>NHL (past 30 days)</caption>
+				<caption>NHL</caption>
 				<thead>
 					<tr>
 						<th scope="col">0</th>
@@ -299,7 +299,7 @@
  	<div id="bet_history">
  		<% if @past_thirty_days.length > 0 %>
  			<span id="past_bets_table">
-		 		Click a date on the calendar to see picking info from that day.
+		 		<%= render :partial => 'users/past_bets_table', :locals => {:past_bets => @past_ten_days} %>
 		 	</span>
 	 		<br />
 	 		<br />

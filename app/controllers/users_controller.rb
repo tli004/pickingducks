@@ -66,6 +66,7 @@ class UsersController < ApplicationController
     @parlays = current_user.parlays.where(:pending => true)
        
     @past_straights = current_user.bets.where(:pending => false, :parlay => false).order('closed_at').reverse
+    @past_ten_days = current_user.bets.where(:pending => false, :parlay => false).where('closed_at >= ?', 10.days.ago).order('closed_at DESC')
     @past_thirty_days = current_user.bets.where(:pending => false, :parlay => false).where('closed_at >= ?', 30.days.ago).order('closed_at DESC')
     
     @past_parlays = current_user.parlays.where(:pending => false).order('closed_at').reverse
@@ -106,15 +107,24 @@ class UsersController < ApplicationController
   def get_bets_for_date
     if params[:user]
       user = User.find(params[:user].to_i)
-      @date_bets = user.bets.where("closed_at between ? and ?", params[:date].to_i.days.ago.beginning_of_day, params[:date].to_i.days.ago.end_of_day) 
+      if params[:ten_days]
+        @date_bets = user.bets.where(:pending => false, :parlay => false).where('closed_at >= ?', 10.days.ago).order('closed_at DESC')
+      else 
+        @date_bets = user.bets.where("closed_at between ? and ?", params[:date].to_i.days.ago.beginning_of_day, params[:date].to_i.days.ago.end_of_day) 
+      end 
     else
-      @date_bets = current_user.bets.where("closed_at between ? and ?", params[:date].to_i.days.ago.beginning_of_day, params[:date].to_i.days.ago.end_of_day) 
+      if params[:ten_days]
+        @date_bets = current_user.bets.where(:pending => false, :parlay => false).where('closed_at >= ?', 10.days.ago).order('closed_at DESC')
+      else
+        @date_bets = current_user.bets.where("closed_at between ? and ?", params[:date].to_i.days.ago.beginning_of_day, params[:date].to_i.days.ago.end_of_day) 
+      end
     end
     render 'users/get_bets_for_date.js.erb'
   end
   
   def public_profile
-    @user = User.find(params[:id])    
+    @user = User.find(params[:id]) 
+    @past_ten_days = @user.bets.where(:pending => false, :parlay => false).where('closed_at >= ?', 10.days.ago).order('closed_at DESC')   
     @past_thirty_days = @user.bets.where(:pending => false, :parlay => false).where('closed_at >= ?', 30.days.ago).order('closed_at DESC')
     @pending_bets = @user.bets.where(:pending => true, :parlay => false)
     
