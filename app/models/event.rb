@@ -97,7 +97,9 @@ class Event < ActiveRecord::Base
     xml_doc = Nokogiri::XML(open(nfl_odds_url, :http_basic_authentication => ["prosperitech", "l1v3l0ng"]))
     xml_doc.xpath('//sports-event').each do |event|      
       event_key = event.xpath('./event-metadata/@event-key').to_s
-      if Event.find_by_extern_id(event_key).nil?
+      one_event = Event.find_by_extern_id(event_key)
+      if one_event.nil? || one_event.spread.nil? || one_event.moneyline_home.nil?
+        one_event.destroy if !one_event.nil?
         new_event = Event.new
         new_event.extern_id = event_key
         new_event.start_time = DateTime.parse(event.xpath('./event-metadata/@start-date-time').to_s)
@@ -121,7 +123,9 @@ class Event < ActiveRecord::Base
     xml_doc = Nokogiri::XML(open(nba_odds_url, :http_basic_authentication => ["prosperitech", "l1v3l0ng"]))
     xml_doc.xpath('//sports-event').each do |event|      
       event_key = event.xpath('./event-metadata/@event-key').to_s
-      if Event.find_by_extern_id(event_key).nil?
+      one_event = Event.find_by_extern_id(event_key)
+      if one_event.nil? || one_event.spread.nil? || one_event.moneyline_home.nil?
+        one_event.destroy if !one_event.nil?
         new_event = Event.new
         new_event.extern_id = event_key
         new_event.start_time = DateTime.parse(event.xpath('./event-metadata/@start-date-time').to_s)
@@ -145,7 +149,9 @@ class Event < ActiveRecord::Base
     xml_doc = Nokogiri::XML(open(mlb_odds_url, :http_basic_authentication => ["prosperitech", "l1v3l0ng"]))
     xml_doc.xpath('//sports-event').each do |event|      
       event_key = event.xpath('./event-metadata/@event-key').to_s
-      if Event.find_by_extern_id(event_key).nil?
+      one_event = Event.find_by_extern_id(event_key)
+      if one_event.nil? || one_event.spread.nil? || one_event.moneyline_home.nil?
+        one_event.destroy if !one_event.nil?
         new_event = Event.new
         new_event.extern_id = event_key
         new_event.start_time = DateTime.parse(event.xpath('./event-metadata/@start-date-time').to_s)
