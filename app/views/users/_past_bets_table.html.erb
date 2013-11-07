@@ -59,10 +59,10 @@
 	</tbody>
 	<% end %>
 	</table>
-	 <button class="past_ten_days_btn"><a onclick="$.getScript('/get_bets_for_date?ten_days=1')">See past ten days</a></button>
+	 <button class="past_ten_days_btn"><a onclick="$.getScript('/get_bets_for_date?ten_days=1<%= "&user=#{user.id}" if !user.nil? %>')">See past ten days</a></button>
 <% else %>
 <span>
 	No pick history for this date.
 </span>
-<button class="past_ten_days_btn"><a onclick="$.getScript('/get_bets_for_date?ten_days=1')">See past ten days</a></button>
+<button class="past_ten_days_btn"><a onclick="$.getScript('/get_bets_for_date?ten_days=1<%= "&user=#{user.id}" if !user.nil? %>')">See past ten days</a></button>
 <% end %>

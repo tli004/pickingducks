@@ -91,7 +91,7 @@
  <div id="bet_history">
 	<% if @past_thirty_days.length > 0 %>
 		<span id="past_bets_table">
-	 		<%= render :partial => "users/past_bets_table", :locals => {:past_bets => @past_ten_days} %>
+	 		<%= render :partial => "users/past_bets_table", :locals => {:past_bets => @past_ten_days, :user => @user } %>
 	 	</span>
 	 	<% else %>
 	 	No pick history.

@@ -1,2 +1,2 @@
-$("#past_bets_table").html($("<%= escape_javascript(render :partial => 'users/past_bets_table', :locals => {:past_bets => @date_bets}) %>"));
+$("#past_bets_table").html($("<%= escape_javascript(render :partial => 'users/past_bets_table', :locals => {:past_bets => @date_bets, :user => @user }) %>"));
 

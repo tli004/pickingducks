@@ -106,11 +106,11 @@ class UsersController < ApplicationController
 
   def get_bets_for_date
     if params[:user]
-      user = User.find(params[:user].to_i)
+      @user = User.find(params[:user].to_i)
       if params[:ten_days]
-        @date_bets = user.bets.where(:pending => false, :parlay => false).where('closed_at >= ?', 10.days.ago).order('closed_at DESC')
+        @date_bets = @user.bets.where(:pending => false, :parlay => false).where('closed_at >= ?', 10.days.ago).order('closed_at DESC')
       else 
-        @date_bets = user.bets.where("closed_at between ? and ?", params[:date].to_i.days.ago.beginning_of_day, params[:date].to_i.days.ago.end_of_day) 
+        @date_bets = @user.bets.where("closed_at between ? and ?", params[:date].to_i.days.ago.beginning_of_day, params[:date].to_i.days.ago.end_of_day) 
       end 
     else
       if params[:ten_days]
